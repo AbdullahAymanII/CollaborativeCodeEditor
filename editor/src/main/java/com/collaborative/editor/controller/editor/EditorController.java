@@ -5,6 +5,7 @@ import com.collaborative.editor.model.mysql.file.CodeDTO;
 import com.collaborative.editor.model.mysql.file.CursorDTO;
 import com.collaborative.editor.service.editorService.CommentServiceImpl;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.messaging.handler.annotation.DestinationVariable;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.messaging.handler.annotation.SendTo;
@@ -70,20 +71,37 @@ import java.time.LocalDateTime;
 //}
 
 
+//@Controller
+//public class EditorController {
+//
+//    @MessageMapping("/code")
+//    @SendTo("/topic/code")
+//    public CodeDTO sendCode(@Payload CodeDTO codeDTO) {
+//        System.out.println("Received code update: " + codeDTO);
+//        return codeDTO; // Broadcast code changes to all clients subscribed to /topic/code
+//    }
+//
+//    @MessageMapping("/cursor")
+//    @SendTo("/topic/cursor")
+//    public CursorDTO sendCursor(@Payload CursorDTO cursorDTO) {
+//        System.out.println("Received cursor update: " + cursorDTO);
+//        return cursorDTO; // Broadcast cursor updates to all clients subscribed to /topic/cursor
+//    }
+//}
 @Controller
 public class EditorController {
 
-    @MessageMapping("/code")
-    @SendTo("/topic/code")
-    public CodeDTO sendCode(@Payload CodeDTO codeDTO) {
-        System.out.println("Received code update: " + codeDTO);
-        return codeDTO; // Broadcast code changes to all clients subscribed to /topic/code
+    @MessageMapping("/code/{filename}")
+    @SendTo("/topic/file/{filename}")
+    public CodeDTO sendCode(@DestinationVariable String filename, @Payload CodeDTO codeDTO) {
+        System.out.println("Received code update for file: " + filename);
+        return codeDTO;
     }
 
-    @MessageMapping("/cursor")
-    @SendTo("/topic/cursor")
-    public CursorDTO sendCursor(@Payload CursorDTO cursorDTO) {
-        System.out.println("Received cursor update: " + cursorDTO);
-        return cursorDTO; // Broadcast cursor updates to all clients subscribed to /topic/cursor
+    @MessageMapping("/cursor/{filename}")
+    @SendTo("/topic/file/{filename}")
+    public CursorDTO sendCursor(@DestinationVariable String filename, @Payload CursorDTO cursorDTO) {
+        System.out.println("Received cursor update for file: " + filename);
+        return cursorDTO;
     }
 }

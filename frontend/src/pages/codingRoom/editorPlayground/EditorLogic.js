@@ -1,29 +1,20 @@
 import { useRef, useCallback } from 'react';
 
-const useEditorLogic = (setCode, publishCodeChange, publishCursorChange, lockLine, user) => {
+const useEditorLogic = (setCode, publishCodeChange, user) => {
     const editorRef = useRef(null);
 
     const handleEditorChange = useCallback(
         (newCode) => {
             setCode(newCode);
-            publishCodeChange(user.name, newCode);
+            publishCodeChange(user, newCode);
         },
-        [setCode, publishCodeChange, user.name]
-    );
-
-    const handleCursorChange = useCallback(
-        (event) => {
-            const lineNumber = event.position.lineNumber;
-            publishCursorChange(user.name, lineNumber);
-            lockLine(lineNumber);
-        },
-        [publishCursorChange, lockLine, user.name]
+        [setCode, publishCodeChange, user]
     );
 
     const handleEditorDidMount = useCallback((editor) => {
         editorRef.current = editor;
-        editor.onDidChangeCursorPosition(handleCursorChange);
-    }, [handleCursorChange]);
+        // editor.onDidChangeCursorPosition(handleCursorChange);
+    }, []);
 
     return { handleEditorChange, handleEditorDidMount };
 };

@@ -8,20 +8,17 @@ import useFileManager from './FileManager';
 import useEditorLogic from './EditorLogic';
 // <EditorPlayGround code={code} setCode={setCode} darkMode={darkMode} runCode={runCode} currentFile={currentFile} user={user} />
 const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user, room }) => {
-    const [lockedLines, setLockedLines] = useState(new Set());
+    // const [lockedLines, setLockedLines] = useState(new Set());
     const [selectedLanguage, setSelectedLanguage] = useState('python');
     const [showConfirmPushModal, setShowConfirmPushModal] = useState(false);
     const [showConfirmMergeModal, setShowConfirmMergeModal] = useState(false);
+    // const [publishCodeChange, publishCodeChange] = useState('');
 
-    const { publishCodeChange, publishCursorChange, isConnected } = useWebSocketManager(setCode, user, (lineNumber) => {
-        setLockedLines((prev) => new Set(prev).add(lineNumber));
-    });
 
+
+    const { publishCodeChange, isConnected } = useWebSocketManager(setCode, user, currentFile);
     const { pushFileToServer, mergeFileFromServer, successMessage } = useFileManager(code, currentFile, room, setCode, setShowConfirmMergeModal, setShowConfirmPushModal);
-
-    const { handleEditorChange, handleEditorDidMount } = useEditorLogic(setCode, publishCodeChange, publishCursorChange, (lineNumber) => {
-        setLockedLines((prev) => new Set(prev).add(lineNumber));
-    }, user);
+    const { handleEditorChange, handleEditorDidMount } = useEditorLogic(setCode, publishCodeChange, user);
 
 
     return (

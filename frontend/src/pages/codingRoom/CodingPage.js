@@ -42,10 +42,6 @@ const CodingPage = () => {
     const handleSelectFileVersion = (selectedFile) => {
         setCode(selectedFile.content);
         setCurrentFile(selectedFile);
-        // setCode(fileVersion.content);
-        // setCurrentFileName(fileVersion.filename);
-        // setCurrentProjectName(fileVersion.projectName);
-        // setCurrentRoomId(fileVersion.roomId);
     };
 
     return (
@@ -64,9 +60,7 @@ const CodingPage = () => {
 
                 {/* Main Content Area for Code Editor */}
                 <div className="coding-playground">
-                    {/*<EditorPlayGround code={code} setCode={setCode} darkMode={darkMode} runCode={runCode} filename={currentFileName} projectName={currentProjectName} roomId={room.roomId} userId={user.name} />*/}
                     <EditorPlayGround code={code} setCode={setCode} darkMode={darkMode} runCode={runCode} currentFile={currentFile} user={user} room={room} />
-
                 </div>
 
                 {/* Chat Box on the Right */}
