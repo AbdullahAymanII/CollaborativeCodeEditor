@@ -1,0 +1,68 @@
+/* index.css */
+
+/* Reset some default styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #f0f0f0;
+  transition: background-color 0.3s ease;
+}
+
+.light-mode {
+  --background-color: #f0f0f0;
+  --text-color: #333;
+  --primary-color: #959595;
+  --button-bg: #3498db;
+  --button-text: #fff;
+}
+
+.dark-mode {
+  --background-color: #434343;
+  --text-color: #5e5e5e;
+  --primary-color: #9f9f9f;
+  --button-bg: #8e44ad;
+  --button-text: #fff;
+}
+
+body.light-mode,
+body.dark-mode {
+  background-color: var(--background-color);
+  color: var(--text-color);
+}
+
+/* For smooth transitions when toggling themes */
+body, .home-container, .form-container {
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+button {
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 20px;
+  transition: background-color 0.3s ease;
+}
+
+/* Global button styles */
+button:hover {
+  opacity: 0.9;
+}
+
+input, textarea {
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  padding: 10px;
+  width: 100%;
+  margin-top: 5px;
+  transition: border 0.3s ease;
+}
+
+input:focus, textarea:focus {
+  border-color: var(--primary-color);
+  outline: none;
+}
