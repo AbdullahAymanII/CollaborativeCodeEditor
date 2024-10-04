@@ -12,7 +12,7 @@ import java.util.Map;
 import java.util.Optional;
 
 public interface RoomService {
-    boolean createRoom(User owner, String roomName, String roomId);
+    void createRoom(User owner, String roomName, String roomId);
 
     Optional<Room> findByRoomId(Long roomId);
 

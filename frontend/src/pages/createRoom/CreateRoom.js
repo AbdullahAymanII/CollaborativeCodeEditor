@@ -5,18 +5,19 @@ const CreateRoom = () => {
     const [roomName, setRoomName] = useState('');
     const [roomId, setRoomId] = useState('');
     const [loading, setLoading] = useState(false);
-    const [errorMessage, setErrorMessage] = useState(''); // Define errorMessage
+    const [errorMessage, setErrorMessage] = useState('');
     const location = useLocation();
     const navigate = useNavigate();
-    const [room, setRoom] = useState({ roomName: '', roomId: '' });
+    const [room, setRoom] = useState({ roomId: "", roomName: "" });
 
-    // const { userName } = location.state; // Retrieve userEmail from state
-    const { user } = location.state; // Retrieve userEmail from state
+    const { user } = location.state || {};
 
     const handleCreateRoom = async () => {
         setLoading(true);
-        setErrorMessage(''); // Reset error message before request
-
+        setErrorMessage('');
+        console.log(user);
+        const updatedRoom = { roomId: roomId, roomName: roomName };
+        console.log(updatedRoom);
         try {
             const response = await fetch('http://localhost:8080/api/rooms/createRoom', {
                 method: 'POST',
@@ -30,18 +31,15 @@ const CreateRoom = () => {
             if (!response.ok) {
                 throw new Error('Invalid RoomName or RoomId');
             }
+            setRoom(updatedRoom);
             console.log(response);
-            // const data = await response.json(); // Parse the response data
-            setRoom({ roomName: roomName, roomId: roomId })
-            // Navigate to create-project page, passing room and user information
-            navigate('/create-project', {
-                // state: { roomId: roomId, roomName: roomName, ownerName: userName },
-                state: { user, room },
-            });
+            console.log(room);
+
+            navigate('/add-members', { state: { user : user, room : updatedRoom } });
         } catch (error) {
-            setErrorMessage(error.message); // Display the error message
+            setErrorMessage(error.message);
         } finally {
-            setLoading(false); // Stop loading once the request completes
+            setLoading(false);
         }
     };
 
@@ -89,59 +87,3 @@ const CreateRoom = () => {
 };
 
 export default CreateRoom;
-
-
-
-//
-//
-//
-//
-//
-//
-//
-// import React, { useState } from 'react';
-// import { useNavigate, useLocation } from 'react-router-dom';
-//
-// const CreateRoom = () => {
-//     const [roomName, setRoomName] = useState('');
-//     const location = useLocation();
-//     const { userName } = location.state; // Get the username from Home page
-//     const navigate = useNavigate();
-//
-//     const handleCreateRoom = async () => {
-//         try {
-//             const response = await fetch('http://localhost:8080/api/rooms/create', {
-//                 method: 'POST',
-//                 headers: {
-//                     'Content-Type': 'application/json',
-//                     Authorization: `Bearer ${localStorage.getItem('token')}`,
-//                 },
-//                 body: JSON.stringify({
-//                     roomName,
-//                     ownerUsername: userName,
-//                 }),
-//             });
-//             if (!response.ok) throw new Error('Failed to create room');
-//             const roomData = await response.json();
-//             const roomID = roomData.roomID; // Assuming server returns the roomID
-//             navigate('/create-project', { state: { roomID, roomName, userName } });
-//         } catch (error) {
-//             console.error('Error creating room:', error);
-//         }
-//     };
-//
-//     return (
-//         <div>
-//             <h1>Create Room</h1>
-//             <input
-//                 type="text"
-//                 placeholder="Enter Room Name"
-//                 value={roomName}
-//                 onChange={(e) => setRoomName(e.target.value)}
-//             />
-//             <button onClick={handleCreateRoom}>Create Room</button>
-//         </div>
-//     );
-// };
-//
-// export default CreateRoom;

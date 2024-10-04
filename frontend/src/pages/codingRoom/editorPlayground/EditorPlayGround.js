@@ -6,15 +6,12 @@ import EditorFooter from './EditorFooter';
 import useWebSocketManager from './WebSocketManager';
 import useFileManager from './FileManager';
 import useEditorLogic from './EditorLogic';
-// <EditorPlayGround code={code} setCode={setCode} darkMode={darkMode} runCode={runCode} currentFile={currentFile} user={user} />
+
 const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user, room }) => {
-    // const [lockedLines, setLockedLines] = useState(new Set());
+
     const [selectedLanguage, setSelectedLanguage] = useState('python');
     const [showConfirmPushModal, setShowConfirmPushModal] = useState(false);
     const [showConfirmMergeModal, setShowConfirmMergeModal] = useState(false);
-    // const [publishCodeChange, publishCodeChange] = useState('');
-
-
 
     const { publishCodeChange, isConnected } = useWebSocketManager(setCode, user, currentFile);
     const { pushFileToServer, mergeFileFromServer, successMessage } = useFileManager(code, currentFile, room, setCode, setShowConfirmMergeModal, setShowConfirmPushModal);

@@ -28,16 +28,15 @@ public class RoomServiceImpl implements RoomService{
     private RoomMembershipRepository roomMembershipRepository;
 
     @Override
-    public boolean createRoom(User owner, String roomName, String roomId) {
+    public void createRoom(User owner, String roomName, String roomId) {
         try {
             Room room = new Room();
             room.setRoomId(Long.parseLong(roomId));
             room.setName(roomName);
             room.setOwner(owner);
             roomRepository.save(room);
-            return true;
         } catch (Exception e){
-            return false;
+            throw new RuntimeException("Failed to create room.");
         }
     }
 
@@ -45,8 +44,7 @@ public class RoomServiceImpl implements RoomService{
     public Optional<Room> findByRoomId(Long roomId) {
         try {
             return roomRepository.findByRoomId(roomId);
-        }catch (Exception e)
-        {
+        }catch (Exception e) {
             return Optional.empty();
         }
     }
@@ -61,30 +59,6 @@ public class RoomServiceImpl implements RoomService{
             return false;
         }
     }
-
-//    @Override
-//    public boolean addCollaborator(Long roomId, User user) {
-//        boolean present = roomRepository.findByRoomId(roomId).isPresent();
-//        if (present){
-//            Room room = roomRepository.findByRoomId(roomId).get();
-//            room.getCollaborators().add(user);
-//            roomRepository.save(room);
-//            return true;
-//        }
-//        return false;
-//    }
-//
-//    @Override
-//    public boolean addViewer(Long roomId, User user) {
-//        boolean present = roomRepository.findByRoomId(roomId).isPresent();
-//        if (present){
-//            Room room = roomRepository.findByRoomId(roomId).get();
-//            room.getViewers().add(user);
-//            roomRepository.save(room);
-//            return true;
-//        }
-//        return false;
-//    }
 
     @Override
     public boolean addUserToRoom(Room room, User user, RoomRole role) {

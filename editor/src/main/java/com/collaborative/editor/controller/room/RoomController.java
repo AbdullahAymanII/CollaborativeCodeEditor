@@ -1,11 +1,14 @@
 package com.collaborative.editor.controller.room;
 
 
+import com.collaborative.editor.model.mysql.file.FileDTO;
 import com.collaborative.editor.model.mysql.project.ProjectDTO;
 import com.collaborative.editor.model.mysql.room.Room;
 import com.collaborative.editor.model.mysql.room.RoomDTO;
 import com.collaborative.editor.model.mysql.room.RoomRole;
 import com.collaborative.editor.model.mysql.user.User;
+import com.collaborative.editor.service.fileService.FileServiceImpl;
+import com.collaborative.editor.service.projectService.ProjectServiceImpl;
 import com.collaborative.editor.service.roomService.RoomServiceImpl;
 import com.collaborative.editor.service.userService.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,10 +25,16 @@ import java.util.Map;
 @RequestMapping("/api/rooms")
 public class RoomController {
 
-    private final RoomServiceImpl roomService ;
+    private final RoomServiceImpl roomService;
 
     @Autowired
-    private UserServiceImpl userService ;
+    private UserServiceImpl userService;
+
+    @Autowired
+    private ProjectServiceImpl projectService;
+
+    @Autowired
+    private FileServiceImpl fileService;
 
     public RoomController(@Qualifier("RoomServiceImpl") RoomServiceImpl roomService) {
         this.roomService = roomService;
@@ -36,17 +45,16 @@ public class RoomController {
         String roomId = request.get("roomId");
         String roomName = request.get("roomName");
 
-
-        User owner = userService.findUserByEmail(request.get("ownerEmail")).get();
-
-        boolean success = roomService.createRoom(owner, roomName, roomId);
-
-        if (success) {
+        try {
+            User owner = userService.findUserByEmail(request.get("ownerEmail")).get();
+            roomService.createRoom(owner, roomName, roomId);
+            projectService.createProject(new ProjectDTO("Main-Branch", Long.parseLong(roomId)), "README");
+            fileService.createFile(new FileDTO("Main-version", Long.parseLong(roomId), "Main-Branch"));
             return ResponseEntity.ok("Room created successfully!");
-        }
-        else {
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body("Failed to create room!");
         }
+
     }
 
     @DeleteMapping("/deleteRoom")
@@ -56,7 +64,7 @@ public class RoomController {
         try {
             roomService.deleteByRoomId(id);
             return ResponseEntity.ok("Room deleted successfully!");
-        }catch (Exception e) {
+        } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
     }
@@ -66,14 +74,14 @@ public class RoomController {
         String roomId = request.get("roomId");
         String email = request.get("member");
 
-        try{
+        try {
             User user = userService.findUserByEmail(email).get();
             Room room = roomService.findByRoomId(Long.parseLong(roomId)).get();
             System.out.println(user.getEmail());
             System.out.println(room.getName());
             roomService.addUserToRoom(room, user, RoomRole.COLLABORATOR);
             return ResponseEntity.ok("Viewer added successfully!");
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body("Failed to find user!");
         }
 
@@ -84,14 +92,14 @@ public class RoomController {
         String roomId = request.get("roomId");
         String email = request.get("member");
 
-        try{
+        try {
             User user = userService.findUserByEmail(email).get();
             Room room = roomService.findByRoomId(Long.parseLong(roomId)).get();
 
             roomService.addUserToRoom(room, user, RoomRole.VIEWER);
 
             return ResponseEntity.ok("Viewer added successfully!");
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.badRequest().body("Failed to find user!");
         }
 
@@ -119,7 +127,7 @@ public class RoomController {
     }
 
     @PostMapping("/join-room/{roomId}")
-    public ResponseEntity<String> joinRoom(@PathVariable("roomId") Long roomId,@RequestBody String roomName) {
+    public ResponseEntity<String> joinRoom(@PathVariable("roomId") Long roomId, @RequestBody String roomName) {
         return ResponseEntity.ok("Room");
     }
 

@@ -1,23 +1,20 @@
-import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import './AddMembers.css'; // Make sure to include the CSS file in your project
+import React, {useState, useEffect} from 'react';
+import {useLocation, useNavigate} from 'react-router-dom';
+import './AddMembers.css';
 
 const AddMembers = () => {
     const [newViewer, setNewViewer] = useState('');
     const [newCollaborator, setNewCollaborator] = useState('');
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-    const [darkMode, setDarkMode] = useState(false); // State to handle theme toggle
+    const [darkMode, setDarkMode] = useState(false);
 
     const location = useLocation();
     const navigate = useNavigate();
 
-    // const roomId = location?.state?.roomId || null;
-
-    const { user, room, project } = location.state;
+    const {user, room} = location.state || {};
 
     useEffect(() => {
-        // Add or remove dark mode class to the body
         if (darkMode) {
             document.body.classList.add('dark-mode');
         } else {
@@ -46,7 +43,7 @@ const AddMembers = () => {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 },
-                body: JSON.stringify({ member, roomId:room.roomId }),
+                body: JSON.stringify({member, roomId: room.roomId}),
             });
 
             if (!response.ok) {

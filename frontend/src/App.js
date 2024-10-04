@@ -6,7 +6,7 @@ import Login from "./pages/loginForm/Login";
 import Registration from "./pages/loginForm/Registration";
 import Home from "./pages/home/Home";
 import CreateRoom from "./pages/createRoom/CreateRoom";
-import CreateProject from "./pages/createRoom/CreateProject";
+// import CreateProject from "./pages/createRoom/CreateProject";
 import AddMembers from "./pages/createRoom/AddMembers";
 import JoinRoom from "./pages/joinRoom/JoinRoom";
 import CodingPage from "./pages/codingRoom/CodingPage";
@@ -17,6 +17,8 @@ function App() {
     const [loading, setLoading] = useState(true);
     const location = useLocation();
     const [user, setUser] = useState(null);
+    const [room, setRoom] = useState({ roomId: "", roomName: "" });
+    const [project, setProject] = useState({ projectName: '', projectDescription: '' });
 
     // Fetch user info and set globally
     useEffect(() => {
@@ -58,9 +60,9 @@ function App() {
                         <Route path="/" element={<Login />} />
                         <Route path="/register" element={<Registration />} />
                         <Route path="/home" element={<Home user={user} />} />
-                        <Route path="/create-room" element={<CreateRoom user={user} />} />
-                        <Route path="/create-project" element={<CreateProject />} />
-                        <Route path="/add-members" element={<AddMembers />} />
+                        <Route path="/create-room" element={<CreateRoom user={user} room={room}/>} />
+                        {/*<Route path="/create-project" element={<CreateProject user={user} room={room} projec={project}/>} />*/}
+                        <Route path="/add-members" element={<AddMembers user={user} room={room} projec={project}/>} />
                         <Route path="/join-room" element={<JoinRoom />} />
                         <Route path="/join-room/:roomId" element={<CodingPage />} /> {/* New dynamic route for CodingRoom */}
                         <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />

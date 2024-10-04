@@ -6,9 +6,8 @@ import com.collaborative.editor.database.mysql.RoomRepository;
 import com.collaborative.editor.model.mysql.project.Project;
 import com.collaborative.editor.model.mysql.project.ProjectDTO;
 import com.collaborative.editor.model.mysql.room.Room;
-import com.collaborative.editor.model.mysql.room.RoomMembership;
-import com.collaborative.editor.model.mysql.room.RoomRole;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.crossstore.ChangeSetPersister;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -27,21 +26,19 @@ public class ProjectServiceImpl implements ProjectService {
 
 
     @Override
-    public boolean createProject(ProjectDTO project, String projectDescription) {
+    public void createProject(ProjectDTO project, String projectDescription) throws NoSuchFieldException {
         Optional<Room> room = roomRepository.findByRoomId(project.getRoomId());
 
         if(room.isPresent()){
+
             Project newProject = new Project();
-//            newProject.(Long.parseLong(projectId));
             newProject.setName(project.getProjectName());
             newProject.setRoom(room.get());
             newProject.setCreatedAt(LocalDateTime.now());
             newProject.setDescription(projectDescription);
             projectRepository.save(newProject);
-            return true;
-        }
-
-        return false;
+        } else
+            throw new NoSuchFieldException("There is no room for project " + project.getRoomId() );
     }
 
     @Override

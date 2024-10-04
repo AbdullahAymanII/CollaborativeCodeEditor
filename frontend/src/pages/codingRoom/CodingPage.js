@@ -3,19 +3,17 @@ import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import './CodingPage.css';
 import Header from './header/Header';
-import VersionControl from './versionControl/VersionControl';
+// import VersionControl from './versionControl/VersionControl';
 // import CodeEditor from './CodeEditor';
 import ChatComponent from './chat/Chat';
 import InputOutput from './inputOutput/InputOutput';
 import Footer from './footer/Footer';
 import EditorPlayGround from "./editorPlayground/EditorPlayGround";
+import Control from "./versionControl/Control";
 
 const CodingPage = () => {
     const [darkMode, setDarkMode] = useState(false);
     const [code, setCode] = useState('');
-    const [currentFileName, setCurrentFileName] = useState('');
-    const [currentProjectName, setCurrentProjectName] = useState('');
-    const [currentRoomId, setCurrentRoomId] = useState('');
     const [output, setOutput] = useState('');
     const [input, setInput] = useState('');
 
@@ -24,8 +22,6 @@ const CodingPage = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const { user, room } = location.state
-
-    // const { userName, profileImage, roomId } = location.state || {};
 
     useEffect(() => {
         if (!location.state) {
@@ -55,7 +51,7 @@ const CodingPage = () => {
             <div className="main-content-wrapper">
                 {/* Sidebar for Version Control */}
                 <div className="sidebar">
-                    <VersionControl room={room} currentFile={handleSelectFileVersion} />
+                    <Control room={room} currentFile={handleSelectFileVersion} />
                 </div>
 
                 {/* Main Content Area for Code Editor */}
