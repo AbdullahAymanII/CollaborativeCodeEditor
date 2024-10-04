@@ -25,14 +25,10 @@ public class ExecutionController {
 
     @PostMapping("/run")
     public  ResponseEntity<Map<String, String>>  runCode(@RequestBody CodeRequestDTO codeRequest) {
-        String language = codeRequest.getLanguage();
-        String code = codeRequest.getCode();
-        System.out.println(language+"    "+code+" ++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
         try {
-            String output = dockerService.executeCode(language, code);
-            System.out.println(" ++++++++++++++++++++++++++++++++++++++++++++++++++++++++ ++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            String output = dockerService.executeCode(codeRequest);
+            System.out.println("abdabdbadbabdabadbsbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb");
             System.out.println(output);
-
             return ResponseEntity.ok(Map.of("output", output));
         } catch (Exception e) {
             return ResponseEntity.noContent().build();

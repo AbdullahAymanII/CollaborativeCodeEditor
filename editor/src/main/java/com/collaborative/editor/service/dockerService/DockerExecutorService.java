@@ -1,20 +1,16 @@
 //package com.collaborative.editor.service.dockerService;
 //
-//
+//import com.collaborative.editor.model.mysql.file.CodeRequestDTO;
 //import jakarta.annotation.PostConstruct;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.beans.factory.annotation.Qualifier;
 //import org.springframework.stereotype.Service;
 //
 //import java.io.BufferedReader;
 //import java.io.InputStreamReader;
-//import java.util.Arrays;
 //import java.util.HashMap;
 //import java.util.Map;
 //
 //@Service
 //public class DockerExecutorService {
-//
 //
 //    private final Map<String, String> languageDockerMap = new HashMap<>();
 //
@@ -28,91 +24,80 @@
 //        languageDockerMap.put("ruby", "ruby:latest");
 //    }
 //
-//    public String executeCode(String language, String code) throws Exception {
-//        String dockerImage = languageDockerMap.get(language);
-//        System.out.println(dockerImage);
+//
+//    public String executeCode(CodeRequestDTO codeRequest) throws Exception {
+//        String dockerImage = languageDockerMap.get(codeRequest.getLanguage());
 //        if (dockerImage == null) {
-//            throw new IllegalArgumentException("Unsupported language: " + language);
+//            throw new IllegalArgumentException("Unsupported language: " + codeRequest.getLanguage());
 //        }
-//        System.out.println(dockerImage+"_________--------------------");
-//        // Prepare the code execution command in Docker
+//
+//
 //        String[] command = {
-//                "D:\\Docker\\resources\\bin\\docker.exe", "run", "--rm", dockerImage, "bash", "-c", prepareCommand(language, code)
+//                "docker", "run", "--rm", dockerImage, "bash", "-c", prepareCommand(codeRequest.getLanguage(), codeRequest.getCode())
 //        };
-//        System.out.println(Arrays.toString(command));
-//        // Use ProcessBuilder to execute the Docker command
+//
+//        System.out.println(command);
+//
 //        ProcessBuilder processBuilder = new ProcessBuilder(command);
 //        processBuilder.redirectErrorStream(true);
-//        System.out.println("processBuilder.redirectErrorStream(true);");
+//        System.out.println("=================================================");
 //
-//        try {
-//            System.out.println("====3333333333===========================================44=============");
-//            Process process = processBuilder.start();
-//            System.out.println("2323232432323323232");
-//        }catch (Exception e){
-//            System.out.println(e.getMessage());
-//            System.out.println(e);
-//        }
 //        Process process = processBuilder.start();
-//        System.out.println("Process process = processBuilder.start();");
-//        // Capture output and return it
+//        System.out.println("1000000000000000000000000000000000000000000000000000000000000000");
 //        BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
-//        System.out.println("=========================================================================");
+//
 //        StringBuilder output = new StringBuilder();
 //        String line;
-//
 //        while ((line = reader.readLine()) != null) {
 //            output.append(line).append("\n");
-//            System.out.println("=========================="+line);
 //        }
 //
 //        int exitCode = process.waitFor();
-//        System.out.println("2322222222222222222222222222222222222222222222222222222222222");
 //        if (exitCode != 0) {
-//            System.out.println("4399999999999999999999999999999999999999999999999999999999999999999999");
 //            throw new Exception("Error occurred during code execution. Exit code: " + exitCode);
 //        }
-//        System.out.println("sdaskdnj;alsdfhn;ldksahfaaaafafafafafafafafafafafafafafafafafafafafafafafafafafafafafafa");
+//
 //        return output.toString();
 //    }
 //
-//    // Prepare the Docker command based on language
 //    private String prepareCommand(String language, String code) {
 //        switch (language) {
 //            case "python":
-//                return String.format("\"%s\" | python3", code);
+//                return String.format("echo \"%s\" | python3", escapeCode(code));
 //            case "javascript":
-//                return String.format("echo \"%s\" | node", code);
+//                return String.format("echo \"%s\" | node", escapeCode(code));
 //            case "java":
 //                return prepareJavaCommand(code);
 //            case "cpp":
 //                return prepareCppCommand(code);
 //            case "go":
-//                return String.format("echo \"%s\" > main.go && go run main.go", code);
+//                return String.format("echo \"%s\" > main.go && go run main.go", escapeCode(code));
 //            case "ruby":
-//                return String.format("echo \"%s\" | ruby", code);
+//                return String.format("echo \"%s\" | ruby", escapeCode(code));
 //            default:
 //                throw new IllegalArgumentException("Unsupported language: " + language);
 //        }
 //    }
 //
 //    private String prepareJavaCommand(String code) {
-//        // For Java, we will need to handle the compilation and execution separately
 //        String javaFile = "Main.java";
-//        return String.format("echo \"%s\" > %s && javac %s && java Main", code, javaFile, javaFile);
+//        return String.format("echo \"%s\" > %s && javac %s && java Main", escapeCode(code), javaFile, javaFile);
 //    }
 //
 //    private String prepareCppCommand(String code) {
-//        // For C++, we will compile the code and run the executable
 //        String cppFile = "main.cpp";
-//        return String.format("echo \"%s\" > %s && g++ %s -o main && ./main", code, cppFile, cppFile);
+//        return String.format("echo \"%s\" > %s && g++ %s -o main && ./main", escapeCode(code), cppFile, cppFile);
+//    }
+//
+//    private String escapeCode(String code) {
+//        return code.replace("\"", "\\\"").replace("$", "\\$");
 //    }
 //}
 
 
-
 package com.collaborative.editor.service.dockerService;
 
+import com.collaborative.editor.model.mysql.file.CodeRequestDTO;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
@@ -125,7 +110,6 @@ import java.util.Map;
 @Service
 public class DockerExecutorService {
 
-    // Mapping languages to Docker images
     private final Map<String, String> languageDockerMap = new HashMap<>();
 
     @PostConstruct
@@ -138,77 +122,81 @@ public class DockerExecutorService {
         languageDockerMap.put("ruby", "ruby:latest");
     }
 
-    // Executes code inside Docker containers
-    public String executeCode(String language, String code) throws Exception {
-        String dockerImage = languageDockerMap.get(language);
+    public String executeCode(CodeRequestDTO codeRequest) throws Exception {
+        String dockerImage = languageDockerMap.get(codeRequest.getLanguage());
         if (dockerImage == null) {
-            throw new IllegalArgumentException("Unsupported language: " + language);
+            throw new IllegalArgumentException("Unsupported language: " + codeRequest.getLanguage());
         }
 
-        // Prepare the Docker command for code execution
         String[] command = {
-                "docker", "run", "--rm", dockerImage, "bash", "-c", prepareCommand(language, code)
+                "docker", "run", "--rm", dockerImage, "bash", "-c", prepareCommand(codeRequest.getLanguage(), codeRequest.getCode(), codeRequest.getInput())
         };
+        System.out.println(Arrays.toString(command));
+        System.out.println(codeRequest.getCode());
 
-        System.out.println(command);
-
-        // Use ProcessBuilder to execute the Docker command
         ProcessBuilder processBuilder = new ProcessBuilder(command);
         processBuilder.redirectErrorStream(true);
         System.out.println("=================================================");
-        // Start the process and capture the output
+
         Process process = processBuilder.start();
-        System.out.println("1000000000000000000000000000000000000000000000000000000000000000");
+        System.out.println("Executing...");
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
         StringBuilder output = new StringBuilder();
         String line;
         while ((line = reader.readLine()) != null) {
             output.append(line).append("\n");
+            System.out.println(line);
         }
+        System.out.println("Successfully executed");
 
         int exitCode = process.waitFor();
         if (exitCode != 0) {
-            throw new Exception("Error occurred during code execution. Exit code: " + exitCode);
+            output.append("Error: ").append(exitCode);
+            return output.toString();
+//            return "Error occurred during code execution. Exit code: " + exitCode;
+//            throw new Exception("Error occurred during code execution. Exit code: " + exitCode);
         }
-
+        System.out.println(output);
         return output.toString();
     }
 
-    // Prepare the Docker command based on language
-    private String prepareCommand(String language, String code) {
+    private String prepareCommand(String language, String code, String input) {
         switch (language) {
             case "python":
-                return String.format("echo \"%s\" | python3", escapeCode(code));
+                return String.format("echo \"%s\" | python3 -c \"%s\"", input, escapeCode(code));
             case "javascript":
-                return String.format("echo \"%s\" | node", escapeCode(code));
+                return String.format("echo \"%s\" | node", escapeCodeWithInput(code, input));
             case "java":
-                return prepareJavaCommand(code);
+                return prepareJavaCommand(code, input);
             case "cpp":
-                return prepareCppCommand(code);
+                return prepareCppCommand(code, input);
             case "go":
-                return String.format("echo \"%s\" > main.go && go run main.go", escapeCode(code));
+                return String.format("echo \"%s\" > main.go && echo \"%s\" | go run main.go", escapeCode(code), input);
             case "ruby":
-                return String.format("echo \"%s\" | ruby", escapeCode(code));
+                return String.format("echo \"%s\" | ruby", escapeCodeWithInput(code, input));
             default:
                 throw new IllegalArgumentException("Unsupported language: " + language);
         }
     }
 
-    private String prepareJavaCommand(String code) {
-        // For Java, we will need to handle the compilation and execution separately
+    private String prepareJavaCommand(String code, String input) {
         String javaFile = "Main.java";
-        return String.format("echo \"%s\" > %s && javac %s && java Main", escapeCode(code), javaFile, javaFile);
+        return String.format("echo \"%s\" > %s && javac %s && echo \"%s\" | java Main", escapeCode(code), javaFile, javaFile, input);
     }
 
-    private String prepareCppCommand(String code) {
-        // For C++, we will compile the code and run the executable
+    private String prepareCppCommand(String code, String input) {
         String cppFile = "main.cpp";
-        return String.format("echo \"%s\" > %s && g++ %s -o main && ./main", escapeCode(code), cppFile, cppFile);
+        return String.format("echo \"%s\" > %s && g++ %s -o main && echo \"%s\" | ./main", escapeCode(code), cppFile, cppFile, input);
     }
 
-    // Escapes special characters in code to avoid shell issues
+    private String escapeCodeWithInput(String code, String input) {
+        // Here we can just pass the code to the container and provide the input via stdin
+        return escapeCode(code);  // Input will be passed separately
+    }
+
     private String escapeCode(String code) {
         return code.replace("\"", "\\\"").replace("$", "\\$");
     }
 }
+

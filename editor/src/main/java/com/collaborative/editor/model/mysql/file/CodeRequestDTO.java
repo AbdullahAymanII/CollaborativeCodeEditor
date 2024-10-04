@@ -11,5 +11,6 @@ import lombok.*;
 public class CodeRequestDTO {
     private String language;
     private String code;
+    private String input;
 }
 

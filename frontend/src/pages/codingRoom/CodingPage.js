@@ -40,6 +40,7 @@ const CodingPage = () => {
         try {
             console.log(code);
             console.log(selectedLanguage);
+            console.log(input);
             const response = await fetch(`http://localhost:8080/api/execute/run`, {
                 method: 'POST',
                 headers: {
@@ -49,6 +50,7 @@ const CodingPage = () => {
                 body: JSON.stringify({
                     language: selectedLanguage,
                     code: code,
+                    input: input, // Pass the input field
                 }),
             });
             if (!response.ok) throw new Error('Failed to fetch file content');
