@@ -16,6 +16,7 @@ const CodingPage = () => {
     const [code, setCode] = useState('');
     const [output, setOutput] = useState('');
     const [input, setInput] = useState('');
+    const [selectedLanguage, setSelectedLanguage] = useState('python');
 
     const [currentFile, setCurrentFile] = useState({ filename: '', roomId: '', projectName:'', content: '' });
 
@@ -31,8 +32,33 @@ const CodingPage = () => {
 
     const toggleTheme = () => setDarkMode(!darkMode);
 
-    const runCode = () => {
-        setOutput(`Executing:\n${code}`);
+    // const runCode = () => {
+    //     setOutput(`Executing:\n${code}`);
+    // };
+
+    const runCode = async () => {
+        try {
+            console.log(code);
+            console.log(selectedLanguage);
+            const response = await fetch(`http://localhost:8080/api/execute/run`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+                body: JSON.stringify({
+                    language: selectedLanguage,
+                    code: code,
+                }),
+            });
+            if (!response.ok) throw new Error('Failed to fetch file content');
+            const data = await response.json();
+            console.log(data.output);
+            setOutput(`Executing:\n${data.output}`);
+            console.log(output);
+        } catch (error) {
+            // showError('The file does not have content currently...');
+        }
     };
 
     const handleSelectFileVersion = (selectedFile) => {
@@ -56,7 +82,18 @@ const CodingPage = () => {
 
                 {/* Main Content Area for Code Editor */}
                 <div className="coding-playground">
-                    <EditorPlayGround code={code} setCode={setCode} darkMode={darkMode} runCode={runCode} currentFile={currentFile} user={user} room={room} />
+                    <EditorPlayGround
+                                      code={code}
+                                      setCode={setCode}
+                                      darkMode={darkMode}
+                                      runCode={runCode}
+                                      currentFile={currentFile}
+                                      user={user}
+                                      room={room}
+                                      selectedLanguage={selectedLanguage}
+                                      setSelectedLanguage={setSelectedLanguage}
+                    />
+
                 </div>
 
                 {/* Chat Box on the Right */}

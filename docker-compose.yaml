@@ -15,7 +15,9 @@
 #    networks:
 #      - backend
 #    volumes:
-#      - .:/app
+#      - ./editor/src:/editor/src        # Mount source code for live reload
+#      - ./editor/target:/editor/target  # Mount target directory for output
+#      - ~/.m2:/root/.m2                 # Cache Maven dependencies
 #
 #  # Frontend Service
 #  frontend:
@@ -30,7 +32,7 @@
 #    networks:
 #      - backend
 #    volumes:
-#      - ./frontend:/app
+#      - ./frontend/src:/app/src                 # Mount frontend code for live reload
 #
 #  # MySQL Service
 #  mysql:
@@ -63,6 +65,15 @@
 #      - ./mongo_init:/docker-entrypoint-initdb.d
 #    networks:
 #      - backend
+#  # Python Executor Service (Added)
+#  python-executor:
+#    image: python:3.9
+#    container_name: collaborative-python-executor
+#    networks:
+#      - backend
+#    volumes:
+#      - ./code:/usr/src/app  # Mount a directory for the Python code
+#    entrypoint: [ "tail", "-f", "/dev/null" ]  # Keep the container running for execution
 #
 #  # Mongo Express UI Service
 #  mongo-express:
@@ -93,7 +104,7 @@
 #      PMA_USER: root
 #      PMA_PASSWORD: root
 #    ports:
-#      - "8082:80"  # Access it at http://localhost:8081
+#      - "8082:80"  # Access it at http://localhost:8082
 #    networks:
 #      - backend
 #    depends_on:
@@ -109,11 +120,8 @@
 #  mongo_data:
 #    driver: local
 #
-#
-#
 
 
-version: '3.8'
 
 services:
   # Backend Service
@@ -133,6 +141,7 @@ services:
       - ./editor/src:/editor/src        # Mount source code for live reload
       - ./editor/target:/editor/target  # Mount target directory for output
       - ~/.m2:/root/.m2                 # Cache Maven dependencies
+      - /var/run/docker.sock:/var/run/docker.sock  # Mount Docker socket for Docker-in-Docker access
 
   # Frontend Service
   frontend:
@@ -181,6 +190,16 @@ services:
     networks:
       - backend
 
+  # Python Executor Service
+  python-executor:
+    image: python:3.9
+    container_name: collaborative-python-executor
+    networks:
+      - backend
+    volumes:
+      - ./code:/usr/src/app  # Mount a directory for the Python code
+    entrypoint: [ "tail", "-f", "/dev/null" ]  # Keep the container running for execution
+
   # Mongo Express UI Service
   mongo-express:
     image: mongo-express
@@ -210,7 +229,7 @@ services:
       PMA_USER: root
       PMA_PASSWORD: root
     ports:
-      - "8082:80"  # Access it at http://localhost:8082
+      - "8082:80"
     networks:
       - backend
     depends_on:
@@ -225,144 +244,3 @@ volumes:
     driver: local
   mongo_data:
     driver: local
-
-
-
-
-
-
-
-
-
-
-
-
-
-# version: '3.8'
-
-# services:
-#  # Backend Service
-#  app:
-#    build:
-#      context: './editor'
-#      dockerfile: Dockerfile
-#    container_name: collaborative-editor
-#    ports:
-#      - "8080:8080"
-#    depends_on:
-#      - mysql
-#      - mongo
-#    networks:
-#      - backend
-#    volumes:
-#      - .:/app
-
-#  # Frontend Service
-#  frontend:
-#    build:
-#      context: './frontend'  # Assuming your frontend code is in the 'frontend' folder
-#      dockerfile: Dockerfile  # Dockerfile for the frontend service
-#    container_name: collaborative-frontend
-#    ports:
-#      - "3000:3000"
-#    depends_on:
-#      - app  # Frontend depends on backend service
-#    networks:
-#      - backend
-#    volumes:
-#      - ./frontend:/app  # Mount frontend folder to the container
-
-#  # MySQL Service
-#  mysql:
-#    image: mysql:8.0
-#    container_name: collaborative-mysql
-#    restart: always
-#    environment:
-#      MYSQL_DATABASE: mysql_db
-# #     MYSQL_USER: root
-# #     MYSQL_PASSWORD: root
-#      MYSQL_ROOT_PASSWORD: root
-#      MYSQL_ROOT_USER: root
-#    ports:
-#      - "3306:3306"
-#    volumes:
-#      - mysql_data:/var/lib/mysql
-#    networks:
-#      - backend
-
-#  # MongoDB Service
-#  mongo:
-#    image: mongo
-#    container_name: collaborative-mongo
-#    environment:
-#       MONGO_INITDB_ROOT_USERNAME: devroot
-#       MONGO_INITDB_ROOT_PASSWORD: devroot
-#       MONGO_INITDB_DATABASE: mongo_db
-#    ports:
-#      - "27017:27017"
-#    volumes:
-#      - ./mongo_data:/data/mongo_db
-#      - ./mongo_init:/docker-entrypoint-initdb.d
-#    networks:
-#      - backend
-
-#  # Mongo Express UI Service
-#  mongo-express:
-#    image: mongo-express
-#    environment:
-#      ME_CONFIG_MONGODB_SERVER: collaborative-mongo
-#      ME_CONFIG_MONGODB_PORT: 27017
-#      ME_CONFIG_MONGODB_ENABLE_ADMIN: true
-#      ME_CONFIG_MONGODB_AUTH_DATABASE: admin
-#      ME_CONFIG_MONGODB_AUTH_USERNAME: devroot
-#      ME_CONFIG_MONGODB_AUTH_PASSWORD: devroot
-#      ME_CONFIG_BASICAUTH_USERNAME: dev
-#      ME_CONFIG_BASICAUTH_PASSWORD: dev
-#    depends_on:
-#      - mongo
-#    ports:
-#      - "8888:8081"
-#    networks:
-#      - backend
-
-# networks:
-#  backend:
-#    driver: bridge
-
-# volumes:
-#  mysql_data:
-#    driver: local
-#  mongo_data:
-#    driver: local
-
-#  version: '3.8'
-#
-#  services:
-#    mongo:
-#      image: mongo
-#      environment:
-#        MONGO_INITDB_ROOT_USERNAME: devroot
-#        MONGO_INITDB_ROOT_PASSWORD: devroot
-#        MONGO_INITDB_DATABASE: mongo_db
-#      ports:
-#        - "27017:27017"
-#      volumes:
-#        - ./mongo_data:/data/mongo_db
-#        - ./mongo_init:/docker-entrypoint-init db.d
-#
-#    # Mongo Express UI
-#    mongo-express:
-#      image: mongo-express
-#      environment:
-#        ME_CONFIG_MONGODB_SERVER: mongo
-#        ME_CONFIG_MONGODB_PORT: 27017
-#        ME_CONFIG_MONGODB_ENABLE_ADMIN: true
-#        ME_CONFIG_MONGODB_AUTH_DATABASE: admin
-#        ME_CONFIG_MONGODB_AUTH_USERNAME: devroot
-#        ME_CONFIG_MONGODB_AUTH_PASSWORD: devroot
-#        ME_CONFIG_BASICAUTH_USERNAME: dev
-#        ME_CONFIG_BASICAUTH_PASSWORD: dev
-#      depends_on:
-#        - mongo
-#      ports:
-#        - "8888:8081"

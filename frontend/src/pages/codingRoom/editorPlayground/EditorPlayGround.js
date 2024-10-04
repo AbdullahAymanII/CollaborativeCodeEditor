@@ -7,9 +7,9 @@ import useWebSocketManager from './WebSocketManager';
 import useFileManager from './FileManager';
 import useEditorLogic from './EditorLogic';
 
-const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user, room }) => {
+const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user, room ,selectedLanguage,setSelectedLanguage}) => {
 
-    const [selectedLanguage, setSelectedLanguage] = useState('python');
+    // const [selectedLanguage, setSelectedLanguage] = useState('python');
     const [showConfirmPushModal, setShowConfirmPushModal] = useState(false);
     const [showConfirmMergeModal, setShowConfirmMergeModal] = useState(false);
 
