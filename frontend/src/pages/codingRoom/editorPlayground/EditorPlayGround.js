@@ -104,7 +104,7 @@
 //
 //
 
-//
+
 // import React, { useState } from 'react';
 // import { Editor } from '@monaco-editor/react';
 // import ActionModal from './ActionModal';
@@ -223,12 +223,12 @@ import useFileManager from './FileManager';
 import useEditorLogic from './EditorLogic';
 import CodeMetricsDisplay from './CodeMetricsDisplay';
 
-const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user, room, selectedLanguage, setSelectedLanguage, role }) => {
+const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user, room, selectedLanguage, setSelectedLanguage, role, setMessages }) => {
     const [showConfirmPushModal, setShowConfirmPushModal] = useState(false);
     const [showConfirmMergeModal, setShowConfirmMergeModal] = useState(false);
     const [showMetricsModal, setShowMetricsModal] = useState(false); // New state for metrics modal
 
-    const { publishCodeChange, isConnected } = useWebSocketManager(setCode, user, currentFile, role);
+    const { publishCodeChange ,isConnected } = useWebSocketManager(setCode, setMessages, user, currentFile, role);
     const { pushFileToServer, mergeFileFromServer, successMessage } = useFileManager(code, currentFile, room, setCode, setShowConfirmMergeModal, setShowConfirmPushModal);
     const { handleEditorChange, handleEditorDidMount, currentLine } = useEditorLogic(setCode, publishCodeChange, user, role);
 

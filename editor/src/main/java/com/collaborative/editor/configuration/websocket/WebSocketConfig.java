@@ -1,17 +1,18 @@
 package com.collaborative.editor.configuration.websocket;
-
-import org.springframework.context.annotation.Configuration;
-import org.springframework.messaging.simp.config.MessageBrokerRegistry;
-import org.springframework.web.socket.WebSocketHandler;
-import org.springframework.web.socket.config.annotation.*;
-
+//package com.collaborative.editor.configuration.websocket;
+//
+//import org.springframework.context.annotation.Configuration;
+//import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+//import org.springframework.web.socket.WebSocketHandler;
+//import org.springframework.web.socket.config.annotation.*;
+//
 //@Configuration
 //@EnableWebSocketMessageBroker
 //public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 //
 //    @Override
 //    public void configureMessageBroker(MessageBrokerRegistry config) {
-//        config.enableSimpleBroker("/topic");
+//        config.enableSimpleBroker("/topic/file"); // File-specific topics
 //        config.setApplicationDestinationPrefixes("/app");
 //    }
 //
@@ -22,13 +23,19 @@ import org.springframework.web.socket.config.annotation.*;
 //                .withSockJS();
 //    }
 //}
+import org.springframework.context.annotation.Configuration;
+import org.springframework.messaging.simp.config.MessageBrokerRegistry;
+import org.springframework.web.socket.config.annotation.EnableWebSocketMessageBroker;
+import org.springframework.web.socket.config.annotation.StompEndpointRegistry;
+import org.springframework.web.socket.config.annotation.WebSocketMessageBrokerConfigurer;
+
 @Configuration
 @EnableWebSocketMessageBroker
 public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry config) {
-        config.enableSimpleBroker("/topic/file"); // File-specific topics
+        config.enableSimpleBroker("/topic/file", "/topic/chat");
         config.setApplicationDestinationPrefixes("/app");
     }
 
