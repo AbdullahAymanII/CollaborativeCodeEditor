@@ -14,5 +14,5 @@ public class ChatMessageDTO {
     private Long roomId;
     private String projectName;
     private String content;
-
+    private Long timestamp;
 }

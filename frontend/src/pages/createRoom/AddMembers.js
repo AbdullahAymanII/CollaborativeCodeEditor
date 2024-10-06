@@ -1,40 +1,125 @@
-import React, {useState, useEffect} from 'react';
-import {useLocation, useNavigate} from 'react-router-dom';
-import './AddMembers.css';
+// import React, {useState, useEffect} from 'react';
+// import {useLocation, useNavigate} from 'react-router-dom';
+// import './AddMembers.css';
+//
+// const AddMembers = () => {
+//     const [newViewer, setNewViewer] = useState('');
+//     const [newCollaborator, setNewCollaborator] = useState('');
+//     const [loading, setLoading] = useState(false);
+//     const [errorMessage, setErrorMessage] = useState('');
+//     const [darkMode, setDarkMode] = useState(false);
+//
+//     const location = useLocation();
+//     const navigate = useNavigate();
+//
+//     const {user, room} = location.state || {};
+//
+//     useEffect(() => {
+//         if (darkMode) {
+//             document.body.classList.add('dark-mode');
+//         } else {
+//             document.body.classList.remove('dark-mode');
+//         }
+//     }, [darkMode]);
+//
+//     if (!room.roomId) {
+//         return (
+//             <div>
+//                 <p>Error: Room ID not found. Please navigate correctly.</p>
+//                 <button onClick={() => navigate('/home')}>Go to Home</button>
+//             </div>
+//         );
+//     }
+//
+//     const addMember = async (type, member) => {
+//         setLoading(true);
+//         setErrorMessage('');
+//
+//         try {
+//             const endpoint = type === 'viewer' ? 'add-viewer' : 'add-collaborator';
+//             const response = await fetch(`http://localhost:8080/api/rooms/${endpoint}`, {
+//                 method: 'POST',
+//                 headers: {
+//                     'Content-Type': 'application/json',
+//                     Authorization: `Bearer ${localStorage.getItem('token')}`
+//                 },
+//                 body: JSON.stringify({member, roomId: room.roomId}),
+//             });
+//
+//             if (!response.ok) {
+//                 throw new Error('Failed to add new member');
+//             }
+//
+//             type === 'viewer' ? setNewViewer('') : setNewCollaborator('');
+//         } catch (error) {
+//             setErrorMessage(error.message);
+//         } finally {
+//             setLoading(false);
+//         }
+//     };
+//
+//     const handleAddViewer = () => {
+//         addMember('viewer', newViewer);
+//     };
+//
+//     const handleAddCollaborator = () => {
+//         addMember('collaborator', newCollaborator);
+//     };
+//
+//     return (
+//         <div className="add-members-container">
+//             <button className="theme-toggle" onClick={() => setDarkMode(!darkMode)}>
+//                 Switch to {darkMode ? 'Light' : 'Dark'} Mode
+//             </button>
+//             <h2>Add Members to Room ID: {room.roomId}</h2>
+//             {errorMessage && <p className="error-message">{errorMessage}</p>}
+//             <div>
+//                 <input
+//                     type="text"
+//                     placeholder="Add new viewer"
+//                     value={newViewer}
+//                     onChange={(e) => setNewViewer(e.target.value)}
+//                 />
+//                 <button onClick={handleAddViewer} disabled={loading}>
+//                     {loading ? 'Adding...' : 'Add Viewer'}
+//                 </button>
+//             </div>
+//             <div>
+//                 <input
+//                     type="text"
+//                     placeholder="Add new collaborator"
+//                     value={newCollaborator}
+//                     onChange={(e) => setNewCollaborator(e.target.value)}
+//                 />
+//                 <button onClick={handleAddCollaborator} disabled={loading}>
+//                     {loading ? 'Adding...' : 'Add Collaborator'}
+//                 </button>
+//             </div>
+//             <button onClick={() => navigate('/home')} disabled={loading}>
+//                 {loading ? 'Finishing...' : 'Finish'}
+//             </button>
+//         </div>
+//     );
+// };
+//
+// export default AddMembers;
+
+import React, { useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import './CreateRoom.css';
 
 const AddMembers = () => {
     const [newViewer, setNewViewer] = useState('');
     const [newCollaborator, setNewCollaborator] = useState('');
     const [loading, setLoading] = useState(false);
     const [errorMessage, setErrorMessage] = useState('');
-    const [darkMode, setDarkMode] = useState(false);
-
-    const location = useLocation();
     const navigate = useNavigate();
-
-    const {user, room} = location.state || {};
-
-    useEffect(() => {
-        if (darkMode) {
-            document.body.classList.add('dark-mode');
-        } else {
-            document.body.classList.remove('dark-mode');
-        }
-    }, [darkMode]);
-
-    if (!room.roomId) {
-        return (
-            <div>
-                <p>Error: Room ID not found. Please navigate correctly.</p>
-                <button onClick={() => navigate('/home')}>Go to Home</button>
-            </div>
-        );
-    }
+    const location = useLocation();
+    const { room } = location.state || {};
 
     const addMember = async (type, member) => {
         setLoading(true);
         setErrorMessage('');
-
         try {
             const endpoint = type === 'viewer' ? 'add-viewer' : 'add-collaborator';
             const response = await fetch(`http://localhost:8080/api/rooms/${endpoint}`, {
@@ -43,7 +128,7 @@ const AddMembers = () => {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 },
-                body: JSON.stringify({member, roomId: room.roomId}),
+                body: JSON.stringify({ member, roomId: room.roomId }),
             });
 
             if (!response.ok) {
@@ -58,51 +143,42 @@ const AddMembers = () => {
         }
     };
 
-    const handleAddViewer = () => {
-        addMember('viewer', newViewer);
-    };
-
-    const handleAddCollaborator = () => {
-        addMember('collaborator', newCollaborator);
-    };
+    const handleAddViewer = () => addMember('viewer', newViewer);
+    const handleAddCollaborator = () => addMember('collaborator', newCollaborator);
 
     return (
-        <div className="add-members-container">
-            <button className="theme-toggle" onClick={() => setDarkMode(!darkMode)}>
-                Switch to {darkMode ? 'Light' : 'Dark'} Mode
-            </button>
-            <h2>Add Members to Room ID: {room.roomId}</h2>
-            {errorMessage && <p className="error-message">{errorMessage}</p>}
-            <div>
+        <div className="container" id="container">
+            <div className="form-container add-members">
+                <h1>Add Members to {room.roomName}</h1>
+                {errorMessage && <div className="error-message">{errorMessage}</div>}
                 <input
                     type="text"
                     placeholder="Add new viewer"
                     value={newViewer}
                     onChange={(e) => setNewViewer(e.target.value)}
+                    disabled={loading}
                 />
-                <button onClick={handleAddViewer} disabled={loading}>
+                <button onClick={handleAddViewer} disabled={loading || !newViewer}>
                     {loading ? 'Adding...' : 'Add Viewer'}
                 </button>
-            </div>
-            <div>
                 <input
                     type="text"
                     placeholder="Add new collaborator"
                     value={newCollaborator}
                     onChange={(e) => setNewCollaborator(e.target.value)}
+                    disabled={loading}
                 />
-                <button onClick={handleAddCollaborator} disabled={loading}>
+                <button onClick={handleAddCollaborator} disabled={loading || !newCollaborator}>
                     {loading ? 'Adding...' : 'Add Collaborator'}
                 </button>
+                <button onClick={() => navigate('/home')} disabled={loading}>
+                    {loading ? 'Finishing...' : 'Finish'}
+                </button>
             </div>
-            <button onClick={() => navigate('/home')} disabled={loading}>
-                {loading ? 'Finishing...' : 'Finish'}
-            </button>
         </div>
     );
 };
 
 export default AddMembers;
-
 
 

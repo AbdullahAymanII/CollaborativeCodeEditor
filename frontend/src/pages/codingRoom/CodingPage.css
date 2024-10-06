@@ -1557,3 +1557,8 @@ body {
 .send-button:hover {
     background-color: #0056b3;
 }
+.timestamp {
+    font-size: 12px;
+    color: red; /* Now red for visibility */
+    margin-top: 4px;
+}

@@ -99,51 +99,146 @@
 /*    --border-color: #555;*/
 /*}*/
 /* CreateRoom.css */
-.create-room-container {
-    background-color: #f4f4f4;
-    color: #333;
-    min-height: 100vh;
+
+
+/*.create-room-container {*/
+/*    background-color: #f4f4f4;*/
+/*    color: #333;*/
+/*    min-height: 100vh;*/
+/*    display: flex;*/
+/*    flex-direction: column;*/
+/*    align-items: center;*/
+/*}*/
+
+/*.create-room-form {*/
+/*    background-color: #fff;*/
+/*    padding: 30px;*/
+/*    border-radius: 10px;*/
+/*    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);*/
+/*    width: 400px;*/
+/*    margin-top: 50px;*/
+/*}*/
+
+/*h2 {*/
+/*    font-size: 2rem;*/
+/*    margin-bottom: 20px;*/
+/*}*/
+
+/*.input-group {*/
+/*    margin-bottom: 15px;*/
+/*}*/
+
+/*input[type="text"] {*/
+/*    width: 100%;*/
+/*    padding: 10px;*/
+/*    border: 1px solid #ccc;*/
+/*    border-radius: 5px;*/
+/*    font-size: 1rem;*/
+/*}*/
+
+/*.create-room-button {*/
+/*    background-color: #333;*/
+/*    color: #fff;*/
+/*    padding: 10px 20px;*/
+/*    border: none;*/
+/*    cursor: pointer;*/
+/*    border-radius: 5px;*/
+/*    transition: background-color 0.3s ease;*/
+/*}*/
+
+/*.create-room-button:hover {*/
+/*    background-color: #555;*/
+/*}*/
+
+.form-wrapper {
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-.create-room-form {
-    background-color: #fff;
-    padding: 30px;
-    border-radius: 10px;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    width: 400px;
-    margin-top: 50px;
-}
-
-h2 {
-    font-size: 2rem;
-    margin-bottom: 20px;
-}
-
-.input-group {
-    margin-bottom: 15px;
-}
-
-input[type="text"] {
     width: 100%;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+}
+
+.error-message {
+    color: red;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+}
+
+.form-animation {
+    background: rgb(255 255 255 / 0%);
+    padding: 30px;
+    border-radius: 28px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    width: 388px;
+    text-align: center;
+    transition: all 0.3s ease;
+}
+
+.form-room-header {
+    margin-bottom: 26px;
+    font-size: 1.8rem;
+    color: #bdbdbd;
+}
+
+.form-input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 5px;
+    margin-top: 15px;
+    border: 5px solid #ffffff0f;
+    border-radius: 69px;
     font-size: 1rem;
+    transition: border-color 0.3s;
+    color: #ffffff;
+    background: center;
+}
+.form-input:focus {
+    border-color: #0e0e0e;
+    outline: none;
 }
 
-.create-room-button {
-    background-color: #333;
-    color: #fff;
-    padding: 10px 20px;
+.form-action-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #4e4e4e;
+    color: white;
     border: none;
+    border-radius: 8px;
+    font-size: 1rem;
     cursor: pointer;
-    border-radius: 5px;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s;
 }
 
-.create-room-button:hover {
-    background-color: #555;
+.form-action-button:hover {
+    background-color: #4c504c;
+}
+
+.finish-button {
+    background-color: #636363;
+}
+
+.finish-button:hover {
+    background-color: #7a7a7a;
+}
+
+.member-forms {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-action-button {
+    width: 100%;
+    padding: 12px;
+    background-color: #00000000;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    margin-bottom: 10px; /* Add margin to the button */
+}
+
+.finish-button {
+    background-color: #636363;
+    margin-top: 10px; /* Optional: Add margin-top for more separation from previous button */
 }

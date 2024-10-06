@@ -22,8 +22,27 @@ public class EditorController {
     @MessageMapping("/chat/{roomId}")
     @SendTo("/topic/chat/{roomId}")
     public ChatMessageDTO handleChatMessage(@DestinationVariable("roomId") String roomId, @Payload ChatMessageDTO chatMessageDTO) {
-        System.out.println("New chat message in room " + roomId + " from " + chatMessageDTO.getSender() + ": " + chatMessageDTO.getContent());
+        chatMessageDTO.setTimestamp(System.currentTimeMillis());
+        System.out.println("@MessageMapping(\"/chat/{roomId}\")");
+        System.out.println(chatMessageDTO);
+        return chatMessageDTO;
+    }
+
+    @MessageMapping("/user/join/{roomId}")
+    @SendTo("/topic/chat/{roomId}")
+    public ChatMessageDTO handleUserJoin(@DestinationVariable("roomId") String roomId, @Payload ChatMessageDTO chatMessageDTO) {
+        chatMessageDTO.setContent(" has joined the room.");
+        chatMessageDTO.setTimestamp(System.currentTimeMillis());
+        return chatMessageDTO;
+    }
+
+    @MessageMapping("/user/leave/{roomId}")
+    @SendTo("/topic/chat/{roomId}")
+    public ChatMessageDTO handleUserLeave(@DestinationVariable("roomId") String roomId, @Payload ChatMessageDTO chatMessageDTO) {
+        chatMessageDTO.setContent(" has left the room.");
+        chatMessageDTO.setTimestamp(System.currentTimeMillis());
         return chatMessageDTO;
     }
 }
+
 
