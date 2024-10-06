@@ -64,7 +64,8 @@ function App() {
                         {/*<Route path="/create-project" element={<CreateProject user={user} room={room} projec={project}/>} />*/}
                         <Route path="/add-members" element={<AddMembers user={user} room={room} projec={project}/>} />
                         <Route path="/join-room" element={<JoinRoom />} />
-                        <Route path="/join-room/:roomId" element={<CodingPage />} /> {/* New dynamic route for CodingRoom */}
+                        <Route path="/join-room/:roomId/:roleClick" element={<CodingPage />} /> {/* New dynamic route for CodingRoom */}
+                        {/*<Route path="/join-room/:roomId/VIEWER" element={<ViewerPage />} /> /!* New dynamic route for CodingRoom *!/*/}
                         <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
                         <Route path="*" element={<NotFound />} />
                     </Routes>

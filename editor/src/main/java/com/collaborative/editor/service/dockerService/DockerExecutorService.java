@@ -1,6 +1,6 @@
 //package com.collaborative.editor.service.dockerService;
 //
-//import com.collaborative.editor.model.mysql.file.CodeRequestDTO;
+//import com.collaborative.editor.model.mysql.code.CodeRequestDTO;
 //import jakarta.annotation.PostConstruct;
 //import org.springframework.stereotype.Service;
 //
@@ -97,7 +97,7 @@
 
 package com.collaborative.editor.service.dockerService;
 
-import com.collaborative.editor.model.mysql.file.CodeRequestDTO;
+import com.collaborative.editor.model.mysql.code.CodeRequestDTO;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 

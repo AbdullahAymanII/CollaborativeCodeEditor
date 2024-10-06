@@ -40,6 +40,11 @@
 
 package com.collaborative.editor.controller.user;
 
+import com.collaborative.editor.configuration.jwt.JwtUtil;
+import com.collaborative.editor.model.mysql.user.User;
+import com.collaborative.editor.service.userService.UserServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -56,6 +61,15 @@ import java.util.Map;
 @RequestMapping("/api/user")
 public class UserController {
 
+    private final UserServiceImpl userService;
+
+    @Autowired
+    private JwtUtil jwtUtil;
+
+    public UserController(@Qualifier("UserServiceImpl") UserServiceImpl userService) {
+        this.userService = userService;
+    }
+
     @GetMapping("/info")
     public Map<String, Object> getUserInfo() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -63,12 +77,10 @@ public class UserController {
         if (authentication == null || authentication.getPrincipal() == null) {
             throw new IllegalArgumentException("No authentication found or invalid principal");
         }
-
-        Object principal = authentication.getPrincipal();
-        String username = extractUsername(principal);
+        User user = userService.getUser(authentication);
+        String username = user.getEmail();
         String profileImage = "https://i.pinimg.com/originals/c6/29/0c/c6290cbd497e76e536931568aefd8b60.png"; // Replace with actual URL
 
-        // Creating a response map to hold user data
         Map<String, Object> response = new HashMap<>();
         response.put("username", username);
         response.put("profileImage", profileImage);
@@ -76,15 +88,4 @@ public class UserController {
         return response;
     }
 
-    private String extractUsername(Object principal) {
-        if (principal instanceof UserDetails userDetails) {
-            return userDetails.getUsername();
-        } else if (principal instanceof DefaultOidcUser oidcUser) {
-            return oidcUser.getEmail();
-        } else if (principal instanceof OAuth2User oauth2User) {
-            return oauth2User.getAttribute("login");
-        } else {
-            throw new IllegalArgumentException("Unsupported authentication principal type");
-        }
-    }
 }

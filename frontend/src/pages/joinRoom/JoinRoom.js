@@ -8,6 +8,7 @@ const JoinRoom = () => {
     const [collaboratorRooms, setCollaboratorRooms] = useState([]);
     const navigate = useNavigate();
     const location = useLocation();
+    const [role, setRole] = useState('');
     // const { userName, profileImage } = location.state; // Retrieve userEmail from state
     const { user } = location.state; // Retrieve userEmail from state
 
@@ -38,7 +39,7 @@ const JoinRoom = () => {
 
     const toggleTheme = () => setDarkMode(!darkMode);
 
-    const handleRoomClick = (room) => {
+    const handleRoomClick = (room,roleClick) => {
         fetch(`http://localhost:8080/api/rooms/join-room/${room.roomId}`, {
             method: 'POST',
             headers: {
@@ -49,10 +50,15 @@ const JoinRoom = () => {
         })
             .then((response) => {
                 if (response.ok) {
-                    navigate(`/join-room/${room.roomId}`, {
-                        // state: { userName, profileImage, roomId },
-                        state: { user, room },
+
+                    setRole(roleClick);
+
+                    console.log(role);
+
+                    navigate(`/join-room/${room.roomId}/${roleClick}`, {
+                        state: { user, room, role:roleClick },
                     });
+
                 } else {
                     console.error('Failed to join room');
                 }
@@ -82,7 +88,7 @@ const JoinRoom = () => {
                         <p>No rooms available as a viewer</p>
                     ) : (
                         viewerRooms.map((room) => (
-                            <div key={room.roomId} className="room-card" onClick={() => handleRoomClick(room)}>
+                            <div key={room.roomId} className="room-card" onClick={() => handleRoomClick(room,"VIEWER")}>
                                 <p>Room Name : {room.name}</p>
                                 <p>Room Id: {room.roomId}</p>
                             </div>
@@ -96,7 +102,7 @@ const JoinRoom = () => {
                         <p>No rooms available as a collaborator</p>
                     ) : (
                         collaboratorRooms.map((room) => (
-                            <div key={room.roomId} className="room-card" onClick={() => handleRoomClick(room)}>
+                            <div key={room.roomId} className="room-card" onClick={() => handleRoomClick(room,"COLLABORATOR")}>
                                 <p>Room Name : {room.name}</p>
                                 <p>Room Id: {room.roomId}</p>
                             </div>

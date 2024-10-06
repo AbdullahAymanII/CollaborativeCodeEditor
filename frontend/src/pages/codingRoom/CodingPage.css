@@ -1364,3 +1364,150 @@ body {
     background-color: rgba(255, 0, 0, 0.1); /* Light red background for locked lines */
     border-left: 3px solid red; /* Red marker to indicate a line is locked */
 }
+
+.view-details-btn {
+    background-color: var(--primary-color);  /* Use theme primary color */
+    color: #fff;  /* White text */
+    border: none;
+    padding: 10px 20px;  /* Standard padding */
+    border-radius: 5px;  /* Rounded corners */
+    cursor: pointer;  /* Pointer on hover */
+    font-size: 1rem;  /* Standard font size */
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);  /* Soft shadow */
+    transition: background-color 0.3s ease, transform 0.2s;  /* Smooth transitions */
+}
+
+.view-details-btn:hover {
+    background-color: var(--primary-color-light);  /* Lighter primary color on hover */
+    transform: translateY(-3px);  /* Slight lift on hover */
+}
+
+.view-details-btn:active {
+    background-color: var(--primary-color-dark);  /* Darker shade when clicked */
+    transform: translateY(1px);  /* Push-down effect on click */
+}
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.7);  /* Dark transparent background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;  /* Ensure it appears on top */
+}
+
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);  /* Modal shadow */
+    text-align: center;
+}
+
+.modal-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: transparent;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #999;  /* Lighter color for close button */
+    transition: color 0.3s;
+}
+
+.modal-close:hover {
+    color: #333;  /* Darker color on hover */
+}
+/* Code Metrics Container */
+.code-metrics-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+/* Modal Styles */
+.modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #ffffff;
+    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.25);
+    border-radius: 10px;
+    padding: 20px;
+    width: 400px;
+    z-index: 1000;
+    transition: all 0.3s ease-in-out;
+}
+
+/* Modal Header */
+.modal h3 {
+    font-size: 24px;
+    font-weight: 600;
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+    border-bottom: 2px solid #f0f0f0;
+    padding-bottom: 10px;
+}
+
+/* Metrics List Styles */
+.metrics-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0 0 20px 0;
+}
+
+.metrics-list li {
+    font-size: 18px;
+    padding: 10px;
+    background-color: #f7f7f7;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    color: #555;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.metrics-list li span {
+    font-weight: 600;
+    color: #000;
+}
+
+/* Close Button Styles */
+.close-btn {
+    display: block;
+    background-color: #ff6b6b;
+    color: #fff;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 600;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin: 0 auto;
+    transition: background-color 0.3s ease;
+    text-align: center;
+}
+
+.close-btn:hover {
+    background-color: #ff4040;
+}
+
+/* Backdrop */
+.modal-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 999;
+}

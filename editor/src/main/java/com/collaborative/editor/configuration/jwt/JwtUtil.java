@@ -1,5 +1,6 @@
 package com.collaborative.editor.configuration.jwt;
 
+import com.collaborative.editor.model.mysql.user.User;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -78,9 +79,7 @@ public class JwtUtil {
 
     public Authentication getAuthentication(String token) {
         String username = getUsernameFromToken(token);
-        System.out.println(username);
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-        System.out.println(userDetails.getUsername());
         return new UsernamePasswordAuthenticationToken(userDetails, null, userDetails.getAuthorities());
     }
 }

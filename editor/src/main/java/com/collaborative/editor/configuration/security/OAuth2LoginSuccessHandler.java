@@ -44,7 +44,6 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         }
 
         String jwtToken = generateJwtToken(authentication);
-//        response.sendRedirect("http://collaborative-frontend:3000/oauth2/redirect?token=" + jwtToken);
          response.sendRedirect("http://localhost:3000/oauth2/redirect?token=" + jwtToken);
     }
 
@@ -61,7 +60,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
     private void handleGitHubLogin(OAuth2User principal) {
         String username = principal.getAttribute("login");
         String email = principal.getAttribute("email");
-        System.out.println("gitHubbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"+username+ "       "+ email);
+
         if (email == null) {
             email = username;
         }

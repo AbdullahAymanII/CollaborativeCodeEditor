@@ -22,7 +22,7 @@ const CodingPage = () => {
 
     const navigate = useNavigate();
     const location = useLocation();
-    const { user, room } = location.state
+    const { user, room, role } = location.state
 
     useEffect(() => {
         if (!location.state) {
@@ -94,6 +94,7 @@ const CodingPage = () => {
                                       room={room}
                                       selectedLanguage={selectedLanguage}
                                       setSelectedLanguage={setSelectedLanguage}
+                                      role={role}
                     />
 
                 </div>

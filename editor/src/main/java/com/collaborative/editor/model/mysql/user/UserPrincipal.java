@@ -10,7 +10,7 @@ import java.util.Collections;
 
 public class UserPrincipal implements UserDetails {
 
-    private User user;
+    private final User user;
 
     public UserPrincipal(User user) {
         this.user = user;
@@ -22,7 +22,6 @@ public class UserPrincipal implements UserDetails {
 
 
     }
-
     @Override
     public String getPassword() {
         return user.getPassword();
@@ -33,23 +32,4 @@ public class UserPrincipal implements UserDetails {
         return user.getEmail();
     }
 
-    @Override
-    public boolean isAccountNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isAccountNonLocked() {
-        return true;
-    }
-
-    @Override
-    public boolean isCredentialsNonExpired() {
-        return true;
-    }
-
-    @Override
-    public boolean isEnabled() {
-        return true;
-    }
 }

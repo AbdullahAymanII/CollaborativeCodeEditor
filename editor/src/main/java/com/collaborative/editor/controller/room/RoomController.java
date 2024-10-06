@@ -109,7 +109,8 @@ public class RoomController {
     public ResponseEntity<Map<String, List<RoomDTO>>> joinRoom(@RequestParam("userName") String userName) {
         try {
 
-            User user = userService.findUserByUsername(userName);
+//            User user = userService.findUserByUsername(userName);
+            User user = userService.findUserByEmail(userName).get();
 
             List<RoomDTO> collaborativeRooms = roomService.findByCollaborativeUserName(user);
             List<RoomDTO> viewRooms = roomService.findByViewerUserName(user);

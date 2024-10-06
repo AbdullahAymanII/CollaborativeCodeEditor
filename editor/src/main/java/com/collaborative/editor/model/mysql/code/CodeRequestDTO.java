@@ -1,4 +1,4 @@
-package com.collaborative.editor.model.mysql.file;
+package com.collaborative.editor.model.mysql.code;
 
 
 import lombok.*;

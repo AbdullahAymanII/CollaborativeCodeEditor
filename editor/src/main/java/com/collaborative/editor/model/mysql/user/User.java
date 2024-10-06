@@ -41,15 +41,6 @@ public class User {
     @Enumerated(EnumType.STRING)
     private RegistrationSource source;
 
-//    // Relationship with rooms as collaborator
-//    @ManyToMany(mappedBy = "collaborators")
-//    private Set<Room> collaboratingRooms = new HashSet<>();
-//
-//    // Relationship with rooms as viewer
-//    @ManyToMany(mappedBy = "viewers")
-//    private Set<Room> viewingRooms = new HashSet<>();
-//
-    // Relationship with rooms as owner (OneToMany relationship since a user can own multiple rooms)
     @OneToMany(mappedBy = "owner")
     private Set<Room> ownedRooms = new HashSet<>();
 

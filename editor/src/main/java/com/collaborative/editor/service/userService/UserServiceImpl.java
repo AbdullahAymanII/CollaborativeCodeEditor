@@ -60,6 +60,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUser(Authentication authentication) throws UsernameNotFoundException {
+        String email = jwtUtil.getEmail(authentication);
+        Optional<User> user = userRepository.findOneByEmail(email);
+        if (user.isEmpty()) {
+            throw new UsernameNotFoundException("User not found with email: " + email);
+        }
+        return user.get();
+    }
+
+    @Override
     public Optional<User> findUserByEmail(String email) {
         return userRepository.findOneByEmail(email);
     }

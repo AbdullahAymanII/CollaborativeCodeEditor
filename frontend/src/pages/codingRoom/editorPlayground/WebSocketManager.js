@@ -1,7 +1,7 @@
 import SockJS from 'sockjs-client';
 import { Client } from '@stomp/stompjs';
 import { useState, useEffect, useRef, useCallback } from 'react';
-const useWebSocketManager = (setCode, user, currentFile) => {
+const useWebSocketManager = (setCode, user, currentFile, role) => {
     const [isConnected, setIsConnected] = useState(false);
     const [initializedCode, setInitializedCode] = useState(false);
     const wsRef = useRef(null);
@@ -14,6 +14,7 @@ const useWebSocketManager = (setCode, user, currentFile) => {
             reconnectDelay: 5000,
             onConnect: () => {
                 console.log('Connected to WebSocket server');
+                console.log(role);
                 setIsConnected(true);
 
                 stompClient.subscribe(`/topic/file/updates`, (message) => {
@@ -27,6 +28,7 @@ const useWebSocketManager = (setCode, user, currentFile) => {
                         setCode(data.code);
                     }
                 });
+
             },
             onStompError: console.error,
             onDisconnect: () => console.log('Disconnected from WebSocket server'),
@@ -55,6 +57,7 @@ const useWebSocketManager = (setCode, user, currentFile) => {
             });
         }
     };
+
     useEffect(() => {
         if (currentFile.filename) {
             wsRef.current = createWebSocketConnection();

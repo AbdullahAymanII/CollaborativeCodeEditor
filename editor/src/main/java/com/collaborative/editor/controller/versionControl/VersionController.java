@@ -30,7 +30,6 @@ public class VersionController {
 
         List<FileDTO> files = fileService.getFiles(new ProjectDTO(projectName, Long.parseLong(roomId)));
 
-        System.out.println(files+" dddddddddddddddddddddddddddddddddddddddddddddddddddddddddd");
         if (files.isEmpty())
             return ResponseEntity.notFound().build();
         else
