@@ -19,14 +19,67 @@
     --tran-03: all 0.3s ease;
     --tran-04: all 0.3s ease;
     --tran-05: all 0.3s ease;
+
+    /* ===== Light Mode Colors ===== */
+    --body-color-light: #e4e9f7;
+    --sidebar-color-light: #ffffff;
+    --primary-color-light: #787878;
+    --text-color-light: #333333;
+    --header-footer-color-light: #ffffff;
+    --border-color-light: #dddddd;
+    --input-output-bg-light: #f0f0f0;
+
+    /* ===== Dark Mode Colors ===== */
+    --body-color-dark: #121212;
+    --sidebar-color-dark: #2e2e2e;
+    --primary-color-dark: #3a3b3c;
+    --text-color-dark: #f4f4f4;
+    --header-footer-color-dark: #1a1a1a;
+    --border-color-dark: #444444;
+    --input-output-bg-dark: #2a2a2a;
+
+    /* ====== Shared Colors ====== */
+    --primary-color: #007bff;
+    --tran-05: all 0.3s ease;
 }
 
-
-
-body {
+.coding-room-container {
     font-family: "Poppins", sans-serif;
     transition: var(--tran-05);
+    background: linear-gradient(to left, #122939, #000000);
+    display: flex;
+    align-items: stretch;
+    justify-content: flex-start;
+    flex-direction: column;
+    height: 100vh;
 }
+
+body.light-mode {
+    --body-color: var(--body-color-light);
+    --sidebar-color: var(--sidebar-color-light);
+    --primary-color: var(--primary-color-light);
+    --text-color: var(--text-color-light);
+    --header-footer-color: var(--header-footer-color-light);
+    --border-color: var(--border-color-light);
+    --input-output-bg: var(--input-output-bg-light);
+}
+
+body.dark-mode {
+    --body-color: var(--body-color-dark);
+    --sidebar-color: var(--sidebar-color-dark);
+    --primary-color: var(--primary-color-dark);
+    --text-color: var(--text-color-dark);
+    --header-footer-color: var(--header-footer-color-dark);
+    --border-color: var(--border-color-dark);
+    --input-output-bg: var(--input-output-bg-dark);
+}
+
+::selection {
+    background-color: var(--primary-color);
+    color: #ffffff;
+}
+
+
 body.light-mode, body.dark-mode {
     background-color: var(--body-color);
 }
@@ -119,12 +172,12 @@ body.dark {
 }
 
 /* Header */
-.coding-room-header {
+.rooms-header {
     padding: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    transition: background-color 0.3s ease;
+    width: 100%;
 }
 
 .user-info {
@@ -133,32 +186,35 @@ body.dark {
 }
 
 .user-image {
-    width: 45px;
-    height: 45px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     margin-right: 10px;
-    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
 .user-name {
-    font-size: 1.3rem;
-    font-weight: bold;
+    font-size: 1.2rem;
+    color: #6a6a6a;
 }
 
-.theme-toggle-btn {
+.header-buttons {
+    display: flex;
+    gap: 10px;
+}
+
+.theme-toggle-btn, .logout-btn {
     padding: 10px 20px;
-    background-color: #dddddd;
-    color: #333;
     border: none;
-    border-radius: 8px;
+    background-color: #a30000;
+    color: #fff;
     cursor: pointer;
+    border-radius: 5px;
     transition: background-color 0.3s ease;
 }
 
-.theme-toggle-btn:hover {
-    background-color: #b0b0b0;
+.theme-toggle-btn:hover, .logout-btn:hover {
+    background-color: #555;
 }
-
 /* Main Content */
 .coding-room-content {
     display: flex;
@@ -344,22 +400,13 @@ body.dark {
     --header-footer-color: #fff;
 }
 
-/*.dark-mode {*/
-/*    --background-color: #121212;*/
-/*    --text-color: #f4f4f4;*/
-/*    --sidebar-color: #2e2e2e;*/
-/*    --header-footer-color: #1a1a1a;*/
-/*}*/
-
 /* Styles for the header */
 .header {
-    width: 100%;
-    padding: 15px;
-    background-color: var(--header-footer-color);
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
 }
 
 .header .profile {
@@ -368,16 +415,17 @@ body.dark {
 }
 
 .header img {
-    width: 40px;
-    height: 40px;
+    width: 50px;
+    height: 50px;
     border-radius: 50%;
     margin-right: 10px;
 }
 
 .header .username {
-    font-size: 18px;
-    color: var(--text-color);
+    font-size: 1.2rem;
+    color: #6a6a6a;
 }
+
 
 .toggle-theme-btn {
     cursor: pointer;
@@ -405,14 +453,6 @@ body.dark {
     overflow-y: auto;
 }
 
-/* Main content for code editor and chat */
-/*.main-content {*/
-/*    width: 50%; !* Main content width *!*/
-/*    padding: 20px;*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    transition: background-color 0.3s ease;*/
-/*}*/
 
 /* Chat component styling */
 .chat-component {
@@ -442,15 +482,6 @@ body.dark {
     transition: background-color 0.3s ease;
 }
 
-/* Footer styles */
-.footer {
-    width: 100%;
-    padding: 15px;
-    background-color: var(--header-footer-color);
-    box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    color: var(--text-color);
-}
 
 /* Responsive design for smaller screens */
 @media (max-width: 768px) {
@@ -1052,102 +1083,8 @@ h2, h3 {
 
 
 
-:root {
-    /* ===== Light Mode Colors ===== */
-    --body-color-light: #e4e9f7;
-    --sidebar-color-light: #ffffff;
-    --primary-color-light: #787878;
-    --text-color-light: #333333;
-    --header-footer-color-light: #ffffff;
-    --border-color-light: #dddddd;
-    --input-output-bg-light: #f0f0f0;
 
-    /* ===== Dark Mode Colors ===== */
-    --body-color-dark: #121212;
-    --sidebar-color-dark: #2e2e2e;
-    --primary-color-dark: #3a3b3c;
-    --text-color-dark: #f4f4f4;
-    --header-footer-color-dark: #1a1a1a;
-    --border-color-dark: #444444;
-    --input-output-bg-dark: #2a2a2a;
 
-    /* ====== Shared Colors ====== */
-    --primary-color: #007bff;
-    --tran-05: all 0.3s ease;
-}
-
-body {
-    font-family: "Poppins", sans-serif;
-    transition: var(--tran-05);
-}
-
-body.light-mode {
-    --body-color: var(--body-color-light);
-    --sidebar-color: var(--sidebar-color-light);
-    --primary-color: var(--primary-color-light);
-    --text-color: var(--text-color-light);
-    --header-footer-color: var(--header-footer-color-light);
-    --border-color: var(--border-color-light);
-    --input-output-bg: var(--input-output-bg-light);
-}
-
-body.dark-mode {
-    --body-color: var(--body-color-dark);
-    --sidebar-color: var(--sidebar-color-dark);
-    --primary-color: var(--primary-color-dark);
-    --text-color: var(--text-color-dark);
-    --header-footer-color: var(--header-footer-color-dark);
-    --border-color: var(--border-color-dark);
-    --input-output-bg: var(--input-output-bg-dark);
-}
-
-/* General Body Styling */
-body {
-    background-color: var(--body-color);
-    color: var(--text-color);
-    transition: var(--tran-05);
-}
-
-::selection {
-    background-color: var(--primary-color);
-    color: #ffffff;
-}
-
-/* Header */
-.header {
-    width: 100%;
-    padding: 15px;
-    background-color: var(--header-footer-color);
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.header .profile {
-    display: flex;
-    align-items: center;
-}
-
-.header img {
-    width: 40px;
-    height: 40px;
-    border-radius: 50%;
-    margin-right: 10px;
-}
-
-.header .username {
-    font-size: 18px;
-    color: var(--text-color);
-}
-
-.toggle-theme-btn {
-    cursor: pointer;
-    background-color: transparent;
-    border: none;
-    color: var(--text-color);
-    font-size: 16px;
-}
 
 /* Main Content Wrapper */
 .main-content-wrapper {
@@ -1246,44 +1183,6 @@ body {
 }
 
 
-/* Footer */
-.footer {
-    width: 100%;
-    padding: 15px;
-    background-color: var(--header-footer-color);
-    box-shadow: 0px -4px 10px rgba(0, 0, 0, 0.1);
-    text-align: center;
-    color: var(--text-color);
-}
-
-/* Version Control */
-/*.version-control {*/
-/*    width: 100%;*/
-/*    padding: 20px;*/
-/*    border-radius: 10px;*/
-/*    margin-bottom: 15px;*/
-/*    box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.05);*/
-/*    background-color: inherit;*/
-/*}*/
-
-/*.version-control ul {*/
-/*    list-style: none;*/
-/*    padding: 0;*/
-/*}*/
-
-/*.version-control ul li {*/
-/*    padding: 10px;*/
-/*    margin-bottom: 10px;*/
-/*    border-radius: 6px;*/
-/*    background-color: var(--sidebar-color);*/
-/*    color: var(--text-color);*/
-/*    transition: background-color 0.3s ease, color 0.3s ease;*/
-/*}*/
-
-/*.version-control ul li:hover {*/
-/*    background-color: var(--primary-color);*/
-/*    color: #ffffff;*/
-/*}*/
 
 /* Dark Mode and Light Mode Styles */
 .light-mode .input-box, .light-mode .output-box, .light-mode .chat-box {
@@ -1561,4 +1460,16 @@ body {
     font-size: 12px;
     color: red; /* Now red for visibility */
     margin-top: 4px;
+}
+.rooms-footer {
+    text-align: center;
+    padding: 15px;
+    background-color: #3333330a;
+    color: #fff;
+    font-size: 0.9rem;
+}
+
+.light-mode .rooms-footer {
+    background-color: #f4f4f4;
+    color: #333;
 }

@@ -51,4 +51,14 @@ public class ProjectController {
         return ResponseEntity.ok(Map.of("projects", projects));
     }
 
+    @PostMapping("/remove-project")
+    public ResponseEntity<String> deleteProject(@RequestBody ProjectDTO project) {
+        try {
+            projectService.deleteProject(project);
+            return ResponseEntity.ok("Project deleted successfully!");
+        }catch (Exception e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 }

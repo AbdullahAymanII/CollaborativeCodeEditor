@@ -176,7 +176,7 @@ const CodingPage = () => {
     };
 
     return (
-        <div className={`coding-room-container ${darkMode ? 'dark-mode' : 'light-mode'}`}>
+        <div className={`coding-room-container ${darkMode ? 'light-mode' : 'dark-mode'}`}>
             <Header user={user} darkMode={darkMode} toggleTheme={toggleTheme} />
 
             <div className="main-content-wrapper">

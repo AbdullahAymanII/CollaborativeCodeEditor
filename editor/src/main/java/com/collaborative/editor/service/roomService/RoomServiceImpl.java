@@ -36,9 +36,8 @@ public class RoomServiceImpl implements RoomService {
             room.setName(roomName);
             room.setOwner(owner);
             roomRepository.save(room);
-            System.out.println("999999999999999999999999999999999999999999999");
+
             addUserToRoom(room, owner, RoomRole.OWNER);
-            System.out.println("33333333333333333333333333333333333333333333333333333");
         } catch (Exception e) {
             throw new RuntimeException("Failed to create room.");
         }
@@ -66,7 +65,6 @@ public class RoomServiceImpl implements RoomService {
     public void addUserToRoom(Room room, User user, RoomRole role) {
         try {
             Optional<RoomMembership> existingMembership = roomMembershipRepository.findByRoomAndUser(room, user);
-            System.out.println("222222222222222222222222222222222222222222222222222222222");
             if (existingMembership.isPresent()) {
                 RoomMembership membership = existingMembership.get();
                 membership.setRole(role);  // Assuming single role per membership
@@ -75,9 +73,7 @@ public class RoomServiceImpl implements RoomService {
                 RoomMembership newMembership = new RoomMembership(room, user, role);
                 room.getRoomMemberships().add(newMembership);
                 user.getRoomMemberships().add(newMembership);
-                System.out.println("1111111111111111111111111111111111111111111111111111111");
                 roomMembershipRepository.save(newMembership);
-                System.out.println("1111111111111111111111111111111111111111111111111111111");
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -107,18 +103,54 @@ public class RoomServiceImpl implements RoomService {
     @Override
     public List<RoomDTO> findByOwnerUsername(User user) {
         Optional<List<RoomMembership>> roomMemberships = roomMembershipRepository.findByUser(user.getEmail());
-        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++");
-        if (roomMemberships.isPresent()) {
-            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++");
-            return roomMemberships.get().stream()
-                    .filter(rm -> rm.getRole() == RoomRole.OWNER)
-                    .map(RoomMembership::getRoom)
-                    .toList().stream()
-                    .map(room -> new RoomDTO(room.getRoomId(), room.getName()))
-                    .collect(Collectors.toList());
-        } else
-            return Collections.emptyList();
 
+        return roomMemberships.map(memberships -> memberships.stream()
+                .filter(rm -> rm.getRole() == RoomRole.OWNER)
+                .map(RoomMembership::getRoom)
+                .toList().stream()
+                .map(room -> new RoomDTO(room.getRoomId(), room.getName()))
+                .collect(Collectors.toList())).orElse(Collections.emptyList());
+
+    }
+
+    @Override
+    public List<String> getViewers(Room room) {
+        return room.getRoomMemberships().stream()
+               .filter(rm -> rm.getRole() == RoomRole.VIEWER)
+               .map(RoomMembership::getUser)
+               .map(User::getEmail)
+               .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<String> getCollaborators(Room room) {
+        return room.getRoomMemberships().stream()
+               .filter(rm -> rm.getRole() == RoomRole.COLLABORATOR)
+               .map(RoomMembership::getUser)
+               .map(User::getEmail)
+               .collect(Collectors.toList());
+    }
+
+    @Override
+    public void removeUserFromRoom(Room room, User user) {
+        try {
+            System.out.println("Removing member++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            Optional<RoomMembership> existingMembership = roomMembershipRepository.findByRoomAndUser(room, user);
+            System.out.println("Removing member++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+            existingMembership.ifPresent(roomMembership -> roomMembershipRepository.delete(roomMembership));
+            System.out.println("Removing member++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to remove user from room.");
+        }
+    }
+
+    @Override
+    public void rename(Room room) {
+        try {
+            roomRepository.save(room);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to rename room.");
+        }
     }
 
 }

@@ -13,6 +13,7 @@ import CodingPage from "./pages/codingRoom/CodingPage";
 import OAuth2RedirectHandler from "./pages/app/OAuth2RedirectHandler";
 import NotFound from "./pages/app/NotFound";
 import EditRoom from "./pages/editRoom/EditRoom";
+import RoomDetailsDashboard from "./pages/editRoom/RoomDetailsDashboard";
 
 function App() {
     const [loading, setLoading] = useState(true);
@@ -67,6 +68,7 @@ function App() {
                         <Route path="/join-room" element={<JoinRoom />} />
                         <Route path="/join-room/:roomId/:roleClick" element={<CodingPage />} /> {/* New dynamic route for CodingRoom */}
                         <Route path="/edit-room" element={<EditRoom />} />
+                        <Route path="/edit-room/room/:roomId" element={<RoomDetailsDashboard />} />
                         {/*<Route path="/join-room/:roomId/VIEWER" element={<ViewerPage />} /> /!* New dynamic route for CodingRoom *!/*/}
                         <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
                         <Route path="*" element={<NotFound />} />

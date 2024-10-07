@@ -30,8 +30,8 @@ const EditRoom = () => {
         fetchRooms();
     }, []);
 
-    const handleRoomClick = (roomId) => {
-        navigate(`/room/${roomId}`);
+    const handleRoomClick = (room) => {
+        navigate(`/edit-room/room/${room.roomId}`, { state: { user, room } });
     };
 
     const toggleTheme = () => setDarkMode(!darkMode);
@@ -40,7 +40,9 @@ const EditRoom = () => {
         localStorage.removeItem('token');
         navigate('/');
     };
-
+    const handleHome = () => {
+        navigate('/Home');
+    };
     return (
         <div className={`rooms-container ${darkMode ? 'light-mode' : 'dark-mode'}`}>
             <header className="rooms-header">
@@ -52,9 +54,8 @@ const EditRoom = () => {
                     <button className="theme-toggle-btn" onClick={toggleTheme}>
                         {darkMode ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
                     </button>
-                    <button className="logout-btn" onClick={handleLogout}>
-                        LOG OUT
-                    </button>
+                    <button className="theme-toggle-btn" onClick={handleHome}>HOME</button>
+                    <button className="logout-btn" onClick={handleLogout}>LOG OUT</button>
                 </div>
             </header>
 
@@ -64,7 +65,7 @@ const EditRoom = () => {
                 ) : (
                     <div className="rooms-grid">
                         {rooms.map((room) => (
-                            <div key={room.roomId} className="room-card" onClick={() => handleRoomClick(room.roomId)}>
+                            <div key={room.roomId} className="room-card" onClick={() => handleRoomClick(room)}>
                                 <img
                                     src="https://w7.pngwing.com/pngs/687/710/png-transparent-conference-centre-meeting-convention-table-computer-icons-program-development-blue-text-symmetry-thumbnail.png"
                                     alt={room.name}

@@ -50,4 +50,15 @@ public class ProjectServiceImpl implements ProjectService {
                 )
                 .collect(Collectors.toList())).orElseGet(List::of);
     }
+
+    @Override
+    public void deleteProject(ProjectDTO projectDTO) throws NoSuchMethodException {
+        try {
+            Project project = projectRepository.findByRoomIdAndProjectName(projectDTO.getRoomId(),projectDTO.getProjectName()).get();
+            projectRepository.delete(project);
+        }catch (Exception e) {
+            throw new NoSuchMethodException("no such method for project");
+        }
+
+    }
 }

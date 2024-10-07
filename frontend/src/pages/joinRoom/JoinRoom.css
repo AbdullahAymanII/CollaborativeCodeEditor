@@ -1,9 +1,10 @@
 
-.join-room-container {
+.rooms-container {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 100vh;
+    height: 100vh;
+    width: 100vw;
     font-family: 'Arial', sans-serif;
     transition: background-color 0.3s ease-in-out, color 0.3s ease-in-out;
 }
@@ -13,21 +14,22 @@
     color: #333;
 }
 
-.dark-mode {
-    /*background: linear-gradient(135deg, #2a2a2a 0%, #1e1e1e 100%);*/
-    color: #979797;
-}
 
-/* Header styling */
-.home-header {
+/* Header */
+.rooms-header {
     padding: 20px;
-    border-bottom: 1px solid #ccc;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: #c7c7c70a;
+    width: 100%;
 }
 
+.dark-mode {
+    background-color: #ffffff00;
+    color: #f4f4f4;
+}
+
+/* Header styling */
 .user-info {
     display: flex;
     align-items: center;
@@ -38,35 +40,36 @@
     height: 50px;
     border-radius: 50%;
     margin-right: 10px;
-    border: 2px solid #6a6a6a;
 }
 
 .user-name {
-    font-size: 1.4rem;
-    font-weight: bold;
+    font-size: 1.2rem;
     color: rgb(106, 106, 106);
-    transition: color 0.3s ease;
 }
 
-.dark-mode .user-name {
-    color: #f4f4f4;
+/* Buttons in the header */
+.header-buttons {
+    display: flex;
+    gap: 10px;
 }
 
-.theme-toggle-btn {
+.theme-toggle-btn,
+.logout-btn {
     padding: 10px 20px;
     border: none;
-    background-color: rgba(55, 55, 55, 0.48);
+    background-color: #a30000;
     color: #fff;
     cursor: pointer;
-    border-radius: 30px;
-    font-size: 1rem;
-    font-weight: bold;
+    border-radius: 5px;
     transition: background-color 0.3s ease;
 }
 
-.theme-toggle-btn:hover {
-    background-color: rgba(35, 35, 35, 0.48);
+.theme-toggle-btn:hover,
+.logout-btn:hover {
+    background-color: #555;
 }
+
+/* New section for home-body content layout */
 
 /* Room Lists Styling */
 .room-lists-container {
@@ -87,8 +90,8 @@
 }
 
 .dark-mode .room-list {
-    background-color: #2a2a2a;
-    box-shadow: 0 4px 12px rgba(255, 255, 255, 0.1);
+    background-color: #ffffff00;
+    box-shadow: 0 4px 12px rgb(45 45 45);
 }
 
 .room-list h2 {
@@ -105,7 +108,7 @@
 }
 
 .dark-mode .room-list h2 {
-    background: linear-gradient(90deg, #f9f871, #e3dedf);
+    background: linear-gradient(90deg, #c9c9c961, #e3dedf);
     -webkit-background-clip: text;
     color: transparent;
 }
@@ -124,9 +127,12 @@
 }
 
 .dark-mode .room-card {
-    background-color: #333;
-    color: #f4f4f4;
-    border-left: 6px solid #f9f871;
+    background-color: #6f4a4a1a;
+    color: #757575;
+    border-left: 10px solid #ffffff29;
+}
+.dark-mode .room-card p:first-of-type {
+    color: #f443369e;
 }
 
 .room-card::before {
@@ -172,7 +178,8 @@
     background-color: #c7c7c70a;
     color: #fff;
     font-size: 0.9rem;
-    letter-spacing: 1px;
+    width: 100%;
+    box-sizing: border-box;
 }
 
 .light-mode .home-footer {

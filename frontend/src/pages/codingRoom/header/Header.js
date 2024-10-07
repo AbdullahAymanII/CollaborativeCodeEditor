@@ -1,16 +1,29 @@
 // components/Header.js
 import React from 'react';
+import {useNavigate} from "react-router-dom";
 
 const Header = ({ user, darkMode, toggleTheme }) => {
+    const navigate = useNavigate();
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        navigate('/');
+    };
+    const handleHome = () => {
+        navigate('/Home');
+    };
     return (
-        <header className="coding-room-header">
+        <header className="rooms-header">
             <div className="user-info">
-                {user.profileImage && <img className="user-image" src={user.profileImage} alt="User" />}
-                <span className="user-name">{user.name || 'Guest'}</span>
+                <img className="user-image" src={user.profileImage} alt="User"/>
+                <span className="user-name">{user.name}</span>
             </div>
-            <button className="theme-toggle-btn" onClick={toggleTheme}>
-                {darkMode ? '☀️ Light Mode' : '🌙 Dark Mode'}
-            </button>
+            <div className="header-buttons">
+                <button className="theme-toggle-btn" onClick={toggleTheme}>
+                    {darkMode ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+                </button>
+                <button className="theme-toggle-btn" onClick={handleHome}>HOME</button>
+                <button className="logout-btn" onClick={handleLogout}>LOG OUT</button>
+            </div>
         </header>
     );
 };

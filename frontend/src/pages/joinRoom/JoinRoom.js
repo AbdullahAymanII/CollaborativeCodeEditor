@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
 import './JoinRoom.css';
 
@@ -10,7 +10,7 @@ const JoinRoom = () => {
     const location = useLocation();
     const [role, setRole] = useState('');
     // const { userName, profileImage } = location.state; // Retrieve userEmail from state
-    const { user } = location.state; // Retrieve userEmail from state
+    const {user} = location.state; // Retrieve userEmail from state
 
     const fetchUserRooms = async () => {
         try {
@@ -39,14 +39,14 @@ const JoinRoom = () => {
 
     const toggleTheme = () => setDarkMode(!darkMode);
 
-    const handleRoomClick = (room,roleClick) => {
+    const handleRoomClick = (room, roleClick) => {
         fetch(`http://localhost:8080/api/rooms/join-room/${room.roomId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${localStorage.getItem('token')}`,
             },
-            body: JSON.stringify({ roomId: room.roomId }),
+            body: JSON.stringify({roomId: room.roomId}),
         })
             .then((response) => {
                 if (response.ok) {
@@ -56,7 +56,7 @@ const JoinRoom = () => {
                     console.log(role);
 
                     navigate(`/join-room/${room.roomId}/${roleClick}`, {
-                        state: { user, room, role:roleClick },
+                        state: {user, room, role: roleClick},
                     });
 
                 } else {
@@ -66,18 +66,27 @@ const JoinRoom = () => {
             .catch((error) => console.error('Error joining room:', error));
     };
 
-
+    const handleLogout = () => {
+        localStorage.removeItem('token');
+        navigate('/');
+    };
+    const handleHome = () => {
+        navigate('/Home');
+    };
     return (
-        <div className={`join-room-container ${darkMode ? 'dark-mode' : 'light-mode'}`}>
-            {/* Reusable Header */}
-            <header className="home-header">
+        <div className={`rooms-container ${darkMode ? 'light-mode' : 'dark-mode'}`}>
+            <header className="rooms-header">
                 <div className="user-info">
-                    <img className="user-image" src={user.profileImage} alt="User" />
+                    <img className="user-image" src={user.profileImage} alt="User"/>
                     <span className="user-name">{user.name}</span>
                 </div>
-                <button className="theme-toggle-btn" onClick={toggleTheme}>
-                    {darkMode ? 'Switch to Light Mode' : 'Switch to Dark Mode'}
-                </button>
+                <div className="header-buttons">
+                    <button className="theme-toggle-btn" onClick={toggleTheme}>
+                        {darkMode ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
+                    </button>
+                    <button className="theme-toggle-btn" onClick={handleHome}>HOME</button>
+                    <button className="logout-btn" onClick={handleLogout}>LOG OUT</button>
+                </div>
             </header>
 
             {/* Main Body for Room Lists */}
@@ -88,7 +97,8 @@ const JoinRoom = () => {
                         <p>No rooms available as a viewer</p>
                     ) : (
                         viewerRooms.map((room) => (
-                            <div key={room.roomId} className="room-card" onClick={() => handleRoomClick(room,"VIEWER")}>
+                            <div key={room.roomId} className="room-card"
+                                 onClick={() => handleRoomClick(room, "VIEWER")}>
                                 <p>Room Name : {room.name}</p>
                                 <p>Room Id: {room.roomId}</p>
                             </div>
@@ -102,7 +112,8 @@ const JoinRoom = () => {
                         <p>No rooms available as a collaborator</p>
                     ) : (
                         collaboratorRooms.map((room) => (
-                            <div key={room.roomId} className="room-card" onClick={() => handleRoomClick(room,"COLLABORATOR")}>
+                            <div key={room.roomId} className="room-card"
+                                 onClick={() => handleRoomClick(room, "COLLABORATOR")}>
                                 <p>Room Name : {room.name}</p>
                                 <p>Room Id: {room.roomId}</p>
                             </div>

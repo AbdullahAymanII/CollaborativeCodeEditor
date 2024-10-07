@@ -28,4 +28,11 @@ public interface RoomService {
 
     List<RoomDTO> findByOwnerUsername(User user);
 
+    List<String> getViewers(Room room);
+
+    List<String> getCollaborators(Room room);
+
+    void removeUserFromRoom(Room room, User user);
+
+    void rename(Room room);
 }
