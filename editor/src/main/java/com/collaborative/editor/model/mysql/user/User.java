@@ -41,7 +41,7 @@ public class User {
     @Enumerated(EnumType.STRING)
     private RegistrationSource source;
 
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Room> ownedRooms = new HashSet<>();
 
 

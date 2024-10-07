@@ -306,7 +306,7 @@
 }
 
 .dark-mode {
-    background-color: #1e1e1e;
+    background-color: #ffffff00;
     color: #f4f4f4;
 }
 
@@ -372,12 +372,12 @@
 
 /* Image container */
 .home-image {
-    background-image: url('https://rare-gallery.com/uploads/posts/905612-developer-development-terminals-computer-Unix-simple-background.jpg');
+    background-image: url('https://framerusercontent.com/images/RWKzauOHXRN6B18AZTTQ3ddl0M.png');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
     width: 100%;
-    height: 100%;  /* Flexible height based on screen */
+    height: 50%;  /* Flexible height based on screen */
 }
 
 /* Container for buttons and title */
@@ -402,8 +402,8 @@
 }
 
 .btn {
-    background-color: #333;
-    color: #fff;
+    background-color: #141414cc;
+    color: #adadad;
     padding: 20px 40px;
     margin: 15px 0;
     border: none;
@@ -447,7 +447,7 @@
 .home-footer {
     text-align: center;
     padding: 15px;
-    background-color: #333;
+    background-color: #c7c7c70a;
     color: #fff;
     font-size: 0.9rem;
     width: 100%;

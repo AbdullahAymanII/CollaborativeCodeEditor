@@ -14,8 +14,8 @@
 }
 
 .dark-mode {
-    background: linear-gradient(135deg, #2a2a2a 0%, #1e1e1e 100%);
-    color: #f4f4f4;
+    /*background: linear-gradient(135deg, #2a2a2a 0%, #1e1e1e 100%);*/
+    color: #979797;
 }
 
 /* Header styling */
@@ -25,7 +25,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    background-color: transparent;
+    background-color: #c7c7c70a;
 }
 
 .user-info {
@@ -169,7 +169,7 @@
 .home-footer {
     text-align: center;
     padding: 15px;
-    background-color: #333;
+    background-color: #c7c7c70a;
     color: #fff;
     font-size: 0.9rem;
     letter-spacing: 1px;

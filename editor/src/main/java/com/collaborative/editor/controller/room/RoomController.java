@@ -132,4 +132,23 @@ public class RoomController {
         return ResponseEntity.ok("Room");
     }
 
+    @GetMapping("/edit-room/{username}")
+    public ResponseEntity<Map<String, List<RoomDTO>>> getRooms(@PathVariable("username") String username) {
+        try {
+            System.out.println("=====================================================================");
+            System.out.println(username);
+            User owner = userService.findUserByEmail(username).get();
+            System.out.println(owner);
+            List<RoomDTO> rooms = roomService.findByOwnerUsername(owner);
+            System.out.println(rooms);
+            System.out.println("=====================================================================");
+            Map<String, List<RoomDTO>> response = new HashMap<>();
+            response.put("rooms", rooms);
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().build();
+        }
+    }
+
 }

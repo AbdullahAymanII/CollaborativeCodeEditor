@@ -93,7 +93,7 @@ body.dark {
 
 /* Dark Mode Colors */
 .dark-mode {
-    background-color: #1a1a1a;
+    background-color: #ffffff00;
     color: #e0e0e0;
 }
 
@@ -344,12 +344,12 @@ body.dark {
     --header-footer-color: #fff;
 }
 
-.dark-mode {
-    --background-color: #121212;
-    --text-color: #f4f4f4;
-    --sidebar-color: #2e2e2e;
-    --header-footer-color: #1a1a1a;
-}
+/*.dark-mode {*/
+/*    --background-color: #121212;*/
+/*    --text-color: #f4f4f4;*/
+/*    --sidebar-color: #2e2e2e;*/
+/*    --header-footer-color: #1a1a1a;*/
+/*}*/
 
 /* Styles for the header */
 .header {

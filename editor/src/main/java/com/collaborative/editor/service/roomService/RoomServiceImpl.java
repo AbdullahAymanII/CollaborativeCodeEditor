@@ -2,30 +2,31 @@ package com.collaborative.editor.service.roomService;
 
 import com.collaborative.editor.database.mysql.RoomMembershipRepository;
 import com.collaborative.editor.database.mysql.RoomRepository;
+import com.collaborative.editor.database.mysql.UserRepository;
 import com.collaborative.editor.model.mysql.room.Room;
 import com.collaborative.editor.model.mysql.room.RoomDTO;
 import com.collaborative.editor.model.mysql.room.RoomMembership;
 import com.collaborative.editor.model.mysql.room.RoomRole;
 import com.collaborative.editor.model.mysql.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.*;
 import java.util.stream.Collectors;
 
 @Service("RoomServiceImpl")
-public class RoomServiceImpl implements RoomService{
+public class RoomServiceImpl implements RoomService {
 
     @Autowired
     private RoomRepository roomRepository;
 
     @Autowired
     private RoomMembershipRepository roomMembershipRepository;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @Override
     public void createRoom(User owner, String roomName, String roomId) {
@@ -35,7 +36,10 @@ public class RoomServiceImpl implements RoomService{
             room.setName(roomName);
             room.setOwner(owner);
             roomRepository.save(room);
-        } catch (Exception e){
+            System.out.println("999999999999999999999999999999999999999999999");
+            addUserToRoom(room, owner, RoomRole.OWNER);
+            System.out.println("33333333333333333333333333333333333333333333333333333");
+        } catch (Exception e) {
             throw new RuntimeException("Failed to create room.");
         }
     }
@@ -44,27 +48,25 @@ public class RoomServiceImpl implements RoomService{
     public Optional<Room> findByRoomId(Long roomId) {
         try {
             return roomRepository.findByRoomId(roomId);
-        }catch (Exception e) {
+        } catch (Exception e) {
             return Optional.empty();
         }
     }
+
     @Transactional
     @Override
-    public boolean deleteByRoomId(Long roomId) {
+    public void deleteByRoomId(Long roomId) {
         try {
             roomRepository.deleteByRoomId(roomId);
-            return true;
-        } catch (Exception e)
-        {
-            return false;
+        } catch (Exception e) {
         }
     }
 
     @Override
-    public boolean addUserToRoom(Room room, User user, RoomRole role) {
+    public void addUserToRoom(Room room, User user, RoomRole role) {
         try {
             Optional<RoomMembership> existingMembership = roomMembershipRepository.findByRoomAndUser(room, user);
-
+            System.out.println("222222222222222222222222222222222222222222222222222222222");
             if (existingMembership.isPresent()) {
                 RoomMembership membership = existingMembership.get();
                 membership.setRole(role);  // Assuming single role per membership
@@ -73,12 +75,12 @@ public class RoomServiceImpl implements RoomService{
                 RoomMembership newMembership = new RoomMembership(room, user, role);
                 room.getRoomMemberships().add(newMembership);
                 user.getRoomMemberships().add(newMembership);
+                System.out.println("1111111111111111111111111111111111111111111111111111111");
                 roomMembershipRepository.save(newMembership);
+                System.out.println("1111111111111111111111111111111111111111111111111111111");
             }
-            return true;
         } catch (Exception e) {
             e.printStackTrace();
-            return false;
         }
     }
 
@@ -100,6 +102,23 @@ public class RoomServiceImpl implements RoomService{
                 .toList().stream()
                 .map(room -> new RoomDTO(room.getRoomId(), room.getName()))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<RoomDTO> findByOwnerUsername(User user) {
+        Optional<List<RoomMembership>> roomMemberships = roomMembershipRepository.findByUser(user.getEmail());
+        System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++");
+        if (roomMemberships.isPresent()) {
+            System.out.println("++++++++++++++++++++++++++++++++++++++++++++++++++");
+            return roomMemberships.get().stream()
+                    .filter(rm -> rm.getRole() == RoomRole.OWNER)
+                    .map(RoomMembership::getRoom)
+                    .toList().stream()
+                    .map(room -> new RoomDTO(room.getRoomId(), room.getName()))
+                    .collect(Collectors.toList());
+        } else
+            return Collections.emptyList();
+
     }
 
 }
