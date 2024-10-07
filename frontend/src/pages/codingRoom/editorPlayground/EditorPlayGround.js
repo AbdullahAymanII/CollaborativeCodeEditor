@@ -381,7 +381,7 @@ const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user,
 
 
     return (
-        <div className={`code-editor-container ${darkMode ? 'dark' : 'light'}`}>
+        <div className={`code-editor-container ${darkMode ? 'light' : 'dark'}`}>
             <EditorHeader
                 selectedLanguage={selectedLanguage}
                 onLanguageChange={e => setSelectedLanguage(e.target.value)}
@@ -389,7 +389,7 @@ const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user,
             <Editor
                 height="67vh"
                 language={selectedLanguage}
-                theme={darkMode ? 'vs-dark' : 'light-plus'}
+                theme={darkMode ? 'light-plus' : 'vs-dark'}
                 value={code}
                 onChange={handleEditorChange}
                 editorDidMount={handleEditorDidMount}
