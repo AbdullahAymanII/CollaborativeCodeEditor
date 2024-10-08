@@ -341,17 +341,17 @@ import { Editor } from '@monaco-editor/react';
 import ActionModal from './ActionModal';
 import EditorHeader from './EditorHeader';
 import EditorFooter from './EditorFooter';
-import useWebSocketManager from './WebSocketManager';
+// import useWebSocketManager from './WebSocketManager';
 import useFileManager from './FileManager';
 import useEditorLogic from './EditorLogic';
 import CodeMetricsDisplay from './CodeMetricsDisplay';
 
-const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user, room, selectedLanguage, setSelectedLanguage, role, setMessages }) => {
+const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user, room, selectedLanguage, setSelectedLanguage, role, setLiveEditing, liveEditing, publishCodeChange, sendActionMessage, isConnected}) => {
     const [showConfirmPushModal, setShowConfirmPushModal] = useState(false);
     const [showConfirmMergeModal, setShowConfirmMergeModal] = useState(false);
     const [showMetricsModal, setShowMetricsModal] = useState(false); // New state for metrics modal
 
-    const { publishCodeChange, sendActionMessage, isConnected } = useWebSocketManager(setCode, setMessages, user, currentFile, role);
+    // const { publishCodeChange, sendActionMessage, isConnected } = useWebSocketManager(setCode, setMessages, user, currentFile, role, liveEditing, room);
     const { pushFileToServer, mergeFileFromServer, successMessage } = useFileManager(code, currentFile, room, setCode, setShowConfirmMergeModal, setShowConfirmPushModal);
     const { handleEditorChange, handleEditorDidMount, currentLine } = useEditorLogic(setCode, publishCodeChange, user, role);
 
@@ -378,6 +378,22 @@ const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user,
         }
         setShowConfirmMergeModal(false);
     };
+    const handleDisplayLogs = () => {
+        console.log("Display logs");
+    };
+
+    const handleStartConnection = () => {
+        if (isConnected) {
+            setLiveEditing(true);
+        }
+    };
+
+    const handleEndConnection = () => {
+        if (isConnected) {
+            setLiveEditing(false);
+        }
+    };
+
 
 
     return (
@@ -446,8 +462,10 @@ const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user,
                 onMergeClick={() => setShowConfirmMergeModal(true)}
                 onPushClick={() => setShowConfirmPushModal(true)}
                 onViewDetailsClick={handleViewDetailsClick} // Pass the handler to show modal
+                startConnection={handleStartConnection}
+                endConnection={handleEndConnection}
+                viewLogs={handleDisplayLogs}
             />
-
             {/* Code Metrics Modal */}
             {showMetricsModal && (
                 <CodeMetricsDisplay

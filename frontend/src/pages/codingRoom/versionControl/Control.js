@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ProjectList from './ProjectList';
 import Action from "./Action";
 
-const Control = ({ room, currentFile }) => {
+const Control = ({ room, currentFile, isConnected, subscribeToCodeUpdates }) => {
     const [projects, setProjects] = useState([]);
     const [selectedProject, setSelectedProject] = useState(null);
     const [files, setFiles] = useState([]);
@@ -35,6 +35,7 @@ const Control = ({ room, currentFile }) => {
             showError('You do not have projects currently. Please add a new project.');
         }
     };
+
 
     const fetchFiles = async (projectName) => {
         try {
@@ -72,6 +73,9 @@ const Control = ({ room, currentFile }) => {
             const data = await response.json();
             setSelectedFileContent(data.file.content);
             currentFile(data.file);
+            if (isConnected && data.file) {
+                subscribeToCodeUpdates(data.file);
+            }
         } catch (error) {
             showError('The file does not have content currently...');
         }

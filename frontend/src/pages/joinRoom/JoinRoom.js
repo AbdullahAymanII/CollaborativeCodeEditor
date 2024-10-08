@@ -1,6 +1,7 @@
-import React, {useState, useEffect} from 'react';
+import React, {useState, useEffect, useRef} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
 import './JoinRoom.css';
+import useWebSocketConnection from "../websocket/useWebSocketConnection";
 
 const JoinRoom = () => {
     const [darkMode, setDarkMode] = useState(false);
@@ -9,6 +10,8 @@ const JoinRoom = () => {
     const navigate = useNavigate();
     const location = useLocation();
     const [role, setRole] = useState('');
+
+
     // const { userName, profileImage } = location.state; // Retrieve userEmail from state
     const {user} = location.state; // Retrieve userEmail from state
 
@@ -54,9 +57,8 @@ const JoinRoom = () => {
                     setRole(roleClick);
 
                     console.log(role);
-
                     navigate(`/join-room/${room.roomId}/${roleClick}`, {
-                        state: {user, room, role: roleClick},
+                        state: {user, room:{roomId:room.roomId, name:room.name}, role: roleClick},
                     });
 
                 } else {

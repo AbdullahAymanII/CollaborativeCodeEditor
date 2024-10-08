@@ -114,16 +114,21 @@
 // export default CodingPage;
 
 
-import React, { useState, useEffect } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
+import React, {useState, useEffect, useRef} from 'react';
+import {useLocation, useNavigate} from 'react-router-dom';
 import './CodingPage.css';
 import Header from './header/Header';
 import InputOutput from './inputOutput/InputOutput';
 import EditorPlayGround from './editorPlayground/EditorPlayGround';
 import Control from './versionControl/Control';
 import Footer from './footer/Footer';
-import useWebSocketManager from './editorPlayground/WebSocketManager';
+// import useWebSocketManager from './editorPlayground/WebSocketManager';
+
 import ChatComponent from "./chat/Chat";
+import useWebSocketConnection from "../websocket/useWebSocketConnection";
+import useCodeManager from "../websocket/useCodeManager";
+import useChatManager from "../websocket/useChatManager";
+// import useWebSocketManager from "../websocket/websocketConfig";
 
 const CodingPage = () => {
     const [darkMode, setDarkMode] = useState(false);
@@ -131,20 +136,63 @@ const CodingPage = () => {
     const [output, setOutput] = useState('');
     const [input, setInput] = useState('');
     const [selectedLanguage, setSelectedLanguage] = useState('python');
-    const [currentFile, setCurrentFile] = useState({ filename: '', roomId: '', projectName: '', content: '' });
+    const [currentFile, setCurrentFile] = useState({filename: '', roomId: '', projectName: '', content: ''});
     const [messages, setMessages] = useState([]); // Store chat messages
-
+    const [liveEditing, setLiveEditing] = useState(false); // New state to control live editing
+    const [isJoined, setIsJoined] = useState(true);
     const location = useLocation();
     const navigate = useNavigate();
-    const { user, room, role } = location.state || { user: {}, room: {}, role: '' };
 
-    const { sendChatMessage, isConnected } = useWebSocketManager(setCode, setMessages, user, currentFile, role);
+    const {user, room, role} = location.state || {user: {}, room: {roomId: '', name: ''}, role: ''};
+    const {wsRef, isConnected, closeWebSocketConnection, createWebSocketConnection} = useWebSocketConnection();
+    const {
+        subscribeToCodeUpdates,
+        publishCodeChange
+    } = useCodeManager(wsRef, isConnected, currentFile, setCode, liveEditing);
+    const {
+        subscribeToChat,
+        sendActionMessage,
+        sendChatMessage
+    } = useChatManager(wsRef, isConnected, currentFile, setMessages, user, role, room);
 
+
+    // const {
+    //     createWebSocketConnection,
+    //     closeWebSocketConnection,
+    //     publishCodeChange,
+    //     sendChatMessage,
+    //     sendActionMessage,
+    //     isConnected
+    // } = useWebSocketManager(setCode, setMessages, user, currentFile, role, liveEditing, room);
+
+    // const { sendChatMessage, isConnected } = useWebSocketManager(setCode, setMessages, user, currentFile, role, liveEditing, room);
     useEffect(() => {
         if (!location.state) {
             navigate('/home');
+            return;
         }
-    }, [location.state, navigate]);
+
+        if (isJoined) {
+            createWebSocketConnection();
+            setIsJoined(false);
+        }
+
+        if (isConnected) {
+            subscribeToChat();
+
+            const joinMessage = {
+                sender: user.name,
+                role: role,
+                filename: '',
+                roomId: room.roomId,
+                projectName: '',
+                content: 'joined the room',
+            };
+            sendChatMessage(joinMessage);
+        }
+    }, [isJoined, isConnected, location.state, navigate, sendChatMessage, subscribeToChat, createWebSocketConnection]);
+
+
 
     const toggleTheme = () => setDarkMode(!darkMode);
 
@@ -177,11 +225,20 @@ const CodingPage = () => {
 
     return (
         <div className={`coding-room-container ${darkMode ? 'light-mode' : 'dark-mode'}`}>
-            <Header user={user} darkMode={darkMode} toggleTheme={toggleTheme} />
+            <Header user={user}
+                    darkMode={darkMode}
+                    toggleTheme={toggleTheme}
+                    closeWebSocketConnection={closeWebSocketConnection}
+                    sendActionMessage={sendActionMessage}
+            />
 
             <div className="main-content-wrapper">
                 <div className="sidebar">
-                    <Control room={room} currentFile={handleSelectFileVersion} />
+                    <Control room={room}
+                             currentFile={handleSelectFileVersion}
+                             isConnected={isConnected}
+                             subscribeToCodeUpdates={subscribeToCodeUpdates}
+                    />
                 </div>
 
                 <div className="coding-playground">
@@ -196,7 +253,11 @@ const CodingPage = () => {
                         selectedLanguage={selectedLanguage}
                         setSelectedLanguage={setSelectedLanguage}
                         role={role}
-                        setMessages={setMessages} // Pass setMessages to EditorPlayGround
+                        setLiveEditing={setLiveEditing}
+                        liveEditing={liveEditing}
+                        publishCodeChange={publishCodeChange}
+                        sendActionMessage={sendActionMessage}
+                        isConnected={isConnected}
                     />
                 </div>
 
@@ -207,16 +268,16 @@ const CodingPage = () => {
                         currentFile={currentFile}
                         role={role}
                         sendMessage={sendChatMessage} // Function to send chat messages
+                        room={room}
                     />
                 </div>
             </div>
 
-            <InputOutput input={input} output={output} setInput={setInput} />
+            <InputOutput input={input} output={output} setInput={setInput}/>
 
-            <Footer />
+            <Footer/>
         </div>
     );
 };
 
 export default CodingPage;
-

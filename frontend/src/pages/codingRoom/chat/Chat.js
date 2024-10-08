@@ -100,7 +100,7 @@
 import React, { useState } from 'react';
 import '../CodingPage.css';
 
-const ChatComponent = ({ messages, user, currentFile, role, sendMessage }) => {
+const ChatComponent = ({ messages, user, currentFile, role, sendMessage, room }) => {
     const [chatInput, setChatInput] = useState('');
 
     const handleSendMessage = () => {
@@ -109,7 +109,7 @@ const ChatComponent = ({ messages, user, currentFile, role, sendMessage }) => {
                 content: chatInput,
                 sender: user.name,
                 filename: currentFile.filename,
-                roomId: currentFile.roomId,
+                roomId: room.roomId,
                 projectName: currentFile.projectName,
                 role: role
             };

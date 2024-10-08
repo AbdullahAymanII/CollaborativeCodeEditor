@@ -2,13 +2,19 @@
 import React from 'react';
 import {useNavigate} from "react-router-dom";
 
-const Header = ({ user, darkMode, toggleTheme }) => {
+const Header = ({ user, darkMode, toggleTheme, closeWebSocketConnection, sendActionMessage }) => {
     const navigate = useNavigate();
+
     const handleLogout = () => {
+        sendActionMessage('left');
+        closeWebSocketConnection();
         localStorage.removeItem('token');
         navigate('/');
     };
+
     const handleHome = () => {
+        sendActionMessage('left');
+        closeWebSocketConnection();
         navigate('/Home');
     };
     return (

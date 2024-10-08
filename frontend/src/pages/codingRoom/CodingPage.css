@@ -2242,3 +2242,28 @@ button.run-btn:active, button.push-btn:active, button.view-details-btn:active {
 .output-area:hover {
     box-shadow: 0px 8px 20px rgba(255 255 255 / 0%); /* Subtle shadow when hovered */
 }
+
+
+
+
+/* Normal button style */
+.live-editing-btn {
+    background-color: #f0f0f0; /* Normal background color */
+    color: #333;
+    border: 1px solid #ccc;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Active (green) button when live editing is active */
+.live-editing-btn.active-btn {
+    background-color: green;
+    color: white;
+    border: 1px solid darkgreen;
+}
+
+.live-editing-btn:disabled {
+    cursor: not-allowed;
+    opacity: 0.7;
+}
