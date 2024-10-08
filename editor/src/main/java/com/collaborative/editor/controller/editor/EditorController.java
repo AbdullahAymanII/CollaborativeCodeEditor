@@ -1,11 +1,10 @@
 package com.collaborative.editor.controller.editor;
 
+import com.collaborative.editor.model.mongodb.MessageLog;
 import com.collaborative.editor.model.mysql.code.CodeDTO;
-import com.collaborative.editor.model.mysql.message.ChatMessageDTO;
-import org.springframework.messaging.handler.annotation.DestinationVariable;
-import org.springframework.messaging.handler.annotation.MessageMapping;
-import org.springframework.messaging.handler.annotation.Payload;
-import org.springframework.messaging.handler.annotation.SendTo;
+import com.collaborative.editor.service.messageLogsService.LogsServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.messaging.handler.annotation.*;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
@@ -13,26 +12,41 @@ import org.springframework.stereotype.Controller;
 @Controller
 public class EditorController {
 
-    @MessageMapping("/code/updates")
-    @SendTo("/topic/file/updates")
-//    @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
-    public CodeDTO handleCollaboratorCode(@Payload CodeDTO codeDTO) {
-        System.out.println("Collaborator update for file: " + codeDTO.getFilename());
+    @Autowired
+    private LogsServiceImpl logService;
+
+    //    @PreAuthorize("hasAnyRole('ADMIN', 'EDITOR')")
+    @MessageMapping("/code/updates/{roomId}/{projectName}/{filename}")
+    @SendTo("/topic/file/updates/{roomId}/{projectName}/{filename}")
+    public CodeDTO handleCollaboratorCode(
+            @DestinationVariable String roomId,
+            @DestinationVariable String projectName,
+            @DestinationVariable String filename,
+            @Payload CodeDTO codeDTO) {
+
+        System.out.println("Received code update for room: " + roomId
+                + ", project: " + projectName
+                + ", filename: " + filename);
+
         return codeDTO;
     }
 
     @MessageMapping("/chat/{roomId}")
     @SendTo("/topic/chat/{roomId}")
-    public ChatMessageDTO handleChatMessage(@DestinationVariable("roomId") String roomId, @Payload ChatMessageDTO chatMessageDTO) {
-        chatMessageDTO.setTimestamp(System.currentTimeMillis());
-        System.out.println("@MessageMapping(\"/chat/{roomId}\")");
-        System.out.println(chatMessageDTO);
-        return chatMessageDTO;
+    public MessageLog handleChatMessage(@DestinationVariable("roomId") String roomId,
+                                        @Payload MessageLog messageLog) {
+
+        messageLog.setTimestamp(System.currentTimeMillis());
+
+        if (!messageLog.getType().equalsIgnoreCase("message"))
+            logService.saveLog(messageLog);
+
+        return messageLog;
     }
 
     @MessageMapping("/user/join/{roomId}")
     @SendTo("/topic/chat/{roomId}")
-    public ChatMessageDTO handleUserJoin(@DestinationVariable("roomId") String roomId, @Payload ChatMessageDTO chatMessageDTO) {
+    public MessageLog handleUserJoin(@DestinationVariable("roomId") String roomId, @Payload MessageLog chatMessageDTO) {
         chatMessageDTO.setContent(" has joined the room.");
         chatMessageDTO.setTimestamp(System.currentTimeMillis());
         return chatMessageDTO;
@@ -40,7 +54,7 @@ public class EditorController {
 
     @MessageMapping("/user/leave/{roomId}")
     @SendTo("/topic/chat/{roomId}")
-    public ChatMessageDTO handleUserLeave(@DestinationVariable("roomId") String roomId, @Payload ChatMessageDTO chatMessageDTO) {
+    public MessageLog handleUserLeave(@DestinationVariable("roomId") String roomId, @Payload MessageLog chatMessageDTO) {
         chatMessageDTO.setContent(" has left the room.");
         chatMessageDTO.setTimestamp(System.currentTimeMillis());
         return chatMessageDTO;

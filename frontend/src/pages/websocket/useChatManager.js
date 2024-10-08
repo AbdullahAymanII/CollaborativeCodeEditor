@@ -92,6 +92,7 @@ const useChatManager = (wsRef, isConnected, currentFile, setMessages, user, role
                 roomId: currentFile.roomId,
                 projectName: currentFile.projectName,
                 role: role,
+                type: actionType,
             };
             sendChatMessage(actionMessage);
         } else {

@@ -351,7 +351,6 @@ const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user,
     const [showConfirmMergeModal, setShowConfirmMergeModal] = useState(false);
     const [showMetricsModal, setShowMetricsModal] = useState(false); // New state for metrics modal
 
-    // const { publishCodeChange, sendActionMessage, isConnected } = useWebSocketManager(setCode, setMessages, user, currentFile, role, liveEditing, room);
     const { pushFileToServer, mergeFileFromServer, successMessage } = useFileManager(code, currentFile, room, setCode, setShowConfirmMergeModal, setShowConfirmPushModal);
     const { handleEditorChange, handleEditorDidMount, currentLine } = useEditorLogic(setCode, publishCodeChange, user, role);
 
@@ -378,9 +377,55 @@ const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user,
         }
         setShowConfirmMergeModal(false);
     };
-    const handleDisplayLogs = () => {
-        console.log("Display logs");
+
+    // const handleDisplayLogs = async () => {
+    //     try {
+    //         const response = await fetch(`http://localhost:8080/api/viewer/room/${room.roomId}/logs`, {
+    //             method: 'GET',
+    //             headers: {
+    //                 'Content-Type': 'application/json',
+    //                 Authorization: `Bearer ${localStorage.getItem('token')}`,
+    //             },
+    //         });
+    //         if (!response.ok) throw new Error('Failed to fetch room logs');
+    //
+    //         const data = await response.json();
+    //         console.log('Room logs:', data);
+    //         console.log(data.roomLogs);
+    //
+    //     } catch (error) {
+    //         console.error('Error fetching room logs:', error);
+    //     }
+    // };
+    const handleDisplayLogs = async () => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/viewer/room/${room.roomId}/logs`, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+            });
+            if (!response.ok) throw new Error('Failed to fetch room logs');
+
+            const data = await response.json();
+
+            // Creating a blob from the room logs data
+            const blob = new Blob([JSON.stringify(data.roomLogs, null, 2)], { type: 'application/json' });
+
+            // Creating a link to download the file
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = `room_logs_${room.roomId}.json`; // Filename to download
+            document.body.appendChild(link); // Append link to body
+            link.click(); // Trigger the download
+            document.body.removeChild(link); // Remove link from DOM
+
+        } catch (error) {
+            console.error('Error fetching room logs:', error);
+        }
     };
+
 
     const handleStartConnection = () => {
         if (isConnected) {
@@ -403,7 +448,7 @@ const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user,
                 onLanguageChange={e => setSelectedLanguage(e.target.value)}
             />
             <Editor
-                height="67vh"
+                height="70vh"
                 language={selectedLanguage}
                 theme={darkMode ? 'light-plus' : 'vs-dark'}
                 value={code}

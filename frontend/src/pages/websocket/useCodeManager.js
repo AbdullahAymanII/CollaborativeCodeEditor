@@ -64,33 +64,30 @@
 import { useCallback } from 'react';
 
 const useCodeManager = (wsRef, isConnected, currentFile, setCode, liveEditing) => {
-    // Subscribe to code updates callback
+
     const subscribeToCodeUpdates = useCallback((currentFile) => {
         console.log('Subscribing to code updates...');
-        if (wsRef.current && isConnected) {
-            wsRef.current.subscribe(`/topic/file/updates`, (message) => {
-                const data = JSON.parse(message.body);
-                if (
-                    data.filename === currentFile.filename &&
-                    data.roomId === currentFile.roomId &&
-                    data.projectName === currentFile.projectName
-                ) {
-                    setCode(data.code);  // Update the code state with the received data
+        if (wsRef.current && isConnected ) {
+            // Subscribe to a specific topic based on roomId, projectName, and filename
+            wsRef.current.subscribe(
+                `/topic/file/updates/${currentFile.roomId}/${currentFile.projectName}/${currentFile.filename}`,
+                (message) => {
+                    const data = JSON.parse(message.body);
+                    setCode(data.code);
+                    console.log('Code update received:', data);
                 }
-                console.log('Code update received:', data);
-                console.log('Code update received:', currentFile);
-            });
+            );
         } else {
             console.log('Cannot subscribe to code updates, WebSocket is not connected.');
         }
-    }, [wsRef, isConnected, liveEditing, currentFile, setCode]); // Memoize the callback
+    }, [wsRef, isConnected, currentFile, setCode]); // Memoize the callback
 
-    // Publish code change callback
     const publishCodeChange = useCallback((user, code) => {
         if (wsRef.current && isConnected && liveEditing) {
             console.log('Publishing code change:', code);
+
             wsRef.current.publish({
-                destination: `/app/code/updates`,
+                destination: `/app/code/updates/${currentFile.roomId}/${currentFile.projectName}/${currentFile.filename}`,
                 body: JSON.stringify({
                     userId: user.name,
                     filename: currentFile.filename,
@@ -104,6 +101,29 @@ const useCodeManager = (wsRef, isConnected, currentFile, setCode, liveEditing) =
             console.log('Cannot publish code change, WebSocket is not connected.');
         }
     }, [wsRef, isConnected, currentFile, liveEditing]); // Memoize the callback
+
+
+
+
+    // Publish code change callback
+    // const publishCodeChange = useCallback((user, code) => {
+    //     if (wsRef.current && isConnected && liveEditing) {
+    //         console.log('Publishing code change:', code);
+    //         wsRef.current.publish({
+    //             destination: `/app/code/updates`,
+    //             body: JSON.stringify({
+    //                 userId: user.name,
+    //                 filename: currentFile.filename,
+    //                 roomId: currentFile.roomId,
+    //                 projectName: currentFile.projectName,
+    //                 code,
+    //             }),
+    //             headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+    //         });
+    //     } else {
+    //         console.log('Cannot publish code change, WebSocket is not connected.');
+    //     }
+    // }, [wsRef, isConnected, currentFile, liveEditing]); // Memoize the callback
 
     return { subscribeToCodeUpdates, publishCodeChange };
 };

@@ -156,16 +156,6 @@ const CodingPage = () => {
     } = useChatManager(wsRef, isConnected, currentFile, setMessages, user, role, room);
 
 
-    // const {
-    //     createWebSocketConnection,
-    //     closeWebSocketConnection,
-    //     publishCodeChange,
-    //     sendChatMessage,
-    //     sendActionMessage,
-    //     isConnected
-    // } = useWebSocketManager(setCode, setMessages, user, currentFile, role, liveEditing, room);
-
-    // const { sendChatMessage, isConnected } = useWebSocketManager(setCode, setMessages, user, currentFile, role, liveEditing, room);
     useEffect(() => {
         if (!location.state) {
             navigate('/home');
@@ -187,6 +177,7 @@ const CodingPage = () => {
                 roomId: room.roomId,
                 projectName: '',
                 content: 'joined the room',
+                type: 'join'
             };
             sendChatMessage(joinMessage);
         }
@@ -229,7 +220,9 @@ const CodingPage = () => {
                     darkMode={darkMode}
                     toggleTheme={toggleTheme}
                     closeWebSocketConnection={closeWebSocketConnection}
-                    sendActionMessage={sendActionMessage}
+                    sendChatMessage={sendChatMessage}
+                    room={room}
+                    role={role}
             />
 
             <div className="main-content-wrapper">

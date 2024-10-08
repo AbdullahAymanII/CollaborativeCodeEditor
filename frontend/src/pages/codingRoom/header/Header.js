@@ -2,18 +2,28 @@
 import React from 'react';
 import {useNavigate} from "react-router-dom";
 
-const Header = ({ user, darkMode, toggleTheme, closeWebSocketConnection, sendActionMessage }) => {
+const Header = ({ user, darkMode, toggleTheme, closeWebSocketConnection, sendChatMessage, room, role }) => {
     const navigate = useNavigate();
 
+    const leaveMessage = {
+        sender: user.name,
+        role: role,
+        filename: '',
+        roomId: room.roomId,
+        projectName: '',
+        content: 'left the room',
+        type: 'leave'
+    };
+
     const handleLogout = () => {
-        sendActionMessage('left');
+        sendChatMessage(leaveMessage);
         closeWebSocketConnection();
         localStorage.removeItem('token');
         navigate('/');
     };
 
     const handleHome = () => {
-        sendActionMessage('left');
+        sendChatMessage(leaveMessage);
         closeWebSocketConnection();
         navigate('/Home');
     };

@@ -84,7 +84,7 @@ const EditorFooter = ({ role, runCode, onMergeClick, onPushClick, onViewDetailsC
             {/* Show "DISPLAY LOGS" and "View Details" buttons for 'VIEWER' role */}
             {role === 'VIEWER' && (
                 <>
-                    <button className="push-btn" onClick={viewLogs}>DISPLAY LOGS</button>
+                    <button className="download-btn" onClick={viewLogs}>DOWNLOAD LOGS</button>
                     <button className="view-details-btn" onClick={onViewDetailsClick}>View Details</button>
                 </>
             )}

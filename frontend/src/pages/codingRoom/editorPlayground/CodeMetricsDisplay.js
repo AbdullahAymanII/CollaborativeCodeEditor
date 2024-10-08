@@ -55,24 +55,26 @@
 // export default CodeMetricsDisplay;
 
 
-import React, { useState, useEffect } from 'react';
+import React, {useState, useEffect} from 'react';
 import Modal from "./CodeDetailsButton";
 
-const CodeMetricsDisplay = ({ code, language, onClose }) => {
+const CodeMetricsDisplay = ({code, language, onClose}) => {
     const [metrics, setMetrics] = useState({
         lines: 0,
         functions: 0,
         variables: 0,
         cyclomaticComplexity: 0,
     });
-
     useEffect(() => {
         const fetchMetrics = async () => {
             try {
-                const response = await fetch('http://localhost:8080/api/code-metrics/VIEWER_STATUS', {
+                const response = await fetch('http://localhost:8080/api/viewer/CodeMetrics', {
                     method: 'POST',
-                    headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` },
-                    body: JSON.stringify({ code, language }),
+                    headers: {
+                        'Content-Type': 'application/json',
+                        Authorization: `Bearer ${localStorage.getItem('token')}`
+                    },
+                    body: JSON.stringify({code, language}),
                 });
                 const data = await response.json();
                 setMetrics(data.metrics);

@@ -1,9 +1,6 @@
 package com.collaborative.editor.service.editorService;
 
-import com.collaborative.editor.database.mongodb.CommentRepository;
-import com.collaborative.editor.model.mongodb.Comment;
 import com.collaborative.editor.model.mysql.code.CodeMetrics;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 @Service("EditorServiceImpl")
