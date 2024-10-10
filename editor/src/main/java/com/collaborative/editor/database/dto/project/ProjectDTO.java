@@ -1,4 +1,4 @@
-package com.collaborative.editor.model.mysql.project;
+package com.collaborative.editor.database.dto.project;
 
 import lombok.*;
 
@@ -9,5 +9,5 @@ import lombok.*;
 @AllArgsConstructor
 public class ProjectDTO {
     private String projectName;
-    private Long roomId;
+    private String roomId;
 }

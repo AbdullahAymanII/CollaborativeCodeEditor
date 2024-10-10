@@ -97,7 +97,7 @@
 
 package com.collaborative.editor.service.dockerService;
 
-import com.collaborative.editor.model.mysql.code.CodeRequestDTO;
+import com.collaborative.editor.database.dto.code.CodeExecution;
 import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 
@@ -122,40 +122,38 @@ public class DockerExecutorService {
         languageDockerMap.put("ruby", "ruby:latest");
     }
 
-    public String executeCode(CodeRequestDTO codeRequest) throws Exception {
+    public String executeCode(CodeExecution codeRequest) throws Exception {
         String dockerImage = languageDockerMap.get(codeRequest.getLanguage());
         if (dockerImage == null) {
             throw new IllegalArgumentException("Unsupported language: " + codeRequest.getLanguage());
         }
 
         String[] command = {
-                "docker", "run", "--rm", dockerImage, "bash", "-c", prepareCommand(codeRequest.getLanguage(), codeRequest.getCode(), codeRequest.getInput())
+                "docker", "run", "--rm", dockerImage, "bash", "-c",
+                prepareCommand(
+                        codeRequest.getLanguage(),
+                        codeRequest.getCode(),
+                        codeRequest.getInput()
+                )
         };
-        System.out.println(Arrays.toString(command));
-        System.out.println(codeRequest.getCode());
+
 
         ProcessBuilder processBuilder = new ProcessBuilder(command);
         processBuilder.redirectErrorStream(true);
-        System.out.println("=================================================");
-
         Process process = processBuilder.start();
-        System.out.println("Executing...");
+
         BufferedReader reader = new BufferedReader(new InputStreamReader(process.getInputStream()));
 
         StringBuilder output = new StringBuilder();
         String line;
         while ((line = reader.readLine()) != null) {
             output.append(line).append("\n");
-            System.out.println(line);
         }
-        System.out.println("Successfully executed");
 
         int exitCode = process.waitFor();
         if (exitCode != 0) {
             output.append("Error: ").append(exitCode);
             return output.toString();
-//            return "Error occurred during code execution. Exit code: " + exitCode;
-//            throw new Exception("Error occurred during code execution. Exit code: " + exitCode);
         }
         System.out.println(output);
         return output.toString();
@@ -191,8 +189,7 @@ public class DockerExecutorService {
     }
 
     private String escapeCodeWithInput(String code, String input) {
-        // Here we can just pass the code to the container and provide the input via stdin
-        return escapeCode(code);  // Input will be passed separately
+        return escapeCode(code);
     }
 
     private String escapeCode(String code) {

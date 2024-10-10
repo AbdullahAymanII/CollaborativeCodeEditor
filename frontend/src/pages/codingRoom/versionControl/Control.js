@@ -63,7 +63,7 @@ const Control = ({ room, currentFile, isConnected, subscribeToCodeUpdates }) => 
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
                 body: JSON.stringify({
-                    fileName: file.fileName,
+                    filename: file.filename,
                     roomId: file.roomId,
                     projectName: file.projectName
                 }),
@@ -120,8 +120,8 @@ const Control = ({ room, currentFile, isConnected, subscribeToCodeUpdates }) => 
         }
     };
 
-    const handleCreateNewFile = async ({ branchName, fileName }) => {
-        if (fileName && branchName) {
+    const handleCreateNewFile = async ({ branchName, filename, extension }) => {
+        if (filename && branchName) {
             try {
                 const encodedBranchName = encodeURIComponent(branchName);
                 const response = await fetch(`http://localhost:8080/api/files/create-file`, {
@@ -130,8 +130,12 @@ const Control = ({ room, currentFile, isConnected, subscribeToCodeUpdates }) => 
                         'Content-Type': 'application/json',
                         Authorization: `Bearer ${localStorage.getItem('token')}`,
                     },
-                    body: JSON.stringify({ fileName, roomId: room.roomId, projectName: branchName }),
+                    body: JSON.stringify({ filename: filename, roomId: room.roomId, projectName: branchName, extension: extension }),
                 });
+                console.log(filename);
+                console.log(room.roomId);
+                console.log(branchName);
+                console.log(extension);
                 if (!response.ok) throw new Error('Failed to create file');
                 fetchFiles(branchName);
             } catch (error) {
@@ -184,8 +188,9 @@ const Control = ({ room, currentFile, isConnected, subscribeToCodeUpdates }) => 
                 title="Create New File"
                 actionLabel="Create"
                 inputs={[
-                    { label: 'Branch Name', placeholder: 'Enter branch name', name: 'branchName' },
-                    { label: 'File Name', placeholder: 'Enter new file name (e.g., file.txt)', name: 'fileName' },
+                    { label: 'Branch Name', placeholder: '/ Enter branch name', name: 'branchName' },
+                    { label: 'File Name', placeholder: 'Enter new file name ', name: 'filename' },
+                    { label: 'File Extension', placeholder: 'Enter Extension ', name: 'extension' },
                 ]}
                 onConfirm={(inputValues) => {
                     handleCreateNewFile(inputValues);

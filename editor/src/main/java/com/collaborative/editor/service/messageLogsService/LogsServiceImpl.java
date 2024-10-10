@@ -1,9 +1,10 @@
 package com.collaborative.editor.service.messageLogsService;
 
+import com.collaborative.editor.database.dto.file.FileDTO;
+import com.collaborative.editor.database.dto.project.ProjectDTO;
 import com.collaborative.editor.database.mongodb.LogsRepository;
+import com.collaborative.editor.model.mongodb.File;
 import com.collaborative.editor.model.mongodb.MessageLog;
-import com.collaborative.editor.model.mysql.file.FileDTO;
-import com.collaborative.editor.model.mysql.project.ProjectDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -25,7 +26,7 @@ public class LogsServiceImpl implements LogsService {
         }
     }
     @Override
-    public Optional<List<MessageLog>> getLogsByActionType(String type, Long roomId) {
+    public Optional<List<MessageLog>> getLogsByActionType(String type, String roomId) {
         try {
             return logsRepository.findByType(type, roomId);
         } catch (Exception e) {
@@ -34,7 +35,7 @@ public class LogsServiceImpl implements LogsService {
     }
 
     @Override
-    public Optional<List<MessageLog>> getLogsByRoomId(Long roomId) {
+    public Optional<List<MessageLog>> getLogsByRoomId(String roomId) {
         try {
             return logsRepository.findByRoomId(roomId);
         } catch (Exception e) {
@@ -52,9 +53,9 @@ public class LogsServiceImpl implements LogsService {
     }
 
     @Override
-    public Optional<List<MessageLog>> getFileLogs(FileDTO file) {
+    public Optional<List<MessageLog>> getFileLogs(String projectName, String roomId, String filename) {
         try {
-            return logsRepository.findByFileNameProjectNameAndRoomId(file.getProjectName(), file.getFileName(), file.getRoomId());
+            return logsRepository.findByFileNameProjectNameAndRoomId(projectName, filename, roomId);
         } catch (Exception e) {
             throw new RuntimeException("FILE NOT FOUND" + e.getMessage(), e);
         }

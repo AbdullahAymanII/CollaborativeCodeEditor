@@ -1,4 +1,4 @@
-package com.collaborative.editor.model.mysql.room;
+package com.collaborative.editor.database.dto.room;
 
 import lombok.*;
 
@@ -8,6 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class RoomDTO {
-    private Long roomId;
+    private String roomId;
     private String name;
 }

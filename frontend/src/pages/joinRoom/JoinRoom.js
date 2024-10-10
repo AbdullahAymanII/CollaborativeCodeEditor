@@ -18,7 +18,7 @@ const JoinRoom = () => {
     const fetchUserRooms = async () => {
         try {
             // Pass userName as a query parameter in the URL
-            const response = await fetch(`http://localhost:8080/api/rooms/join-room?userName=${encodeURIComponent(user.name)}`, {
+            const response = await fetch(`http://localhost:8080/api/rooms/join-room?username=${encodeURIComponent(user.name)}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -49,9 +49,10 @@ const JoinRoom = () => {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${localStorage.getItem('token')}`,
             },
-            body: JSON.stringify({roomId: room.roomId}),
+            body: JSON.stringify({roomName: room.name}),
         })
             .then((response) => {
+                console.log(role);
                 if (response.ok) {
 
                     setRole(roleClick);

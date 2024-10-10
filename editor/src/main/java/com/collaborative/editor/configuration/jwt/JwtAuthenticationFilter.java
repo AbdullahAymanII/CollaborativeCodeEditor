@@ -28,9 +28,7 @@ public class JwtAuthenticationFilter extends BasicAuthenticationFilter {
         if (header != null && header.startsWith("Bearer ")) {
             String token = header.substring(7);
             if (jwtUtil.validateToken(token)) {
-                System.out.println(token);
                 SecurityContextHolder.getContext().setAuthentication(jwtUtil.getAuthentication(token));
-                System.out.println(jwtUtil.getAuthentication(token).getDetails());
             }
         }
         chain.doFilter(request, response);

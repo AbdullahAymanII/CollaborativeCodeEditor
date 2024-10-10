@@ -1,6 +1,7 @@
 package com.collaborative.editor.service.editorService;
 
-import com.collaborative.editor.model.mysql.code.CodeMetrics;
+
+import com.collaborative.editor.database.dto.code.CodeMetrics;
 import org.springframework.stereotype.Service;
 
 @Service("EditorServiceImpl")

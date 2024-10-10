@@ -12,12 +12,12 @@ import java.util.Optional;
 @Repository
 public interface ProjectRepository extends JpaRepository<Project, Long> {
     @Query("SELECT r FROM Project r JOIN r.room v WHERE v.roomId = :roomId")
-    Optional<List<Project>> findByRoomId(@Param("roomId") Long roomId);
+    Optional<List<Project>> findByRoomId(@Param("roomId") String roomId);
 
     @Query("SELECT r FROM Project r WHERE r.name = :projectName")
     Optional<Project> findByProjectName(@Param("projectName") String projectName);
 
     @Query("SELECT r FROM Project r JOIN r.room v WHERE v.roomId = :roomId AND r.name = :projectName")
-    Optional<Project> findByRoomIdAndProjectName(@Param("roomId") Long roomId, @Param("projectName") String projectName);
+    Optional<Project> findByRoomIdAndProjectName(@Param("roomId") String roomId, @Param("projectName") String projectName);
 
 }

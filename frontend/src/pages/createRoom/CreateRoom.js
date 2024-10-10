@@ -163,9 +163,6 @@
 // export default CreateRoom;
 
 
-
-
-
 // import React, { useState } from 'react';
 // import {useLocation, useNavigate} from 'react-router-dom';
 // import { motion } from 'framer-motion';
@@ -311,9 +308,9 @@
 // export default CreateRoomAndAddMembers;
 
 
-import React, { useState } from 'react';
-import { useLocation, useNavigate } from 'react-router-dom';
-import { motion } from 'framer-motion';
+import React, {useState} from 'react';
+import {useLocation, useNavigate} from 'react-router-dom';
+import {motion} from 'framer-motion';
 import './CreateRoom.css';
 
 const RoomCreationFlow = () => {
@@ -326,7 +323,7 @@ const RoomCreationFlow = () => {
     const [showMemberForm, setShowMemberForm] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
-    const { user } = location.state || {};
+    const {user} = location.state || {};
 
     const handleCreateRoom = async () => {
         setLoading(true);
@@ -338,13 +335,19 @@ const RoomCreationFlow = () => {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
-                body: JSON.stringify({ roomName, roomId, ownerEmail: user.name }),
+                body: JSON.stringify({roomName, memberEmail: user.name}),
             });
-
             if (!response.ok) {
                 throw new Error('Invalid Room Name or ID');
             }
+            // Parse the response body to JSON
+            const data = await response.json();
+            console.log("------------------------+++++++++++++++++++");
+            console.log(data);  // Now data should contain the roomId
+            console.log(data.roomId);  // Access the roomId from the response
+            console.log("------------------------+++++++++++++++++++");
 
+            setRoomId(data.roomId);  // Set the roomId from the response data
             setShowMemberForm(true); // Transition to the Add Members form
         } catch (error) {
             setErrorMessage(error.message);
@@ -357,16 +360,15 @@ const RoomCreationFlow = () => {
         setLoading(true);
         setErrorMessage('');
         try {
-            const endpoint = type === 'viewer' ? 'add-viewer' : 'add-collaborator';
-            const response = await fetch(`http://localhost:8080/api/rooms/${endpoint}`, {
+            const endpoint = type === 'viewer' ? 'VIEWER' : 'COLLABORATOR';
+            const response = await fetch(`http://localhost:8080/api/rooms/add-member`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${localStorage.getItem('token')}`
                 },
-                body: JSON.stringify({ member, roomId }),
+                body: JSON.stringify({memberEmail: member, roomId: roomId, role: endpoint}),
             });
-
             if (!response.ok) {
                 throw new Error('Failed to add new member');
             }
@@ -388,10 +390,10 @@ const RoomCreationFlow = () => {
 
             <motion.div
                 className="form-animation"
-                initial={{ opacity: 0, scale: 0.8 }}
-                animate={{ opacity: 1, scale: 1 }}
-                exit={{ opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.5 }}
+                initial={{opacity: 0, scale: 0.8}}
+                animate={{opacity: 1, scale: 1}}
+                exit={{opacity: 0, scale: 0.8}}
+                transition={{duration: 0.5}}
             >
                 {!showMemberForm ? (
                     <form className="creation-form" onSubmit={(e) => e.preventDefault()}>
@@ -404,19 +406,20 @@ const RoomCreationFlow = () => {
                             onChange={(e) => setRoomName(e.target.value)}
                             disabled={loading}
                         />
-                        <input
-                            className="form-input"
-                            type="text"
-                            placeholder="Room ID"
-                            value={roomId}
-                            onChange={(e) => setRoomId(e.target.value)}
-                            disabled={loading}
-                        />
+                        {/*<input*/}
+                        {/*    className="form-input"*/}
+                        {/*    type="text"*/}
+                        {/*    placeholder="Room ID"*/}
+                        {/*    value={roomId}*/}
+                        {/*    onChange={(e) => setRoomId(e.target.value)}*/}
+                        {/*    disabled={loading}*/}
+                        {/*/>*/}
                         <button
                             className="form-action-button"
                             type="submit"
                             onClick={handleCreateRoom}
-                            disabled={loading || !roomName || !roomId}
+                            // disabled={loading || !roomName || !roomId}
+                            disabled={loading || !roomName}
                         >
                             {loading ? 'Creating...' : 'Next'}
                         </button>

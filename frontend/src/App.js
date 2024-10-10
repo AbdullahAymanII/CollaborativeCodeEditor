@@ -35,7 +35,10 @@ function App() {
                 });
                 if (!response.ok) throw new Error('Failed to fetch user');
                 const userData = await response.json();
+                console.log('---------------------------------');
                 setUser(userData);
+                console.log(userData);
+                console.log('---------------------------------');
             } catch (error) {
                 console.error('Error fetching user:', error);
             }

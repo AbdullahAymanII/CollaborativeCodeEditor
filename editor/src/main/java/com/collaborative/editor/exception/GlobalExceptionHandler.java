@@ -1,10 +1,8 @@
 package com.collaborative.editor.exception;
 
-import com.collaborative.editor.model.mysql.user.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -31,6 +29,18 @@ public class GlobalExceptionHandler {
         return errorResponse;
     }
 
+    @ExceptionHandler(InvalidCredentialsException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> handleInvalidCredentialsException(InvalidCredentialsException ex) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", "Invalid Credentials Exception");
+        errorResponse.put("message", ex.getMessage());
+
+        logger.error("Exception occurred:", ex.getMessage(), ex);
+
+        return errorResponse;
+    }
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Map<String, String> handleGeneralException(Exception ex) {
@@ -48,6 +58,54 @@ public class GlobalExceptionHandler {
     public Map<String, String> handleFileAlreadyExistsException(Exception ex) {
         Map<String, String> errorResponse = new HashMap<>();
         errorResponse.put("error", ex.getMessage());
+        errorResponse.put("message", ex.getMessage());
+
+        logger.error("Exception occurred:", ex.getMessage(), ex);
+
+        return errorResponse;
+    }
+
+    @ExceptionHandler(FileNotFoundException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public Map<String, String> handleFileNotFoundException(Exception ex) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", ex.getMessage());
+        errorResponse.put("message", ex.getMessage());
+
+        logger.error("Exception occurred:", ex.getMessage(), ex);
+
+        return errorResponse;
+    }
+
+    @ExceptionHandler(ProjectNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> handleProjectNotFoundException(ProjectNotFoundException ex) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", "Project Not Found");
+        errorResponse.put("message", ex.getMessage());
+
+        logger.error("Exception occurred:", ex.getMessage(), ex);
+
+        return errorResponse;
+    }
+
+    @ExceptionHandler(RoomNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> handleRoomNotFoundException(RoomNotFoundException ex) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", "Room Not Found");
+        errorResponse.put("message", ex.getMessage());
+
+        logger.error("Exception occurred:", ex.getMessage(), ex);
+
+        return errorResponse;
+    }
+
+    @ExceptionHandler(RoomMembershipNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> handleRoomMembershipNotFoundException(RoomMembershipNotFoundException ex) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", "RoomMembership Not Found Exception");
         errorResponse.put("message", ex.getMessage());
 
         logger.error("Exception occurred:", ex.getMessage(), ex);

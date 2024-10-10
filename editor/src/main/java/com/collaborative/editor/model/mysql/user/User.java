@@ -1,14 +1,14 @@
 package com.collaborative.editor.model.mysql.user;
 
-import com.collaborative.editor.model.mysql.room.Room;
-import com.collaborative.editor.model.mysql.room.RoomMembership;
+import com.collaborative.editor.model.mysql.roomMembership.RoomMembership;
+import com.collaborative.editor.model.mysql.user.constants.AccountSource;
+import com.collaborative.editor.model.mysql.user.constants.Role;
 import jakarta.persistence.*;
 import lombok.*;
-import net.minidev.json.annotate.JsonIgnore;
 import org.springframework.data.annotation.Id;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -23,6 +23,9 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+
+    @Version // Optimistic locking
+    private Long version;
 
     @Column(nullable = false, unique = true)
     private String username;
@@ -39,13 +42,11 @@ public class User {
 
     @Column(name = "source")
     @Enumerated(EnumType.STRING)
-    private RegistrationSource source;
+    private AccountSource source;
 
-    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<Room> ownedRooms = new HashSet<>();
-
+//    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+//    private Set<Room> ownedRooms = new HashSet<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<RoomMembership> roomMemberships = new HashSet<>();
-
+    private List<RoomMembership> roomMemberships = new ArrayList<>();
 }

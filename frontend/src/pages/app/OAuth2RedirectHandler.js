@@ -7,7 +7,11 @@ const OAuth2RedirectHandler = () => {
 
     useEffect(() => {
         const searchParams = new URLSearchParams(location.search);
+
         const token = searchParams.get("token");
+        console.log("----------------8988888888888888");
+        console.log(token);
+        console.log("----------------8988888888888888");
         if (token) {
             localStorage.setItem("token", token);
             navigate("/home");

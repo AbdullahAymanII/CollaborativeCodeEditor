@@ -1,16 +1,16 @@
-package com.collaborative.editor.controller.editor;
+package com.collaborative.editor.controller.websocket;
 
+import com.collaborative.editor.database.dto.code.CodeDTO;
 import com.collaborative.editor.model.mongodb.MessageLog;
-import com.collaborative.editor.model.mysql.code.CodeDTO;
+
 import com.collaborative.editor.service.messageLogsService.LogsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.*;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Controller;
 
 
 @Controller
-public class EditorController {
+public class WebsocketController {
 
     @Autowired
     private LogsServiceImpl logService;
@@ -44,21 +44,21 @@ public class EditorController {
         return messageLog;
     }
 
-    @MessageMapping("/user/join/{roomId}")
-    @SendTo("/topic/chat/{roomId}")
-    public MessageLog handleUserJoin(@DestinationVariable("roomId") String roomId, @Payload MessageLog chatMessageDTO) {
-        chatMessageDTO.setContent(" has joined the room.");
-        chatMessageDTO.setTimestamp(System.currentTimeMillis());
-        return chatMessageDTO;
-    }
-
-    @MessageMapping("/user/leave/{roomId}")
-    @SendTo("/topic/chat/{roomId}")
-    public MessageLog handleUserLeave(@DestinationVariable("roomId") String roomId, @Payload MessageLog chatMessageDTO) {
-        chatMessageDTO.setContent(" has left the room.");
-        chatMessageDTO.setTimestamp(System.currentTimeMillis());
-        return chatMessageDTO;
-    }
+//    @MessageMapping("/user/join/{roomId}")
+//    @SendTo("/topic/chat/{roomId}")
+//    public MessageLog handleUserJoin(@DestinationVariable("roomId") String roomId, @Payload MessageLog chatMessageDTO) {
+//        chatMessageDTO.setContent(" has joined the room.");
+//        chatMessageDTO.setTimestamp(System.currentTimeMillis());
+//        return chatMessageDTO;
+//    }
+//
+//    @MessageMapping("/user/leave/{roomId}")
+//    @SendTo("/topic/chat/{roomId}")
+//    public MessageLog handleUserLeave(@DestinationVariable("roomId") String roomId, @Payload MessageLog chatMessageDTO) {
+//        chatMessageDTO.setContent(" has left the room.");
+//        chatMessageDTO.setTimestamp(System.currentTimeMillis());
+//        return chatMessageDTO;
+//    }
 }
 
 

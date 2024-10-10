@@ -3,10 +3,10 @@ package com.collaborative.editor.model.mongodb;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.index.CompoundIndex;
 import org.springframework.data.mongodb.core.mapping.Document;
-import org.springframework.data.mongodb.repository.Update;
+
+import java.time.LocalDateTime;
 
 
 @Document(collection = "file_versions")
@@ -14,13 +14,20 @@ import org.springframework.data.mongodb.repository.Update;
 @NoArgsConstructor
 @AllArgsConstructor
 @CompoundIndex(def = "{'filename': 1, 'projectName': 1, 'roomId': 1}", unique = true)  // Compound unique index
-public class FileVersion {
+public class File {
 
     private String filename;
 
-    private Long roomId;
+    private String roomId;
 
     private String projectName;
 
     private String content;
+
+    private Long createdAt;
+
+    private Long lastModifiedAt;
+
+    private String extension;
+
 }

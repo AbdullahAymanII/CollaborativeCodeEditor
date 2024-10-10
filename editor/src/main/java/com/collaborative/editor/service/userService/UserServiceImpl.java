@@ -15,6 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -22,43 +23,30 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
-//    private final JWTService jwtService;
-    private final AuthenticationManager authManager;
     private final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
     private final JwtUtil jwtUtil ;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository, @Lazy AuthenticationManager authManager, JwtUtil jwtUtil) {
+    public UserServiceImpl(UserRepository userRepository, JwtUtil jwtUtil) {
         this.userRepository = userRepository;
-//        this.jwtService = jwtService;
-        this.authManager = authManager;
         this.jwtUtil = jwtUtil;
     }
 
     @Override
-    public boolean createUser(User user) {
-        user.setPassword(encoder.encode(user.getPassword()));
-        return userRepository.save(user) != null;
-    }
+    @Transactional
+    public void createUser(User user) {
 
-    @Override
-    public String verify(String username, String password) {
-        try {
-            Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
-
-            if (authentication.isAuthenticated()) {
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-
-                return jwtUtil.generateToken(authentication);
-            }
-        } catch (UsernameNotFoundException ex) {
-            throw new UserNotFoundException("User not found with email: " + username);
-        } catch (BadCredentialsException ex) {
-            return "Invalid credentials";
+        if (userRepository.findOneByEmail(user.getEmail()).isPresent()) {
+            throw new IllegalArgumentException("User with email already exists");
         }
-        return "Authentication failed";
-    }
 
+        try {
+            user.setPassword(encoder.encode(user.getPassword()));
+            userRepository.save(user);
+        }catch (Exception e) {
+            throw new RuntimeException("Failed to create user");
+        }
+    }
     @Override
     public User getUser(Authentication authentication) throws UsernameNotFoundException {
         String email = jwtUtil.getEmail(authentication);
@@ -76,32 +64,11 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User findUserByUsername(String username) {
-        return userRepository.findOneByUsername(username);
+        try {
+            return userRepository.findOneByUsername(username);
+        }catch (UserNotFoundException e) {
+            throw new RuntimeException("User not found with username: " + username);
+        }
     }
 
-    @Override
-    public boolean updateUserPassword(User user) {
-        return userRepository.save(user) != null;
-    }
-
-    @Override
-    public boolean updateUserEmail(User user) {
-        return userRepository.save(user) != null;
-    }
-
-    @Override
-    public boolean updateUserUserName(User user) {
-        return userRepository.save(user) != null;
-    }
-
-    @Override
-    public boolean updateUserRole(User user) {
-        return userRepository.save(user) != null;
-    }
-
-    @Override
-    public boolean deleteUser(User user) {
-        userRepository.delete(user);
-        return true;
-    }
 }

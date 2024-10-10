@@ -1,10 +1,12 @@
 package com.collaborative.editor.controller.room;
 
 
-import com.collaborative.editor.model.mysql.file.FileDTO;
-import com.collaborative.editor.model.mysql.project.ProjectDTO;
+import com.collaborative.editor.database.dto.file.FileDTO;
+import com.collaborative.editor.database.dto.project.ProjectDTO;
+import com.collaborative.editor.database.dto.room.AddMemberRequest;
+import com.collaborative.editor.database.dto.room.RoomDTO;
+import com.collaborative.editor.database.dto.room.CreateRoomRequest;
 import com.collaborative.editor.model.mysql.room.Room;
-import com.collaborative.editor.model.mysql.room.RoomDTO;
 import com.collaborative.editor.model.mysql.room.RoomRole;
 import com.collaborative.editor.model.mysql.user.User;
 import com.collaborative.editor.service.fileService.FileServiceImpl;
@@ -27,77 +29,63 @@ import java.util.Map;
 public class RoomController {
 
     private final RoomServiceImpl roomService;
+    private final UserServiceImpl userService;
+    private final ProjectServiceImpl projectService;
+    private final FileServiceImpl fileService;
 
     @Autowired
-    private UserServiceImpl userService;
+    public RoomController(
+            @Qualifier("RoomServiceImpl") RoomServiceImpl roomService,
+            @Qualifier("UserServiceImpl") UserServiceImpl userService,
+            @Qualifier("ProjectServiceImpl") ProjectServiceImpl projectService,
+            @Qualifier("FileServiceImpl") FileServiceImpl fileService) {
 
-    @Autowired
-    private ProjectServiceImpl projectService;
-
-    @Autowired
-    private FileServiceImpl fileService;
-
-    public RoomController(@Qualifier("RoomServiceImpl") RoomServiceImpl roomService) {
         this.roomService = roomService;
+        this.userService = userService;
+        this.projectService = projectService;
+        this.fileService = fileService;
     }
 
     @PostMapping("/createRoom")
-    public ResponseEntity<String> createRoom(@RequestBody Map<String, String> request) {
-        String roomId = request.get("roomId");
-        String roomName = request.get("roomName");
+    public ResponseEntity<Map<String, String>> createRoom(@RequestBody CreateRoomRequest request) {
+        String ownerEmail = request.getMemberEmail();
+        String roomName = request.getRoomName();
 
         try {
-            User owner = userService.findUserByEmail(request.get("ownerEmail")).get();
-            roomService.createRoom(owner, roomName, roomId);
-            projectService.createProject(new ProjectDTO("Main-Branch", Long.parseLong(roomId)), "README");
-            fileService.createFile(new FileDTO("Main-version", Long.parseLong(roomId), "Main-Branch"));
-            return ResponseEntity.ok("Room created successfully!");
+            User owner = userService.findUserByEmail(ownerEmail).get();
+            String roomId = roomService.createRoom(owner, roomName);
+
+            projectService.createProject(new ProjectDTO("Main-Branch", roomId));
+            fileService.createFile(new FileDTO("Main-version", roomId, "Main-Branch", ".txt"));
+
+            return ResponseEntity.ok(Collections.singletonMap("roomId", roomId));
         } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Failed to create room!");
+            return ResponseEntity.noContent().build();
         }
 
     }
 
     @DeleteMapping("/deleteRoom")
-    public ResponseEntity<String> deleteRoom(@RequestBody Map<String, String> request) {
-        Long id = Long.parseLong(request.get("roomId"));
-
+    public ResponseEntity<String> deleteRoom(@RequestBody String roomId) {
         try {
-            roomService.deleteByRoomId(id);
+            roomService.deleteRoom(roomId);
             return ResponseEntity.ok("Room deleted successfully!");
         } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
     }
 
-    @PostMapping("/add-collaborator")
-    public ResponseEntity<String> addCollaborator(@RequestBody Map<String, String> request) {
-        String roomId = request.get("roomId");
-        String email = request.get("member");
 
+    @PostMapping("/add-member")
+    public ResponseEntity<String> addMember(@RequestBody AddMemberRequest request) {
+        String roomId = request.getRoomId();
+        String memberEmail = request.getMemberEmail();
+        RoomRole role = RoomRole.valueOf(request.getRole());
         try {
-            User user = userService.findUserByEmail(email).get();
-            Room room = roomService.findByRoomId(Long.parseLong(roomId)).get();
-            System.out.println(user.getEmail());
-            System.out.println(room.getName());
-            roomService.addUserToRoom(room, user, RoomRole.COLLABORATOR);
-            return ResponseEntity.ok("Viewer added successfully!");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Failed to find user!");
-        }
+            User user = userService.findUserByEmail(memberEmail).get();
+            Room room = roomService.getRoomById(roomId).get();
 
-    }
-
-    @PostMapping("/add-viewer")
-    public ResponseEntity<String> addViewer(@RequestBody Map<String, String> request) {
-        String roomId = request.get("roomId");
-        String email = request.get("member");
-
-        try {
-            User user = userService.findUserByEmail(email).get();
-            Room room = roomService.findByRoomId(Long.parseLong(roomId)).get();
-
-            roomService.addUserToRoom(room, user, RoomRole.VIEWER);
+            roomService.addUserToRoom(room, user, role);
 
             return ResponseEntity.ok("Viewer added successfully!");
         } catch (Exception e) {
@@ -107,38 +95,35 @@ public class RoomController {
     }
 
     @GetMapping("/join-room")
-    public ResponseEntity<Map<String, List<RoomDTO>>> joinRoom(@RequestParam("userName") String userName) {
+    public ResponseEntity<Map<String, List<RoomDTO>>> joinRoom(@RequestParam("username") String username) {
         try {
 
-//            User user = userService.findUserByUsername(userName);
-            User user = userService.findUserByEmail(userName).get();
+            User user = userService.findUserByEmail(username).get();
 
-            List<RoomDTO> collaborativeRooms = roomService.findByCollaborativeUserName(user);
-            List<RoomDTO> viewRooms = roomService.findByViewerUserName(user);
+            List<RoomDTO> collaborativeRooms = roomService.getCollaborativeRooms(user);
+            List<RoomDTO> viewRooms = roomService.getViewerRooms(user);
 
             Map<String, List<RoomDTO>> response = new HashMap<>();
             response.put("collaborativeRooms", collaborativeRooms);
             response.put("viewRooms", viewRooms);
 
             return ResponseEntity.ok(response);
-
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
     }
 
     @PostMapping("/join-room/{roomId}")
-    public ResponseEntity<String> joinRoom(@PathVariable("roomId") Long roomId, @RequestBody String roomName) {
+    public ResponseEntity<String> joinRoom(@PathVariable("roomId") String roomId, @RequestBody String roomName) {
         return ResponseEntity.ok("Room");
     }
 
     @GetMapping("/edit-room/{username}")
-    public ResponseEntity<Map<String, List<RoomDTO>>> getRooms(@PathVariable("username") String username) {
+    public ResponseEntity<Map<String, List<RoomDTO>>> getOwnedRooms(@PathVariable("username") String username) {
         try {
 
             User owner = userService.findUserByEmail(username).get();
-            List<RoomDTO> rooms = roomService.findByOwnerUsername(owner);
+            List<RoomDTO> rooms = roomService.getUserOwnedRooms(owner);
 
             Map<String, List<RoomDTO>> response = new HashMap<>();
             response.put("rooms", rooms);
@@ -148,10 +133,11 @@ public class RoomController {
             return ResponseEntity.badRequest().build();
         }
     }
+
     @GetMapping("/{roomId}/details")
     public ResponseEntity<Map<String, List<Object>>> getRoomDetails(@PathVariable("roomId") String roomId) {
         try {
-            Room room = roomService.findByRoomId(Long.parseLong(roomId)).get();
+            Room room = roomService.getRoomById(roomId).get();
             List<Object> collaborators = Collections.singletonList(roomService.getCollaborators(room));
             List<Object> viewers = Collections.singletonList(roomService.getViewers(room));
             List<Object> projects = Collections.singletonList(projectService.getProjects(room.getRoomId()));
@@ -164,34 +150,34 @@ public class RoomController {
             return ResponseEntity.ok(response);
 
         } catch (Exception e) {
-            e.printStackTrace();
             return ResponseEntity.badRequest().build();
         }
     }
 
     @PostMapping("/remove-member")
-    public ResponseEntity<String> removeMember(@RequestBody Map<String, String> request) {
-        String roomId = request.get("roomId");
-        String email = request.get("member");
-        System.out.println(roomId + " " + email);
-        System.out.println("===========================");
+    public ResponseEntity<String> removeMember(@RequestBody AddMemberRequest request) {
+
         try {
-            User user = userService.findUserByEmail(email).get();
-            Room room = roomService.findByRoomId(Long.parseLong(roomId)).get();
-            System.out.println("remoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooove");
-            roomService.removeUserFromRoom(room, user);
-            System.out.println("remoooooooooooooooooooooooooooooooooooooooooooooooooooooooooooove");
+            String roomId = request.getRoomId();
+            String memberEmail = request.getMemberEmail();
+            RoomRole role = RoomRole.valueOf(request.getRole());
+            User user = userService.findUserByEmail(memberEmail).get();
+            Room room = roomService.getRoomById(roomId).get();
+
+            roomService.removeUserFromRoom(room, user, role);
+
             return ResponseEntity.ok("Viewer removed successfully!");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Failed to find user!");
         }
     }
-    @PostMapping("/rename")
-    public ResponseEntity<String> renameRoom(@RequestBody Map<String, String> request) {
-        String roomId = request.get("roomId");
-        String roomName = request.get("newName");
+
+    @PutMapping("/rename")
+    public ResponseEntity<String> renameRoom(@RequestBody RoomDTO roomDTO) {
+        String roomId = roomDTO.getRoomId();
+        String roomName = roomDTO.getName();
         try {
-            Room room = roomService.findByRoomId(Long.parseLong(roomId)).get();
+            Room room = roomService.getRoomById(roomId).get();
             room.setName(roomName);
             roomService.rename(room);
             return ResponseEntity.ok("Room renamed successfully!");

@@ -1,5 +1,4 @@
-package com.collaborative.editor.model.mysql.code;
-
+package com.collaborative.editor.database.dto.code;
 
 import lombok.*;
 
@@ -8,7 +7,7 @@ import lombok.*;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class CodeRequestDTO {
+public class CodeExecution {
     private String language;
     private String code;
     private String input;

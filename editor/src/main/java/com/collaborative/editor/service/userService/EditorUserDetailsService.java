@@ -1,15 +1,12 @@
 package com.collaborative.editor.service.userService;
 
-import com.collaborative.editor.configuration.jwt.JwtUtil;
 import com.collaborative.editor.database.mysql.UserRepository;
 import com.collaborative.editor.exception.UserNotFoundException;
 import com.collaborative.editor.model.mysql.user.User;
-import com.collaborative.editor.model.mysql.user.UserPrincipal;
+import com.collaborative.editor.model.mysql.user.CustomUserDetails;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -26,7 +23,7 @@ public class EditorUserDetailsService implements UserDetailsService {
         if (user.isEmpty()) {
             throw new UserNotFoundException("User with email '" + username + "' not found");
         }
-        return new UserPrincipal(user.get());
+        return new CustomUserDetails(user.get());
     }
 
 }

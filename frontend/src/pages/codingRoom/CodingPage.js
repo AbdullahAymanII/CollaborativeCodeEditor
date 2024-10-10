@@ -133,6 +133,7 @@ import useChatManager from "../websocket/useChatManager";
 const CodingPage = () => {
     const [darkMode, setDarkMode] = useState(false);
     const [code, setCode] = useState('');
+    const [sender, setSender] = useState('');
     const [output, setOutput] = useState('');
     const [input, setInput] = useState('');
     const [selectedLanguage, setSelectedLanguage] = useState('python');
@@ -148,7 +149,7 @@ const CodingPage = () => {
     const {
         subscribeToCodeUpdates,
         publishCodeChange
-    } = useCodeManager(wsRef, isConnected, currentFile, setCode, liveEditing);
+    } = useCodeManager(wsRef, isConnected, currentFile, setCode, liveEditing, setSender);
     const {
         subscribeToChat,
         sendActionMessage,
@@ -251,6 +252,8 @@ const CodingPage = () => {
                         publishCodeChange={publishCodeChange}
                         sendActionMessage={sendActionMessage}
                         isConnected={isConnected}
+                        sender={sender}
+                        setSender={setSender}
                     />
                 </div>
 
@@ -268,7 +271,7 @@ const CodingPage = () => {
 
             <InputOutput input={input} output={output} setInput={setInput}/>
 
-            <Footer/>
+            <Footer />
         </div>
     );
 };

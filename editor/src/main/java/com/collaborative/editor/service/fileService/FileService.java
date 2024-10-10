@@ -1,8 +1,9 @@
 package com.collaborative.editor.service.fileService;
 
-import com.collaborative.editor.model.mongodb.FileVersion;
-import com.collaborative.editor.model.mysql.file.FileDTO;
-import com.collaborative.editor.model.mysql.project.ProjectDTO;
+import com.collaborative.editor.database.dto.file.FileDTO;
+import com.collaborative.editor.database.dto.project.ProjectDTO;
+import com.collaborative.editor.model.mongodb.File;
+
 
 import java.nio.file.FileAlreadyExistsException;
 import java.util.List;
@@ -12,9 +13,9 @@ public interface FileService {
 
     void createFile(FileDTO fileDTO) throws FileAlreadyExistsException;
 
-    void pushFileContent(FileVersion fileVersion);
+    void pushFileContent(File file);
 
-    FileVersion mergeFileContent( FileVersion newVersion) throws FileAlreadyExistsException;
+    File mergeFileContent(File newVersion) throws FileAlreadyExistsException;
 
-    FileVersion pullFileContent(FileDTO fileDTO);
+    File pullFileContent(FileDTO fileDTO);
 }

@@ -1,4 +1,4 @@
-package com.collaborative.editor.model.mysql.file;
+package com.collaborative.editor.database.dto.file;
 
 
 import lombok.*;
@@ -9,7 +9,8 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class FileDTO {
-    private String fileName;
-    private Long roomId;
+    private String filename;
+    private String roomId;
     private String projectName;
+    private String extension;
 }

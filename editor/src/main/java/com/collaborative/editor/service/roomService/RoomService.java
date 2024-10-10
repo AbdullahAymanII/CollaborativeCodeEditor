@@ -1,8 +1,7 @@
 package com.collaborative.editor.service.roomService;
 
-
+import com.collaborative.editor.database.dto.room.RoomDTO;
 import com.collaborative.editor.model.mysql.room.Room;
-import com.collaborative.editor.model.mysql.room.RoomDTO;
 import com.collaborative.editor.model.mysql.room.RoomRole;
 import com.collaborative.editor.model.mysql.user.User;
 
@@ -10,29 +9,26 @@ import java.util.List;
 import java.util.Optional;
 
 public interface RoomService {
-    void createRoom(User owner, String roomName, String roomId);
+    String createRoom(User owner, String roomName);
 
-    Optional<Room> findByRoomId(Long roomId);
+    Optional<Room> getRoomById(String roomId);
 
-    void deleteByRoomId(Long roomId);
-
-//    boolean addCollaborator(Long roomId, User user);
-//
-//    boolean addViewer(Long roomId, User user);
+    void deleteRoom(String roomId);
 
     void addUserToRoom(Room room, User user, RoomRole role);
 
-    List<RoomDTO> findByCollaborativeUserName(User user);
 
-    List<RoomDTO> findByViewerUserName(User user);
+    List<RoomDTO> getCollaborativeRooms(User user);
 
-    List<RoomDTO> findByOwnerUsername(User user);
+    List<RoomDTO> getViewerRooms(User user);
+
+    List<RoomDTO> getUserOwnedRooms(User user);
 
     List<String> getViewers(Room room);
 
     List<String> getCollaborators(Room room);
 
-    void removeUserFromRoom(Room room, User user);
+    void removeUserFromRoom(Room room, User user, RoomRole role);
 
     void rename(Room room);
 }

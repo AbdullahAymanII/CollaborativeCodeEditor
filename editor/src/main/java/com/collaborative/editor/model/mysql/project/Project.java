@@ -39,6 +39,7 @@ public class Project {
     private Room room;
 
     private LocalDateTime createdAt;
+
     private LocalDateTime updatedAt;
 }
 

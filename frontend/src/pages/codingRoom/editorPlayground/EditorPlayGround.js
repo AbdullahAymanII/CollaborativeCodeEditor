@@ -346,7 +346,7 @@ import useFileManager from './FileManager';
 import useEditorLogic from './EditorLogic';
 import CodeMetricsDisplay from './CodeMetricsDisplay';
 
-const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user, room, selectedLanguage, setSelectedLanguage, role, setLiveEditing, liveEditing, publishCodeChange, sendActionMessage, isConnected}) => {
+const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user, room, selectedLanguage, setSelectedLanguage, role, setLiveEditing, liveEditing, publishCodeChange, sendActionMessage, isConnected, sender, setSender}) => {
     const [showConfirmPushModal, setShowConfirmPushModal] = useState(false);
     const [showConfirmMergeModal, setShowConfirmMergeModal] = useState(false);
     const [showMetricsModal, setShowMetricsModal] = useState(false); // New state for metrics modal
@@ -378,25 +378,6 @@ const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user,
         setShowConfirmMergeModal(false);
     };
 
-    // const handleDisplayLogs = async () => {
-    //     try {
-    //         const response = await fetch(`http://localhost:8080/api/viewer/room/${room.roomId}/logs`, {
-    //             method: 'GET',
-    //             headers: {
-    //                 'Content-Type': 'application/json',
-    //                 Authorization: `Bearer ${localStorage.getItem('token')}`,
-    //             },
-    //         });
-    //         if (!response.ok) throw new Error('Failed to fetch room logs');
-    //
-    //         const data = await response.json();
-    //         console.log('Room logs:', data);
-    //         console.log(data.roomLogs);
-    //
-    //     } catch (error) {
-    //         console.error('Error fetching room logs:', error);
-    //     }
-    // };
     const handleDisplayLogs = async () => {
         try {
             const response = await fetch(`http://localhost:8080/api/viewer/room/${room.roomId}/logs`, {
@@ -446,6 +427,7 @@ const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user,
             <EditorHeader
                 selectedLanguage={selectedLanguage}
                 onLanguageChange={e => setSelectedLanguage(e.target.value)}
+                room={room}
             />
             <Editor
                 height="70vh"
@@ -510,6 +492,8 @@ const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user,
                 startConnection={handleStartConnection}
                 endConnection={handleEndConnection}
                 viewLogs={handleDisplayLogs}
+                sender={sender}
+                setSender={setSender}
             />
             {/* Code Metrics Modal */}
             {showMetricsModal && (

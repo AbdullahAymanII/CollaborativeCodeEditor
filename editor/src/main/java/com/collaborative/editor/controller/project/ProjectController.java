@@ -1,8 +1,8 @@
 package com.collaborative.editor.controller.project;
 
-import com.collaborative.editor.model.mongodb.FileVersion;
-import com.collaborative.editor.model.mysql.file.FileDTO;
-import com.collaborative.editor.model.mysql.project.ProjectDTO;
+
+import com.collaborative.editor.database.dto.file.FileDTO;
+import com.collaborative.editor.database.dto.project.ProjectDTO;
 import com.collaborative.editor.service.fileService.FileServiceImpl;
 import com.collaborative.editor.service.projectService.ProjectServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,32 +10,81 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.nio.file.FileAlreadyExistsException;
 import java.util.List;
 import java.util.Map;
+
+//@RestController
+//@RequestMapping("/api/projects")
+//@CrossOrigin
+//public class ProjectController {
+//
+//    private final ProjectServiceImpl projectService;
+//
+//    @Autowired
+//    private FileServiceImpl fileService;
+//
+//    public ProjectController(@Qualifier("ProjectServiceImpl") ProjectServiceImpl projectService) {
+//        this.projectService = projectService;
+//    }
+//
+//    @PostMapping("/create-project")
+//    public ResponseEntity<String> createProject(@RequestBody ProjectDTO request) {
+//        String projectName = request.getProjectName();
+//        Long roomId = request.getRoomId();
+//        try {
+//            projectService.createProject(request);
+//            fileService.createFile(new FileDTO("Main-version", roomId, projectName));
+//
+//            return ResponseEntity.ok("Project created successfully!");
+//        } catch (Exception e) {
+//            return ResponseEntity.badRequest().body("Failed to create project.");
+//        }
+//    }
+//
+//    @GetMapping("/room/{roomId}")
+//    public ResponseEntity<Map<String, List<ProjectDTO>>> listProjects(@PathVariable String roomId) {
+//        List<ProjectDTO> projects = projectService.getProjects(Long.parseLong(roomId));
+//        if (projects.isEmpty()) {
+//            return ResponseEntity.notFound().build();
+//        }
+//        return ResponseEntity.ok(Map.of("projects", projects));
+//    }
+//
+//    @PostMapping("/remove-project")
+//    public ResponseEntity<String> deleteProject(@RequestBody ProjectDTO project) {
+//        try {
+//            projectService.deleteProject(project);
+//            return ResponseEntity.ok("Project deleted successfully!");
+//        }catch (Exception e){
+//            return ResponseEntity.notFound().build();
+//        }
+//    }
+//
+//}
+
 
 @RestController
 @RequestMapping("/api/projects")
 @CrossOrigin
 public class ProjectController {
 
+    private static final String MAIN_VERSION = "Main-version";
+    private static final String DEFAULT_EXTENSION = ".txt";
+
     private final ProjectServiceImpl projectService;
+    private final FileServiceImpl fileService;
 
     @Autowired
-    private FileServiceImpl fileService;
-
-    public ProjectController(@Qualifier("ProjectServiceImpl") ProjectServiceImpl projectService) {
+    public ProjectController(@Qualifier("ProjectServiceImpl") ProjectServiceImpl projectService, FileServiceImpl fileService) {
         this.projectService = projectService;
+        this.fileService = fileService;
     }
 
     @PostMapping("/create-project")
-    public ResponseEntity<String> createProject(@RequestBody Map<String, String> request) {
-        String projectName = request.get("projectName");
-        String projectDescription = request.get("projectDescription");
-        String roomId = request.get("roomId");
+    public ResponseEntity<String> createProject(@RequestBody ProjectDTO request) {
         try {
-            projectService.createProject(new ProjectDTO(projectName, Long.parseLong(roomId)), projectDescription);
-            fileService.createFile(new FileDTO("Main-version", Long.parseLong(roomId), projectName));
+            projectService.createProject(request);
+            fileService.createFile(new FileDTO(MAIN_VERSION, request.getRoomId(), request.getProjectName(),DEFAULT_EXTENSION));
             return ResponseEntity.ok("Project created successfully!");
         } catch (Exception e) {
             return ResponseEntity.badRequest().body("Failed to create project.");
@@ -44,11 +93,12 @@ public class ProjectController {
 
     @GetMapping("/room/{roomId}")
     public ResponseEntity<Map<String, List<ProjectDTO>>> listProjects(@PathVariable String roomId) {
-        List<ProjectDTO> projects = projectService.getProjects(Long.parseLong(roomId));
-        if (projects.isEmpty()) {
+        try {
+            List<ProjectDTO> projects = projectService.getProjects(roomId);
+            return ResponseEntity.ok(Map.of("projects", projects));
+        } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(Map.of("projects", projects));
     }
 
     @PostMapping("/remove-project")
@@ -56,9 +106,8 @@ public class ProjectController {
         try {
             projectService.deleteProject(project);
             return ResponseEntity.ok("Project deleted successfully!");
-        }catch (Exception e){
+        } catch (Exception e) {
             return ResponseEntity.notFound().build();
         }
     }
-
 }

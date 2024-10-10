@@ -76,11 +76,11 @@ const ProjectList = ({ projects, selectedProject, onSelectProject, files, select
                                     ) : (
                                         files.map((file) => (
                                             <li
-                                                key={file.fileName}
+                                                key={file.filename}
                                                 className={`file-item ${selectedFile === file ? 'selected' : ''}`}
                                                 onClick={() => onSelectFile(file)}
                                             >
-                                                {file.fileName}
+                                                {file.filename}
                                             </li>
                                         ))
                                     )}

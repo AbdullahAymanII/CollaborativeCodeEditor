@@ -13,7 +13,7 @@ public class MessageLog {
     private String sender;
     private String role;
     private String filename;
-    private Long roomId;
+    private String roomId;
     private String projectName;
     private String content;
     private Long timestamp;

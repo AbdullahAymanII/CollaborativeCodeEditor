@@ -13,8 +13,8 @@ import java.util.Optional;
 @Repository
 public interface RoomRepository extends JpaRepository<Room, Long> {
 
-    @Query("SELECT r FROM Room r JOIN r.owner c WHERE c.email = :email")
-    Optional<List<Room>> findByOwnerEmail(@Param("email") String email);
+//    @Query("SELECT r FROM Room r JOIN r. c WHERE c.email = :email")
+//    Optional<List<Room>> findByOwnerEmail(@Param("email") String email);
 
 //    @Query("SELECT r FROM Room r JOIN r.collaborators c WHERE c.email = :email")
 //    Optional<List<Room>> findCollaboratingRooms(@Param("email") String email);
@@ -23,10 +23,10 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
 //    Optional<List<Room>> findViewingRooms(@Param("email") String email);
 
     @Query("SELECT r FROM Room r  WHERE r.roomId = :roomId")
-    Optional<Room> findByRoomId(@Param("roomId") Long roomId);
+    Optional<Room> findByRoomId(@Param("roomId") String roomId);
 
     @Modifying
     @Query("DELETE FROM Room r WHERE r.roomId = :roomId")
-    void deleteByRoomId(@Param("roomId") Long roomId);
+    void deleteByRoomId(@Param("roomId") String roomId);
 
 }

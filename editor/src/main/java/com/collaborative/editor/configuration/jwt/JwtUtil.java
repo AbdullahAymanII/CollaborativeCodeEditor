@@ -40,19 +40,29 @@ public class JwtUtil {
     public String getEmail(Authentication authentication) {
 
         if (authentication.getPrincipal() instanceof UserDetails userDetails) {
+            System.out.println("+++++++++++++++++++++++++++++++++++++++");
+            System.out.println("userDetails");
+            System.out.println(userDetails.getUsername());
+            System.out.println("+++++++++++++++++++++++++++++++++++++++");
             return userDetails.getUsername();
         }
 
         if (authentication instanceof OAuth2AuthenticationToken oauthToken) {
 
-            String registrationId = oauthToken.getAuthorizedClientRegistrationId().toLowerCase();
-
-            return switch (registrationId) {
-                case "google" -> oauthToken.getPrincipal().getAttribute("email");
-                case "github" -> oauthToken.getPrincipal().getAttribute("login");
-                default ->
-                        throw new IllegalArgumentException("Unsupported OAuth2 client registration id: " + registrationId);
-            };
+            return oauthToken.getPrincipal().getAttribute("email");
+//            String registrationId = oauthToken.getAuthorizedClientRegistrationId().toLowerCase();
+//
+//            System.out.println("+++++++++++++++++++++++++++++++++++++++");
+//            System.out.println("OAuth2AuthenticationToken");
+//            System.out.println(registrationId);
+//            System.out.println("+++++++++++++++++++++++++++++++++++++++");
+//
+//            return switch (registrationId) {
+//                case "google" -> oauthToken.getPrincipal().getAttribute("email");
+//                case "github" -> oauthToken.getPrincipal().getAttribute("email");
+//                default ->
+//                        throw new IllegalArgumentException("Unsupported OAuth2 client registration id: " + registrationId);
+//            };
 
         }
         throw new IllegalArgumentException("Unsupported authentication principal type");

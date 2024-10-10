@@ -323,15 +323,15 @@ const RoomAdmin = () => {
     }, []);
 
     const addMember = async (type, member) => {
-        const endpoint = type === 'viewer' ? 'add-viewer' : 'add-collaborator';
+        const endpoint = type === 'viewer' ? 'VIEWER' : 'COLLABORATOR';
         try {
-            const response = await fetch(`http://localhost:8080/api/rooms/${endpoint}`, {
+            const response = await fetch(`http://localhost:8080/api/rooms/add-member`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
-                body: JSON.stringify({ member, roomId: room.roomId }),
+                body: JSON.stringify({ memberEmail:member, roomId: room.roomId, role: endpoint }),
             });
             if (!response.ok) throw new Error('Failed to add new member');
             if (type === 'viewer') setViewers([...viewers, newViewer]);
@@ -348,14 +348,14 @@ const RoomAdmin = () => {
 
     const removeMember = async (type, member) => {
         try {
-            const endpoint = type === 'viewer' ? 'remove-viewer' : 'remove-collaborator';
+            const endpoint = type === 'viewer' ? 'VIEWER' : 'COLLABORATOR';
             const response = await fetch(`http://localhost:8080/api/rooms/remove-member`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
-                body: JSON.stringify({ roomId: room.roomId, member }),
+                body: JSON.stringify({ roomId: room.roomId, memberEmail: member, role: endpoint }),
             });
             if (!response.ok) throw new Error('Failed to remove member');
             if (type === 'viewer') setViewers(viewers.filter(v => v !== member));
@@ -388,12 +388,12 @@ const RoomAdmin = () => {
     const handleRenameRoom = async (newName) => {
         try {
             const response = await fetch(`http://localhost:8080/api/rooms/rename`, {
-                method: 'POST',
+                method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
-                body: JSON.stringify({ newName, roomId: room.roomId }),
+                body: JSON.stringify({ name: newName, roomId: room.roomId }),
             });
             if (!response.ok) throw new Error('Failed to rename room');
             setRoomName(newName);
@@ -410,7 +410,7 @@ const RoomAdmin = () => {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${localStorage.getItem('token')}`,
                 },
-                body: JSON.stringify({ projectName: newProject, roomId: room.roomId, projectDescription:"MY NEW PROJECT" }),
+                body: JSON.stringify({ projectName: newProject, roomId: room.roomId }),
             });
             if (!response.ok) throw new Error('Failed to add project');
             setProjects([...projects, { projectName: newProject, roomId: room.roomId }]);

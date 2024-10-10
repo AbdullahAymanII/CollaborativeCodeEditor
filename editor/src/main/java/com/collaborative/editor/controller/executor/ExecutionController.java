@@ -1,7 +1,7 @@
 package com.collaborative.editor.controller.executor;
 
 
-import com.collaborative.editor.model.mysql.code.CodeRequestDTO;
+import com.collaborative.editor.database.dto.code.CodeExecution;
 import com.collaborative.editor.service.dockerService.DockerExecutorService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -20,7 +20,7 @@ public class ExecutionController {
     }
 
     @PostMapping("/run")
-    public  ResponseEntity<Map<String, String>>  runCode(@RequestBody CodeRequestDTO codeRequest) {
+    public  ResponseEntity<Map<String, String>>  runCode(@RequestBody CodeExecution codeRequest) {
         try {
             String output = dockerService.executeCode(codeRequest);
             return ResponseEntity.ok(Map.of("output", output));

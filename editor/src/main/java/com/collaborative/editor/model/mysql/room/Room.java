@@ -1,12 +1,14 @@
 package com.collaborative.editor.model.mysql.room;
 
 import com.collaborative.editor.model.mysql.project.Project;
-import com.collaborative.editor.model.mysql.user.User;
+import com.collaborative.editor.model.mysql.roomMembership.RoomMembership;
 import jakarta.persistence.*;
 import lombok.*;
 import org.springframework.data.annotation.Id;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -16,6 +18,7 @@ import java.util.Set;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class Room {
 
     @jakarta.persistence.Id
@@ -23,18 +26,17 @@ public class Room {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Version
+    private Long version;
+
     @Column(nullable = false, unique=true)
-    private Long roomId;
+    private String roomId;
 
     @Column(nullable = false)
     private String name;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "owner_id", nullable = false)
-    private User owner;
-
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<RoomMembership> roomMemberships = new HashSet<>();
+    private List<RoomMembership> roomMemberships = new ArrayList<>();
 
 
     @OneToMany(mappedBy = "room", cascade = CascadeType.ALL)

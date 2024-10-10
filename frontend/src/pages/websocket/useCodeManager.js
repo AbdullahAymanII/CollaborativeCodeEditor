@@ -63,7 +63,7 @@
 
 import { useCallback } from 'react';
 
-const useCodeManager = (wsRef, isConnected, currentFile, setCode, liveEditing) => {
+const useCodeManager = (wsRef, isConnected, currentFile, setCode, liveEditing, setSender) => {
 
     const subscribeToCodeUpdates = useCallback((currentFile) => {
         console.log('Subscribing to code updates...');
@@ -74,13 +74,14 @@ const useCodeManager = (wsRef, isConnected, currentFile, setCode, liveEditing) =
                 (message) => {
                     const data = JSON.parse(message.body);
                     setCode(data.code);
+                    setSender(data.userId);
                     console.log('Code update received:', data);
                 }
             );
         } else {
             console.log('Cannot subscribe to code updates, WebSocket is not connected.');
         }
-    }, [wsRef, isConnected, currentFile, setCode]); // Memoize the callback
+    }, [wsRef, isConnected, currentFile, setCode, setSender]); // Memoize the callback
 
     const publishCodeChange = useCallback((user, code) => {
         if (wsRef.current && isConnected && liveEditing) {
