@@ -2,10 +2,10 @@ name: Collaborative Code Editor Project
 on:
   push:
     branches:
-      - master
+      - feature-websocket
   pull_request:
     branches:
-      - master
+      - feature-websocket
   workflow_dispatch:
 jobs:
   hello:
