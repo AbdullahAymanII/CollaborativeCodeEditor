@@ -89,6 +89,8 @@ const useWebSocketConnection = () => {
         if (wsRef.current) return; // Prevent duplicate WebSocket connections
 
         const socket = new SockJS('http://localhost:8080/ws');
+
+
         const stompClient = new Client({
             webSocketFactory: () => socket,
             reconnectDelay: 5000,

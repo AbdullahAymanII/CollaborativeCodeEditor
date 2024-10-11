@@ -342,11 +342,6 @@ const RoomCreationFlow = () => {
             }
             // Parse the response body to JSON
             const data = await response.json();
-            console.log("------------------------+++++++++++++++++++");
-            console.log(data);  // Now data should contain the roomId
-            console.log(data.roomId);  // Access the roomId from the response
-            console.log("------------------------+++++++++++++++++++");
-
             setRoomId(data.roomId);  // Set the roomId from the response data
             setShowMemberForm(true); // Transition to the Add Members form
         } catch (error) {
@@ -426,7 +421,7 @@ const RoomCreationFlow = () => {
                     </form>
                 ) : (
                     <div className="member-forms">
-                        <h1 className="form-header">Add Members to {roomName}</h1>
+                        <h1 className="add-member-headerForm">Add Members to {roomName}</h1>
                         <input
                             className="form-input"
                             type="text"

@@ -445,14 +445,14 @@ const RoomAdmin = () => {
             </header>
 
             <div className="room-admin-body">
-                <h2>Manage Room: {roomName}</h2>
+                <h2 className="edit-h2" >Manage Room: {roomName}</h2>
                 <input
                     type="text"
                     value={newName}
                     onChange={(e) => setNewName(e.target.value)}
                     placeholder="New room name"
                 />
-                <button onClick={() => handleRenameRoom(newName)} className="rename-btn">Rename Room</button>
+                <button onClick={() => handleRenameRoom(newName)} className="edit-button">Rename Room</button>
 
                 <section className="stats">
                     <div className="stat-card">
@@ -482,7 +482,7 @@ const RoomAdmin = () => {
                             onChange={(e) => setNewViewer(e.target.value)}
                             placeholder="Add new viewer"
                         />
-                        <button onClick={handleAddViewer} className="add-btn">Add Viewer</button>
+                        <button onClick={handleAddViewer} className="edit-button">Add Viewer</button>
                     </div>
 
                     <div className="collaborator-management">
@@ -501,7 +501,7 @@ const RoomAdmin = () => {
                             onChange={(e) => setNewCollaborator(e.target.value)}
                             placeholder="Add new collaborator"
                         />
-                        <button onClick={handleAddCollaborator} className="add-btn">Add Collaborator</button>
+                        <button onClick={handleAddCollaborator} className="edit-button">Add Collaborator</button>
                     </div>
                 </section>
 
@@ -521,7 +521,7 @@ const RoomAdmin = () => {
                         onChange={(e) => setNewProject(e.target.value)}
                         placeholder="Add new project"
                     />
-                    <button onClick={handleAddProject} className="add-btn">Add Project</button>
+                    <button onClick={handleAddProject} className="edit-button">Add Project</button>
                 </section>
             </div>
         </div>

@@ -27,6 +27,14 @@ const Header = ({ user, darkMode, toggleTheme, closeWebSocketConnection, sendCha
         closeWebSocketConnection();
         navigate('/Home');
     };
+    const handleLeaveRoom = () => {
+        sendChatMessage(leaveMessage);
+        closeWebSocketConnection();
+        navigate('/join-room', {
+            state: { user },
+        });
+    };
+
     return (
         <header className="rooms-header">
             <div className="user-info">
@@ -38,6 +46,7 @@ const Header = ({ user, darkMode, toggleTheme, closeWebSocketConnection, sendCha
                     {darkMode ? 'Switch to Dark Mode' : 'Switch to Light Mode'}
                 </button>
                 <button className="theme-toggle-btn" onClick={handleHome}>HOME</button>
+                <button className="logout-btn" onClick={handleLeaveRoom}>LEAVE ROOM</button>
                 <button className="logout-btn" onClick={handleLogout}>LOG OUT</button>
             </div>
         </header>

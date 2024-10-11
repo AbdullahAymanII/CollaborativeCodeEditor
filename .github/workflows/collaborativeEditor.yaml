@@ -1,0 +1,34 @@
+name: Collaborative Code Editor Project
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+  workflow_dispatch:
+jobs:
+  hello:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+      - uses: actions/checkout@v2
+      - name: Print hello world
+        run: |
+          echo "Hello, world!"
+          echo "This is a collaborative code editor project."
+  build:
+    runs-on: ubuntu-latest
+    needs: hello
+    steps:
+      - name: Build Docker image
+        run: |
+          docker build -t code-editor .
+  goodbye:
+    runs-on: ubuntu-latest
+    needs: hello
+    steps:
+      - name: Print goodbye world
+        run: |
+          echo "Goodbye, world!"
+          echo "This is a collaborative code editor project."

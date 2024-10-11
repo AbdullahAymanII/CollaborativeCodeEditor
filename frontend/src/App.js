@@ -6,7 +6,6 @@ import Login from "./pages/loginForm/Login";
 import Registration from "./pages/loginForm/Registration";
 import Home from "./pages/home/Home";
 import CreateRoom from "./pages/createRoom/CreateRoom";
-// import CreateProject from "./pages/createRoom/CreateProject";
 import AddMembers from "./pages/createRoom/AddMembers";
 import JoinRoom from "./pages/joinRoom/JoinRoom";
 import CodingPage from "./pages/codingRoom/CodingPage";

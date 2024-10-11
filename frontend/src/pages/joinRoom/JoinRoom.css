@@ -53,20 +53,30 @@
     gap: 10px;
 }
 
-.theme-toggle-btn,
-.logout-btn {
+.theme-toggle-btn{
     padding: 10px 20px;
     border: none;
-    background-color: #615f5f;
+    background-color: #5a5757;
     color: #fff;
     cursor: pointer;
     border-radius: 5px;
     transition: background-color 0.3s ease;
 }
+.logout-btn {
+    padding: 10px 20px;
+    border: none;
+    background-color: #911111b0;
+    color: #fff;
+    cursor: pointer;
+    border-radius: 6px;
+    transition: background-color 0.3s ease;
+}
 
-.theme-toggle-btn:hover,
-.logout-btn:hover {
+.theme-toggle-btn:hover {
     background-color: #555;
+}
+.logout-btn:hover {
+    background-color: #400000;
 }
 
 /* New section for home-body content layout */
