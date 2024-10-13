@@ -48,7 +48,7 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.AWS_BACKEND_HOST }}
-          username: ubuntu
+          username: i-0adabf6ef59b093e9
           key: ${{ secrets.AWS_SSH_KEY }}
           script: |
             # Pull the latest backend image
@@ -75,7 +75,7 @@ jobs:
         uses: appleboy/ssh-action@master
         with:
           host: ${{ secrets.AWS_FRONTEND_HOST }}
-          username: ubuntu
+          username: i-013c7f2dc6a0b6e68
           key: ${{ secrets.AWS_SSH_KEY }}
           script: |
             # Pull the latest frontend image
