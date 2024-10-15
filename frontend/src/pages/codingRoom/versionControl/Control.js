@@ -14,11 +14,38 @@ const Control = ({ room, currentFile, isConnected, subscribeToCodeUpdates }) => 
 
     const [showBranchModal, setShowBranchModal] = useState(false);
     const [showFileModal, setShowFileModal] = useState(false);
-
+    const [showDownloadModal, setShowDownloadModal] = useState(false);
     const showError = (message) => {
         setErrorMessage(message);
         setTimeout(() => setErrorMessage(''), 3000);
     };
+
+    const downloadProject = async ({ branchName }) => {
+        try {
+            const response = await fetch(`http://localhost:8080/api/projects/${room.roomId}/${branchName}/download-project`, {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${localStorage.getItem('token')}`,
+                },
+            });
+
+            if (!response.ok) throw new Error('Failed to download project');
+
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `${branchName}.zip`;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        } catch (error) {
+            showError('You do not have projects currently. Please add a new project.');
+        }
+    };
+
+
 
     const fetchProjects = async () => {
         try {
@@ -160,6 +187,9 @@ const Control = ({ room, currentFile, isConnected, subscribeToCodeUpdates }) => 
                 <button className="action-btn add-file-btn" onClick={() => setShowFileModal(true)}>
                     Add New File
                 </button>
+                <button className="action-btn add-file-btn" onClick={() => setShowDownloadModal(true)}>
+                    DownloadProject
+                </button>
             </div>
 
             <ProjectList
@@ -197,6 +227,21 @@ const Control = ({ room, currentFile, isConnected, subscribeToCodeUpdates }) => 
                     setShowFileModal(false);
                 }}
                 onCancel={() => setShowFileModal(false)}
+            />
+
+            <Action
+                show={showDownloadModal}
+                title="Download Project"
+                actionLabel="Create"
+                inputs={[
+                    { label: 'Branch Name', placeholder: '/ Enter branch name', name: 'branchName' },
+
+                ]}
+                onConfirm={(inputValues) => {
+                    downloadProject(inputValues);
+                    setShowDownloadModal(false);
+                }}
+                onCancel={() => setShowDownloadModal(false)}
             />
 
             <Action

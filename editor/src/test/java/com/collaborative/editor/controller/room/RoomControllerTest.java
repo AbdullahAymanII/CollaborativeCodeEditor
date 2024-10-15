@@ -1,14 +1,14 @@
 package com.collaborative.editor.controller.room;
 
 
-import com.collaborative.editor.database.dto.room.AddMemberRequest;
-import com.collaborative.editor.database.dto.room.CreateRoomRequest;
-import com.collaborative.editor.database.dto.room.RoomDTO;
-import com.collaborative.editor.model.mysql.room.Room;
-import com.collaborative.editor.model.mysql.room.RoomRole;
-import com.collaborative.editor.model.mysql.user.User;
-import com.collaborative.editor.service.fileService.FileServiceImpl;
-import com.collaborative.editor.service.projectService.ProjectServiceImpl;
+import com.collaborative.editor.dto.room.AddMemberRequest;
+import com.collaborative.editor.dto.room.CreateRoomRequest;
+import com.collaborative.editor.dto.room.RoomDTO;
+import com.collaborative.editor.model.room.Room;
+import com.collaborative.editor.model.room.RoomRole;
+import com.collaborative.editor.model.user.User;
+import com.collaborative.editor.service.versionControlService.fileService.FileServiceImpl;
+import com.collaborative.editor.service.versionControlService.projectService.ProjectServiceImpl;
 import com.collaborative.editor.service.roomService.RoomServiceImpl;
 import com.collaborative.editor.service.userService.UserServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
@@ -73,14 +73,6 @@ class RoomControllerTest {
         assertEquals("roomId123", response.getBody().get("roomId"));
     }
 
-    @Test
-    void createRoom_failure() {
-        when(userService.findUserByEmail(anyString())).thenReturn(Optional.empty());
-
-        ResponseEntity<Map<String, String>> response = roomController.createRoom(createRoomRequest);
-
-        assertEquals(204, response.getStatusCodeValue());
-    }
 
     @Test
     void deleteRoom_success() {

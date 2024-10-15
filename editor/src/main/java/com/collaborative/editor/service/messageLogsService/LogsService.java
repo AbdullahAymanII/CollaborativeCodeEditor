@@ -1,9 +1,7 @@
 package com.collaborative.editor.service.messageLogsService;
 
-import com.collaborative.editor.database.dto.file.FileDTO;
-import com.collaborative.editor.database.dto.project.ProjectDTO;
-import com.collaborative.editor.model.mongodb.File;
-import com.collaborative.editor.model.mongodb.MessageLog;
+import com.collaborative.editor.dto.project.ProjectDTO;
+import com.collaborative.editor.model.messageLog.MessageLog;
 
 
 import java.util.List;

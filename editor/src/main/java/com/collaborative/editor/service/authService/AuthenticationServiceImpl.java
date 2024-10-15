@@ -1,9 +1,9 @@
 package com.collaborative.editor.service.authService;
 
 import com.collaborative.editor.configuration.jwt.JwtUtil;
-import com.collaborative.editor.database.dto.authentication.LoginRequest;
-import com.collaborative.editor.exception.InvalidCredentialsException;
-import com.collaborative.editor.exception.UserNotFoundException;
+import com.collaborative.editor.dto.authentication.LoginRequest;
+import com.collaborative.editor.exception.authenticaionException.InvalidCredentialsException;
+import com.collaborative.editor.exception.userException.UserNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -14,7 +14,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-@Service
+@Service("AuthenticationServiceImpl")
 public class AuthenticationServiceImpl implements AuthenticationService{
 
     private final AuthenticationManager authManager;

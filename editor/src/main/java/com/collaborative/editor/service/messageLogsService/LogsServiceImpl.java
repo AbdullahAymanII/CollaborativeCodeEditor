@@ -1,17 +1,15 @@
 package com.collaborative.editor.service.messageLogsService;
 
-import com.collaborative.editor.database.dto.file.FileDTO;
-import com.collaborative.editor.database.dto.project.ProjectDTO;
-import com.collaborative.editor.database.mongodb.LogsRepository;
-import com.collaborative.editor.model.mongodb.File;
-import com.collaborative.editor.model.mongodb.MessageLog;
+import com.collaborative.editor.dto.project.ProjectDTO;
+import com.collaborative.editor.repository.mongodb.LogsRepository;
+import com.collaborative.editor.model.messageLog.MessageLog;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
-@Service
+@Service("LogsServiceImpl")
 public class LogsServiceImpl implements LogsService {
 
     @Autowired

@@ -1,18 +1,15 @@
 package com.collaborative.editor.controller.room;
 
-
-import com.collaborative.editor.database.dto.file.FileDTO;
-import com.collaborative.editor.database.dto.project.ProjectDTO;
-import com.collaborative.editor.database.dto.room.AddMemberRequest;
-import com.collaborative.editor.database.dto.room.RoomDTO;
-import com.collaborative.editor.database.dto.room.CreateRoomRequest;
-import com.collaborative.editor.model.mysql.room.Room;
-import com.collaborative.editor.model.mysql.room.RoomRole;
-import com.collaborative.editor.model.mysql.user.User;
-import com.collaborative.editor.service.fileService.FileServiceImpl;
-import com.collaborative.editor.service.projectService.ProjectServiceImpl;
-import com.collaborative.editor.service.roomService.RoomServiceImpl;
-import com.collaborative.editor.service.userService.UserServiceImpl;
+import com.collaborative.editor.dto.room.AddMemberRequest;
+import com.collaborative.editor.dto.room.RoomDTO;
+import com.collaborative.editor.dto.room.CreateRoomRequest;
+import com.collaborative.editor.exception.roomException.RoomCreationException;
+import com.collaborative.editor.model.room.Room;
+import com.collaborative.editor.model.room.RoomRole;
+import com.collaborative.editor.model.user.User;
+import com.collaborative.editor.service.versionControlService.projectService.ProjectService;
+import com.collaborative.editor.service.roomService.RoomService;
+import com.collaborative.editor.service.userService.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
@@ -28,38 +25,36 @@ import java.util.Map;
 @RequestMapping("/api/rooms")
 public class RoomController {
 
-    private final RoomServiceImpl roomService;
-    private final UserServiceImpl userService;
-    private final ProjectServiceImpl projectService;
-    private final FileServiceImpl fileService;
+    private final RoomService roomService;
+    private final UserService userService;
+    private final ProjectService projectService;
 
     @Autowired
     public RoomController(
-            @Qualifier("RoomServiceImpl") RoomServiceImpl roomService,
-            @Qualifier("UserServiceImpl") UserServiceImpl userService,
-            @Qualifier("ProjectServiceImpl") ProjectServiceImpl projectService,
-            @Qualifier("FileServiceImpl") FileServiceImpl fileService) {
+            @Qualifier("RoomServiceImpl") RoomService roomService,
+            @Qualifier("UserServiceImpl") UserService userService,
+            @Qualifier("ProjectServiceImpl") ProjectService projectService) {
 
         this.roomService = roomService;
         this.userService = userService;
         this.projectService = projectService;
-        this.fileService = fileService;
     }
 
     @PostMapping("/createRoom")
     public ResponseEntity<Map<String, String>> createRoom(@RequestBody CreateRoomRequest request) {
+
+        System.out.println(request);
         String ownerEmail = request.getMemberEmail();
         String roomName = request.getRoomName();
-
+        System.out.println(roomName);
+        System.out.println(ownerEmail);
         try {
+
             User owner = userService.findUserByEmail(ownerEmail).get();
             String roomId = roomService.createRoom(owner, roomName);
-
-            projectService.createProject(new ProjectDTO("Main-Branch", roomId));
-            fileService.createFile(new FileDTO("Main-version", roomId, "Main-Branch", ".txt"));
-
             return ResponseEntity.ok(Collections.singletonMap("roomId", roomId));
-        } catch (Exception e) {
+
+        } catch (RoomCreationException e) {
             return ResponseEntity.noContent().build();
         }
 
@@ -74,7 +69,6 @@ public class RoomController {
             return ResponseEntity.notFound().build();
         }
     }
-
 
     @PostMapping("/add-member")
     public ResponseEntity<String> addMember(@RequestBody AddMemberRequest request) {
@@ -94,6 +88,29 @@ public class RoomController {
 
     }
 
+    @PostMapping("/remove-member")
+    public ResponseEntity<String> removeMember(@RequestBody AddMemberRequest request) {
+
+        try {
+            String roomId = request.getRoomId();
+            String memberEmail = request.getMemberEmail();
+            RoomRole role = RoomRole.valueOf(request.getRole());
+            User user = userService.findUserByEmail(memberEmail).get();
+            Room room = roomService.getRoomById(roomId).get();
+
+            roomService.removeUserFromRoom(room, user, role);
+
+            return ResponseEntity.ok("Viewer removed successfully!");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Failed to find user!");
+        }
+    }
+
+    @PostMapping("/join-room/{roomId}")
+    public ResponseEntity<String> joinRoom(@PathVariable("roomId") String roomId, @RequestBody String roomName) {
+        return ResponseEntity.ok("Room");
+    }
+
     @GetMapping("/join-room")
     public ResponseEntity<Map<String, List<RoomDTO>>> joinRoom(@RequestParam("username") String username) {
         try {
@@ -111,11 +128,6 @@ public class RoomController {
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
         }
-    }
-
-    @PostMapping("/join-room/{roomId}")
-    public ResponseEntity<String> joinRoom(@PathVariable("roomId") String roomId, @RequestBody String roomName) {
-        return ResponseEntity.ok("Room");
     }
 
     @GetMapping("/edit-room/{username}")
@@ -151,24 +163,6 @@ public class RoomController {
 
         } catch (Exception e) {
             return ResponseEntity.badRequest().build();
-        }
-    }
-
-    @PostMapping("/remove-member")
-    public ResponseEntity<String> removeMember(@RequestBody AddMemberRequest request) {
-
-        try {
-            String roomId = request.getRoomId();
-            String memberEmail = request.getMemberEmail();
-            RoomRole role = RoomRole.valueOf(request.getRole());
-            User user = userService.findUserByEmail(memberEmail).get();
-            Room room = roomService.getRoomById(roomId).get();
-
-            roomService.removeUserFromRoom(room, user, role);
-
-            return ResponseEntity.ok("Viewer removed successfully!");
-        } catch (Exception e) {
-            return ResponseEntity.badRequest().body("Failed to find user!");
         }
     }
 

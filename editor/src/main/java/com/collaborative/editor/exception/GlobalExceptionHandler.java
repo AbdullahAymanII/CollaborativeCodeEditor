@@ -1,5 +1,10 @@
 package com.collaborative.editor.exception;
 
+import com.collaborative.editor.exception.authenticaionException.InvalidCredentialsException;
+import com.collaborative.editor.exception.userException.UserNotFoundException;
+import com.collaborative.editor.exception.versionControlException.fileException.FileNotFoundException;
+import com.collaborative.editor.exception.roomException.*;
+import com.collaborative.editor.exception.versionControlException.projectException.ProjectNotFoundException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -116,6 +121,43 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(ResourceNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", "ResourceNotFoundException Not Found Exception");
+        errorResponse.put("message", ex.getMessage());
+
+        logger.error("Exception occurred:", ex.getMessage(), ex);
+
+        return errorResponse;
+    }
+
+
+    @ExceptionHandler(RoomUpdateException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> handleRoomUpdateException(RoomUpdateException ex) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", "ResourceNotFoundException Not Found Exception");
+        errorResponse.put("message", ex.getMessage());
+
+        logger.error("Exception occurred:", ex.getMessage(), ex);
+
+        return errorResponse;
+    }
+
+    @ExceptionHandler(RoomCreationException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> handleRoomCreationException(RoomCreationException ex) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", "ResourceNotFoundException Not Found Exception");
+        errorResponse.put("message", ex.getMessage());
+
+        logger.error("Exception occurred:", ex.getMessage(), ex);
+
+        return errorResponse;
+    }
+
+    @ExceptionHandler(RoomDeletionException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> handleRoomDeletionException(RoomDeletionException ex) {
         Map<String, String> errorResponse = new HashMap<>();
         errorResponse.put("error", "ResourceNotFoundException Not Found Exception");
         errorResponse.put("message", ex.getMessage());

@@ -1,6 +1,6 @@
 package com.collaborative.editor.service.userService;
 
-import com.collaborative.editor.model.mysql.user.User;
+import com.collaborative.editor.model.user.User;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 

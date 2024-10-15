@@ -1,7 +1,7 @@
 package com.collaborative.editor.controller.websocket;
 
-import com.collaborative.editor.database.dto.code.CodeDTO;
-import com.collaborative.editor.model.mongodb.MessageLog;
+import com.collaborative.editor.dto.code.CodeDTO;
+import com.collaborative.editor.model.messageLog.MessageLog;
 
 import com.collaborative.editor.service.messageLogsService.LogsServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -44,21 +44,6 @@ public class WebsocketController {
         return messageLog;
     }
 
-//    @MessageMapping("/user/join/{roomId}")
-//    @SendTo("/topic/chat/{roomId}")
-//    public MessageLog handleUserJoin(@DestinationVariable("roomId") String roomId, @Payload MessageLog chatMessageDTO) {
-//        chatMessageDTO.setContent(" has joined the room.");
-//        chatMessageDTO.setTimestamp(System.currentTimeMillis());
-//        return chatMessageDTO;
-//    }
-//
-//    @MessageMapping("/user/leave/{roomId}")
-//    @SendTo("/topic/chat/{roomId}")
-//    public MessageLog handleUserLeave(@DestinationVariable("roomId") String roomId, @Payload MessageLog chatMessageDTO) {
-//        chatMessageDTO.setContent(" has left the room.");
-//        chatMessageDTO.setTimestamp(System.currentTimeMillis());
-//        return chatMessageDTO;
-//    }
 }
 
 

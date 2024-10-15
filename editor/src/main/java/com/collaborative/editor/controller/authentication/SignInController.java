@@ -1,12 +1,12 @@
 package com.collaborative.editor.controller.authentication;
 
-import com.collaborative.editor.database.dto.authentication.LoginRequest;
-import com.collaborative.editor.database.dto.authentication.LoginResponse;
-import com.collaborative.editor.exception.InvalidCredentialsException;
-import com.collaborative.editor.exception.UserNotFoundException;
-import com.collaborative.editor.service.authService.AuthenticationServiceImpl;
+import com.collaborative.editor.dto.authentication.LoginRequest;
+import com.collaborative.editor.dto.authentication.LoginResponse;
+import com.collaborative.editor.exception.authenticaionException.InvalidCredentialsException;
+import com.collaborative.editor.exception.userException.UserNotFoundException;
+import com.collaborative.editor.service.authService.AuthenticationService;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -17,8 +17,11 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api")
 public class SignInController {
 
-    @Autowired
-    private AuthenticationServiceImpl authenticationService;
+    private final AuthenticationService authenticationService;
+
+    public SignInController(@Qualifier("AuthenticationServiceImpl") AuthenticationService authenticationService) {
+        this.authenticationService = authenticationService;
+    }
 
     @PostMapping("/sign-in")
     public ResponseEntity<LoginResponse> signIn(@RequestBody LoginRequest loginRequest) {

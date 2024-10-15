@@ -1,14 +1,13 @@
 package com.collaborative.editor.service.userService;
 
-import com.collaborative.editor.database.mysql.UserRepository;
-import com.collaborative.editor.exception.UserNotFoundException;
-import com.collaborative.editor.model.mysql.user.User;
+import com.collaborative.editor.repository.mysql.UserRepository;
+import com.collaborative.editor.exception.userException.UserNotFoundException;
+import com.collaborative.editor.model.user.User;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import java.util.Optional;
 

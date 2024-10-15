@@ -211,3 +211,42 @@ body{
     background-color: #3e3939;
 }
 
+
+
+
+/* Message Styling */
+.message {
+    margin-top: 15px;
+    padding: 10px 15px;
+    border-radius: 8px;
+    font-size: 14px;
+    text-align: center;
+    width: 100%;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.message.success {
+    background-color: #2ecc71; /* Success green */
+    color: #fff;
+}
+
+.message.error {
+    background-color: #e74c3c; /* Error red */
+    color: #fff;
+}
+
+/* Fade-in animation for messages */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+.message {
+    animation: fadeIn 0.5s ease-in-out;
+}
+

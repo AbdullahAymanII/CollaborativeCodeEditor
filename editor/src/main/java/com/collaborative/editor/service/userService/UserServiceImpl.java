@@ -2,16 +2,13 @@ package com.collaborative.editor.service.userService;
 
 
 import com.collaborative.editor.configuration.jwt.JwtUtil;
-import com.collaborative.editor.database.mysql.UserRepository;
-import com.collaborative.editor.exception.UserNotFoundException;
-import com.collaborative.editor.model.mysql.user.User;
+import com.collaborative.editor.repository.mysql.UserRepository;
+import com.collaborative.editor.exception.userException.UserNotFoundException;
+import com.collaborative.editor.model.user.User;
+import com.collaborative.editor.service.userService.validatorCheck.EmailValidator;
+import com.collaborative.editor.service.userService.validatorCheck.PasswordValidator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Lazy;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -32,22 +29,6 @@ public class UserServiceImpl implements UserService {
         this.jwtUtil = jwtUtil;
     }
 
-    //
-//    @Override
-//    @Transactional
-//    public void createUser(User user) {
-//
-//        if (userRepository.findOneByEmail(user.getEmail()).isPresent()) {
-//            throw new IllegalArgumentException("User with email already exists");
-//        }
-//
-//        try {
-//            user.setPassword(encoder.encode(user.getPassword()));
-//            userRepository.save(user);
-//        }catch (Exception e) {
-//            throw new RuntimeException("Failed to create user");
-//        }
-//    }
     @Override
     @Transactional
     public void createUser(User user) {

@@ -1,9 +1,9 @@
 package com.collaborative.editor.service.roomService;
 
-import com.collaborative.editor.database.dto.room.RoomDTO;
-import com.collaborative.editor.model.mysql.room.Room;
-import com.collaborative.editor.model.mysql.room.RoomRole;
-import com.collaborative.editor.model.mysql.user.User;
+import com.collaborative.editor.dto.room.RoomDTO;
+import com.collaborative.editor.model.room.Room;
+import com.collaborative.editor.model.room.RoomRole;
+import com.collaborative.editor.model.user.User;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +16,6 @@ public interface RoomService {
     void deleteRoom(String roomId);
 
     void addUserToRoom(Room room, User user, RoomRole role);
-
 
     List<RoomDTO> getCollaborativeRooms(User user);
 

@@ -1,8 +1,8 @@
 package com.collaborative.editor.service.messageLogsService;
 
-import com.collaborative.editor.database.dto.project.ProjectDTO;
-import com.collaborative.editor.database.mongodb.LogsRepository;
-import com.collaborative.editor.model.mongodb.MessageLog;
+import com.collaborative.editor.dto.project.ProjectDTO;
+import com.collaborative.editor.repository.mongodb.LogsRepository;
+import com.collaborative.editor.model.messageLog.MessageLog;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;

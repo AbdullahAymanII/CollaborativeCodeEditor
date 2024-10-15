@@ -1,22 +1,24 @@
 package com.collaborative.editor.service.roomService;
 
-import com.collaborative.editor.database.dto.room.RoomDTO;
-import com.collaborative.editor.database.mysql.ProjectRepository;
-import com.collaborative.editor.database.mysql.RoomMembershipRepository;
-import com.collaborative.editor.database.mysql.RoomRepository;
-import com.collaborative.editor.database.mysql.UserRepository;
-import com.collaborative.editor.exception.RoomMembershipNotFoundException;
-import com.collaborative.editor.model.mysql.project.Project;
-import com.collaborative.editor.model.mysql.room.Room;
-import com.collaborative.editor.model.mysql.roomMembership.RoomMembership;
-import com.collaborative.editor.model.mysql.room.RoomRole;
-import com.collaborative.editor.model.mysql.user.User;
+import com.collaborative.editor.dto.file.FileDTO;
+import com.collaborative.editor.dto.project.ProjectDTO;
+import com.collaborative.editor.dto.room.RoomDTO;
+import com.collaborative.editor.repository.mysql.RoomMembershipRepository;
+import com.collaborative.editor.repository.mysql.RoomRepository;
+import com.collaborative.editor.exception.roomException.RoomCreationException;
+import com.collaborative.editor.exception.roomException.RoomMembershipNotFoundException;
+import com.collaborative.editor.exception.roomException.RoomNotFoundException;
+import com.collaborative.editor.model.room.Room;
+import com.collaborative.editor.model.roomMembership.RoomMembership;
+import com.collaborative.editor.model.room.RoomRole;
+import com.collaborative.editor.model.user.User;
+import com.collaborative.editor.service.versionControlService.fileService.FileService;
+import com.collaborative.editor.service.versionControlService.projectService.ProjectService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
-import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -31,27 +33,64 @@ public class RoomServiceImpl implements RoomService {
     private RoomMembershipRepository roomMembershipRepository;
 
     @Autowired
-    private UserRepository userRepository;
+    private ProjectService projectService;
+
+    @Autowired
+    private FileService fileService;
 
     private Lock lock = new ReentrantLock();
-    @Autowired
-    private ProjectRepository projectRepository;
+
 
     @Override
     @Transactional
     public String createRoom(User owner, String roomName) {
         try {
             String roomId = UUID.randomUUID().toString();
+            Room room = Room.builder()
+                    .name(roomName)
+                    .roomId(roomId)
+                    .roomMemberships(new ArrayList<>())
+                    .projects(new HashSet<>())
+                    .build();
 
-            Room room = new Room();
-            room.setRoomId(roomId);
-            room.setName(roomName);
             roomRepository.save(room);
             addUserToRoom(room, owner, RoomRole.OWNER);
 
+            createDefaultProject(room);
+            createDefaultFile(room);
             return roomId;
         } catch (Exception e) {
-            throw new RuntimeException("Failed to create room.");
+            throw new RoomCreationException("Failed to create room: " + e.getMessage());
+        }
+    }
+
+    private void createDefaultProject(Room room) {
+        try {
+            projectService.createProject(
+                    ProjectDTO
+                            .builder()
+                            .projectName("Main-Branch")
+                            .roomId(room.getRoomId())
+                            .build()
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create default branch: " + e.getMessage());
+        }
+    }
+
+    private void createDefaultFile(Room room) {
+        try {
+            fileService.createFile(
+                    FileDTO
+                            .builder()
+                            .filename("README")
+                            .projectName("Main-Branch")
+                            .roomId(room.getRoomId())
+                            .extension(".md")
+                            .build()
+            );
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to create default file: " + e.getMessage());
         }
     }
 
@@ -66,34 +105,30 @@ public class RoomServiceImpl implements RoomService {
         }
     }
 
-    @Transactional
     @Override
+    @Transactional
     public void deleteRoom(String roomId) {
-        try {
+        Room room = roomRepository.findByRoomId(roomId)
+                .orElseThrow(() -> new RoomNotFoundException("Room not found with ID: " + roomId));
 
-            if (roomRepository.findByRoomId(roomId).isEmpty())
-                throw new RuntimeException("Invalid room");
-
-            roomRepository.deleteByRoomId(roomId);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to delete room.");
-        }
+        roomRepository.deleteByRoomId(roomId);
     }
 
     @Override
     public void addUserToRoom(Room room, User user, RoomRole role) {
         try {
-//                Room.builder().roomId(room.getRoomId())
-//            Project.builder().name(projectRepository)
-                lock.lock();
-                RoomMembership newMembership = new RoomMembership();
-                newMembership.setRoom(room);
-                newMembership.setUser(user);
-                newMembership.setRole(role);
 
-                room.getRoomMemberships().add(newMembership);
-                user.getRoomMemberships().add(newMembership);
-                roomMembershipRepository.save(newMembership);
+            lock.lock();
+            RoomMembership newMembership = RoomMembership
+                    .builder()
+                    .room(room)
+                    .user(user)
+                    .role(role)
+                    .build();
+
+            room.getRoomMemberships().add(newMembership);
+            user.getRoomMemberships().add(newMembership);
+            roomMembershipRepository.save(newMembership);
 
         } catch (Exception e) {
             throw new RuntimeException("Failed to add user to room.");
@@ -142,35 +177,33 @@ public class RoomServiceImpl implements RoomService {
     @Transactional(readOnly = true)
     public List<String> getViewers(Room room) {
         return room.getRoomMemberships().stream()
-               .filter(rm -> rm.getRole() == RoomRole.VIEWER)
-               .map(RoomMembership::getUser)
-               .map(User::getEmail)
-               .collect(Collectors.toList());
+                .filter(rm -> rm.getRole() == RoomRole.VIEWER)
+                .map(RoomMembership::getUser)
+                .map(User::getEmail)
+                .collect(Collectors.toList());
     }
 
     @Override
     @Transactional(readOnly = true)
     public List<String> getCollaborators(Room room) {
         return room.getRoomMemberships().stream()
-               .filter(rm -> rm.getRole() == RoomRole.COLLABORATOR)
-               .map(RoomMembership::getUser)
-               .map(User::getEmail)
-               .collect(Collectors.toList());
+                .filter(rm -> rm.getRole() == RoomRole.COLLABORATOR)
+                .map(RoomMembership::getUser)
+                .map(User::getEmail)
+                .collect(Collectors.toList());
     }
 
-    @Transactional
     @Override
+    @Transactional
     public void removeUserFromRoom(Room room, User user, RoomRole role) {
         try {
-            Optional<RoomMembership> existingMembership = roomMembershipRepository.findByRole(room, user, role);
-            if (existingMembership.isEmpty()) {
-                throw new RoomMembershipNotFoundException("Room membership for user " + user.getUsername() + " does not exist  in  room " + room.getName());
-            }
+            RoomMembership membership = roomMembershipRepository.findByRole(room, user, role)
+                    .orElseThrow(() -> new RoomMembershipNotFoundException("Room membership not found"));
 
-                RoomMembership membership = existingMembership.get();
-                room.getRoomMemberships().remove(membership);
-                user.getRoomMemberships().remove(membership);
-                roomMembershipRepository.delete(membership);
+            room.getRoomMemberships().remove(membership);
+            user.getRoomMemberships().remove(membership);
+
+            roomMembershipRepository.delete(membership);
 
         } catch (Exception e) {
             throw new RuntimeException("Failed to remove user from room.");

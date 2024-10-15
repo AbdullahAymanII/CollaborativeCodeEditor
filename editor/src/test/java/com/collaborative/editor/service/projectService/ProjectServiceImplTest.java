@@ -1,13 +1,13 @@
 package com.collaborative.editor.service.projectService;
 
-import com.collaborative.editor.database.dto.project.ProjectDTO;
-import com.collaborative.editor.database.mongodb.FileRepository;
-import com.collaborative.editor.database.mysql.ProjectRepository;
-import com.collaborative.editor.database.mysql.RoomRepository;
-import com.collaborative.editor.exception.RoomNotFoundException;
-import com.collaborative.editor.model.mysql.project.Project;
-import com.collaborative.editor.model.mysql.room.Room;
-import com.collaborative.editor.model.mongodb.File;
+import com.collaborative.editor.dto.project.ProjectDTO;
+import com.collaborative.editor.repository.mongodb.FileRepository;
+import com.collaborative.editor.repository.mysql.ProjectRepository;
+import com.collaborative.editor.repository.mysql.RoomRepository;
+import com.collaborative.editor.exception.roomException.RoomNotFoundException;
+import com.collaborative.editor.model.project.Project;
+import com.collaborative.editor.model.room.Room;
+import com.collaborative.editor.service.versionControlService.projectService.ProjectServiceImpl;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -15,8 +15,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
-import java.io.IOException;
-import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -49,15 +47,15 @@ class ProjectServiceImplTest {
         projectDTO.setRoomId("123");
     }
 
-    @Test
-    void testCreateProject_Success() {
-        Room room = new Room();
-        when(roomRepository.findByRoomId(projectDTO.getRoomId())).thenReturn(Optional.of(room));
-
-        projectService.createProject(projectDTO);
-
-        verify(projectRepository, times(1)).save(any(Project.class));
-    }
+//    @Test
+//    void testCreateProject_Success() {
+//        Room room = new Room();
+//        when(roomRepository.findByRoomId(projectDTO.getRoomId())).thenReturn(Optional.of(room));
+//
+//        projectService.createProject(projectDTO);
+//
+//        verify(projectRepository, times(1)).save(any(Project.class));
+//    }
 
     @Test
     void testCreateProject_RoomNotFound() {

@@ -1,9 +1,9 @@
 package com.collaborative.editor.controller.authentication;
 
-import com.collaborative.editor.database.dto.authentication.LoginRequest;
-import com.collaborative.editor.database.dto.authentication.LoginResponse;
-import com.collaborative.editor.exception.InvalidCredentialsException;
-import com.collaborative.editor.exception.UserNotFoundException;
+import com.collaborative.editor.dto.authentication.LoginRequest;
+import com.collaborative.editor.dto.authentication.LoginResponse;
+import com.collaborative.editor.exception.authenticaionException.InvalidCredentialsException;
+import com.collaborative.editor.exception.userException.UserNotFoundException;
 import com.collaborative.editor.service.authService.AuthenticationServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;

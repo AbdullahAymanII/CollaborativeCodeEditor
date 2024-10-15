@@ -1,0 +1,26 @@
+{
+  "python": {
+    "dockerImage": "python:3.9",
+    "commandTemplate": "echo \"{input}\" | python3 -c \"{code}\""
+  },
+  "javascript": {
+    "dockerImage": "node:14",
+    "commandTemplate": "echo \"{input}\" | node -e \"{code}\""
+  },
+  "java": {
+    "dockerImage": "openjdk:17",
+    "commandTemplate": "echo \"{code}\" > Main.java && javac Main.java && echo \"{input}\" | java Main"
+  },
+  "cpp": {
+    "dockerImage": "gcc:latest",
+    "commandTemplate": "echo \"{code}\" > main.cpp && g++ main.cpp -o main && echo \"{input}\" | ./main"
+  },
+  "go": {
+    "dockerImage": "golang:latest",
+    "commandTemplate": "echo \"{input}\" > main.go && echo \"{input}\" | go run main.go"
+  },
+  "ruby": {
+    "dockerImage": "ruby:latest",
+    "commandTemplate": "echo \"{input}\" | ruby -e \"{code}\""
+  }
+}

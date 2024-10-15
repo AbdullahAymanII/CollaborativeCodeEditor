@@ -1,7 +1,7 @@
 package com.collaborative.editor.controller.executor;
 
 
-import com.collaborative.editor.database.dto.code.CodeExecution;
+import com.collaborative.editor.dto.code.CodeExecution;
 import com.collaborative.editor.service.dockerService.DockerExecutorService;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

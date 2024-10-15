@@ -1,9 +1,9 @@
 package com.collaborative.editor.configuration.security;
 
 import com.collaborative.editor.configuration.jwt.JwtUtil;
-import com.collaborative.editor.model.mysql.user.constants.AccountSource;
-import com.collaborative.editor.model.mysql.user.constants.Role;
-import com.collaborative.editor.model.mysql.user.User;
+import com.collaborative.editor.model.user.constants.AccountSource;
+import com.collaborative.editor.model.user.constants.Role;
+import com.collaborative.editor.model.user.User;
 import com.collaborative.editor.service.userService.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -42,9 +42,6 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         }
 
         String jwtToken = generateJwtToken(authentication);
-        System.out.println("============================================");
-        System.out.println(jwtToken);
-        System.out.println("============================================");
         response.sendRedirect("http://localhost:3000/oauth2/redirect?token=" + jwtToken);
     }
 

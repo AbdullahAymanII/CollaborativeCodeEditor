@@ -1,16 +1,20 @@
 package com.collaborative.editor.service.roomService;
 
-import com.collaborative.editor.database.mysql.RoomMembershipRepository;
-import com.collaborative.editor.database.mysql.RoomRepository;
-import com.collaborative.editor.model.mysql.room.Room;
-import com.collaborative.editor.model.mysql.room.RoomRole;
-import com.collaborative.editor.model.mysql.roomMembership.RoomMembership;
-import com.collaborative.editor.model.mysql.user.User;
+import com.collaborative.editor.repository.mysql.RoomMembershipRepository;
+import com.collaborative.editor.repository.mysql.RoomRepository;
+import com.collaborative.editor.model.room.Room;
+import com.collaborative.editor.model.room.RoomRole;
+import com.collaborative.editor.model.roomMembership.RoomMembership;
+import com.collaborative.editor.model.user.User;
+import com.collaborative.editor.service.versionControlService.fileService.FileService;
+import com.collaborative.editor.service.versionControlService.projectService.ProjectService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 import java.util.UUID;
@@ -19,7 +23,8 @@ import java.util.concurrent.locks.ReentrantLock;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
-class RoomServiceImplTest {
+@ExtendWith(MockitoExtension.class)
+public class RoomServiceImplTest {
 
     @InjectMocks
     private RoomServiceImpl roomService;
@@ -29,6 +34,12 @@ class RoomServiceImplTest {
 
     @Mock
     private RoomMembershipRepository roomMembershipRepository;
+
+    @Mock
+    private ProjectService projectService;
+
+    @Mock
+    private FileService fileService;
 
     @Mock
     private ReentrantLock lock;
@@ -51,10 +62,15 @@ class RoomServiceImplTest {
     @Test
     void createRoom_success() {
         when(roomRepository.save(any(Room.class))).thenReturn(room);
+
+        when(roomMembershipRepository.save(any(RoomMembership.class))).thenReturn(new RoomMembership());
+
         String roomId = roomService.createRoom(owner, "Test Room");
 
         assertNotNull(roomId);
         verify(roomRepository, times(1)).save(any(Room.class));
+
+        verify(roomMembershipRepository, times(1)).save(any(RoomMembership.class));
     }
 
     @Test
@@ -89,7 +105,6 @@ class RoomServiceImplTest {
         verify(roomMembershipRepository, times(1)).delete(any());
     }
 
-
     @Test
     void renameRoom_success() {
         when(roomRepository.save(room)).thenReturn(room);
@@ -97,4 +112,6 @@ class RoomServiceImplTest {
 
         verify(roomRepository, times(1)).save(room);
     }
+
+
 }
