@@ -65,16 +65,6 @@ services:
     networks:
       - backend
 
-  # Python Executor Service
-  python-executor:
-    image: python:3.9
-    container_name: collaborative-python-executor
-    networks:
-      - backend
-    volumes:
-      - ./code:/usr/src/app  # Mount a directory for the Python code
-    entrypoint: [ "tail", "-f", "/dev/null" ]  # Keep the container running for execution
-
   # Mongo Express UI Service
   mongo-express:
     image: mongo-express

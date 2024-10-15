@@ -2,9 +2,7 @@ package com.collaborative.editor.controller.logs;
 
 import com.collaborative.editor.database.dto.code.CodeMetrics;
 import com.collaborative.editor.database.dto.code.CodeMetricsRequest;
-import com.collaborative.editor.database.dto.file.FileDTO;
 import com.collaborative.editor.database.dto.project.ProjectDTO;
-import com.collaborative.editor.model.mongodb.File;
 import com.collaborative.editor.model.mongodb.MessageLog;
 
 import com.collaborative.editor.service.editorService.EditorServiceImpl;

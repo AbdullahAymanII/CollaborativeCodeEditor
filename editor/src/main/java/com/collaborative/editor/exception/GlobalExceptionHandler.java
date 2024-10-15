@@ -113,4 +113,16 @@ public class GlobalExceptionHandler {
         return errorResponse;
     }
 
+    @ExceptionHandler(ResourceNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> handleResourceNotFoundException(ResourceNotFoundException ex) {
+        Map<String, String> errorResponse = new HashMap<>();
+        errorResponse.put("error", "ResourceNotFoundException Not Found Exception");
+        errorResponse.put("message", ex.getMessage());
+
+        logger.error("Exception occurred:", ex.getMessage(), ex);
+
+        return errorResponse;
+    }
+
 }

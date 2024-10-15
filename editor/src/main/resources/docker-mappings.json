@@ -1,0 +1,8 @@
+{
+  "python": "python:3.9",
+  "javascript": "node:14",
+  "java": "openjdk:17",
+  "cpp": "gcc:latest",
+  "go": "golang:latest",
+  "ruby": "ruby:latest"
+}

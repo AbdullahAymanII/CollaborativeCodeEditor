@@ -3,8 +3,7 @@ package com.collaborative.editor.model.mysql.project;
 //import com.collaborative.editor.model.mysql.file.File;
 import com.collaborative.editor.model.mysql.room.Room;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 import org.hibernate.annotations.CompositeType;
 
 import java.time.LocalDateTime;
@@ -23,6 +22,9 @@ import java.time.LocalDateTime;
 @Table(name = "projects", uniqueConstraints = {
         @UniqueConstraint(columnNames = {"name", "room_id"})
 })
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
 public class Project {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -41,5 +43,6 @@ public class Project {
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
+
 }
 

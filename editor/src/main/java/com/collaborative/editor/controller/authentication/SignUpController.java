@@ -23,11 +23,12 @@ public class SignUpController {
     public ResponseEntity<String> createAccount(@RequestBody User user) {
         try {
             userService.createUser(user);
-            return ResponseEntity.ok("success");
-        }catch (Exception e) {
+            return ResponseEntity.ok("Account created successfully");
+        } catch (IllegalArgumentException e) {
+            return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
+        } catch (Exception e) {
             return new ResponseEntity<>("Registration failed, please try again", HttpStatus.BAD_REQUEST);
         }
-
     }
 
      @GetMapping("/sign-in/provider/{provider}")

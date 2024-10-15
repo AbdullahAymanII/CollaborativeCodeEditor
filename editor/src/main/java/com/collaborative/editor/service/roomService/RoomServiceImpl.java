@@ -1,10 +1,12 @@
 package com.collaborative.editor.service.roomService;
 
 import com.collaborative.editor.database.dto.room.RoomDTO;
+import com.collaborative.editor.database.mysql.ProjectRepository;
 import com.collaborative.editor.database.mysql.RoomMembershipRepository;
 import com.collaborative.editor.database.mysql.RoomRepository;
 import com.collaborative.editor.database.mysql.UserRepository;
 import com.collaborative.editor.exception.RoomMembershipNotFoundException;
+import com.collaborative.editor.model.mysql.project.Project;
 import com.collaborative.editor.model.mysql.room.Room;
 import com.collaborative.editor.model.mysql.roomMembership.RoomMembership;
 import com.collaborative.editor.model.mysql.room.RoomRole;
@@ -32,26 +34,20 @@ public class RoomServiceImpl implements RoomService {
     private UserRepository userRepository;
 
     private Lock lock = new ReentrantLock();
+    @Autowired
+    private ProjectRepository projectRepository;
 
     @Override
     @Transactional
     public String createRoom(User owner, String roomName) {
         try {
-            System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
-//            String roomId = UUID.randomUUID().toString();
-//            Long roomId = ThreadLocalRandom.current().nextLong(1, Long.MAX_VALUE)%10000;
             String roomId = UUID.randomUUID().toString();
-            System.out.println(roomId);
-            System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
+
             Room room = new Room();
             room.setRoomId(roomId);
-            System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
             room.setName(roomName);
-            System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
             roomRepository.save(room);
-            System.out.println("+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++");
             addUserToRoom(room, owner, RoomRole.OWNER);
-            System.out.println("++++++++++++++++++++++OWNER+++++++++++++++++++++++++++++++++++++++++++++++");
 
             return roomId;
         } catch (Exception e) {
@@ -61,6 +57,7 @@ public class RoomServiceImpl implements RoomService {
 
 
     @Override
+    @Transactional(readOnly = true)
     public Optional<Room> getRoomById(String roomId) {
         try {
             return roomRepository.findByRoomId(roomId);
@@ -85,8 +82,9 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public void addUserToRoom(Room room, User user, RoomRole role) {
-
         try {
+//                Room.builder().roomId(room.getRoomId())
+//            Project.builder().name(projectRepository)
                 lock.lock();
                 RoomMembership newMembership = new RoomMembership();
                 newMembership.setRoom(room);
@@ -102,25 +100,10 @@ public class RoomServiceImpl implements RoomService {
         } finally {
             lock.unlock();
         }
-
-        //        try {
-//            Optional<RoomMembership> existingMembership = roomMembershipRepository.findByRoomAndUser(room, user);
-//            if (existingMembership.isPresent()) {
-//                RoomMembership membership = existingMembership.get();
-//                membership.setRole(role);  // Assuming single role per membership
-//                roomMembershipRepository.save(membership);
-//            } else {
-//                RoomMembership newMembership = new RoomMembership(room, user, role);
-//                room.getRoomMemberships().add(newMembership);
-//                user.getRoomMemberships().add(newMembership);
-//                roomMembershipRepository.save(newMembership);
-//            }
-//        } catch (Exception e) {
-//            e.printStackTrace();
-//        }
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<RoomDTO> getCollaborativeRooms(User user) {
         return user.getRoomMemberships().stream()
                 .filter(rm -> rm.getRole() == RoomRole.COLLABORATOR)
@@ -131,6 +114,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<RoomDTO> getViewerRooms(User user) {
         return user.getRoomMemberships().stream()
                 .filter(rm -> rm.getRole() == RoomRole.VIEWER)
@@ -141,6 +125,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<RoomDTO> getUserOwnedRooms(User user) {
         Optional<List<RoomMembership>> roomMemberships = roomMembershipRepository.findByUser(user.getEmail());
 
@@ -154,6 +139,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<String> getViewers(Room room) {
         return room.getRoomMemberships().stream()
                .filter(rm -> rm.getRole() == RoomRole.VIEWER)
@@ -163,6 +149,7 @@ public class RoomServiceImpl implements RoomService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public List<String> getCollaborators(Room room) {
         return room.getRoomMemberships().stream()
                .filter(rm -> rm.getRole() == RoomRole.COLLABORATOR)

@@ -242,14 +242,12 @@ public class FileServiceImpl implements FileService {
     public synchronized void pushFileContent(File file) {
         try {
             Optional<File> existingFile = checkExistingFile(file);
-            System.out.println(existingFile);
-            System.out.println("999999999999999999999999999999999999999999999999999999999999999999999999999999");
+
             if (existingFile.isPresent()) {
-                System.out.println("957437435788837543777777777743557343458888888884444444444463747543754373457435745379999999");
                 File dbFile = existingFile.get();
                 dbFile.setContent(file.getContent());
                 dbFile.setLastModifiedAt(System.currentTimeMillis());
-                System.out.println("Added file ==================================================================" + dbFile);
+
                 fileVersionRepository.upsertFileContent(
                         dbFile.getFilename(),
                         dbFile.getProjectName(),
