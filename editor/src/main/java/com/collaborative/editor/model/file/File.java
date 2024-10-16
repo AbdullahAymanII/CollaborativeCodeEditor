@@ -13,7 +13,7 @@ import org.springframework.data.mongodb.core.mapping.Document;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@CompoundIndex(def = "{'filename': 1, 'projectName': 1, 'roomId': 1}", unique = true)  // Compound unique index
+@CompoundIndex(def = "{'filename': 1, 'projectName': 1, 'roomId': 1}", unique = true)
 public class File {
 
     private String filename;

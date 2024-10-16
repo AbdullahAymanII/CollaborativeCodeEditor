@@ -803,35 +803,6 @@ h2 {
     background-color: #ffffff00;
 }
 
-/*!* Editor Header *!*/
-/*.editor-header {*/
-/*    display: flex;*/
-/*    justify-content: space-between;*/
-/*    padding: 10px 20px;*/
-/*    background-color: #ffffff00;*/
-/*    border-bottom: 1px solid var(--border-color);*/
-/*    flex-direction: column;*/
-/*    align-items: flex-start;*/
-/*}*/
-
-/*.editor-header h2 {*/
-/*    color: var(--header-title-color);*/
-/*    font-size: 1.8rem;*/
-/*}*/
-
-/*.room-id-container {*/
-/*    margin-top: 5px;*/
-/*    display: flex;*/
-/*    align-items: center;*/
-/*}*/
-
-/*.copy-btn {*/
-/*    margin-left: 10px;*/
-/*    padding: 5px 10px;*/
-/*    cursor: pointer;*/
-/*}*/
-
-/* Editor Header */
 /* Editor Header */
 .editor-header {
     padding: 10px 20px;
@@ -980,4 +951,24 @@ input[type="text"] {
     background: #00000000;
     color: #000000;
     border-radius: 20px;
+}
+
+
+
+.file-info-container {
+    padding: 10px;
+    background-color: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    margin-bottom: 20px;
+    color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.file-info strong {
+    font-weight: 600;
+    color: #ff5000;
+}
+
+.file-info {
+    line-height: 1.5;
 }

@@ -8,7 +8,15 @@ const useFileManager = (code, currentFile, room, setCode, setShowConfirmMergeMod
             const response = await fetch(`http://localhost:8080/api/files/push-file-content`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}` },
-                body: JSON.stringify({ filename:currentFile.filename, roomId:room.roomId, projectName:currentFile.projectName, content: code }),
+                body: JSON.stringify(
+                    { filename:currentFile.filename,
+                        roomId:room.roomId,
+                        projectName:currentFile.projectName,
+                        content: code,
+                        createdAt: currentFile.createdAt,
+                        lastModifiedAt: currentFile.lastModifiedAt,
+                        extension: currentFile.extension
+                    }),
             });
             if (!response.ok) throw new Error('Failed to push to server');
             setSuccessMessage('Pushed to server successfully!');

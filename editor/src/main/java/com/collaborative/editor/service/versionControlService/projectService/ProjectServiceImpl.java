@@ -41,7 +41,10 @@ public class ProjectServiceImpl implements ProjectService {
     private Lock lock = new ReentrantLock();
 
     @Autowired
-    public ProjectServiceImpl(ProjectRepository projectRepository, RoomRepository roomRepository, FileRepository fileRepository) {
+    public ProjectServiceImpl(ProjectRepository projectRepository,
+                              RoomRepository roomRepository,
+                              FileRepository fileRepository
+    ) {
         this.projectRepository = projectRepository;
         this.roomRepository = roomRepository;
         this.fileRepository = fileRepository;
@@ -64,15 +67,14 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     private Project buildNewProject(ProjectDTO project, Room room) {
-        Project newProject = Project.builder()
+
+        return Project.builder()
                 .name(project.getProjectName())
                 .room(room)
                 .createdAt(LocalDateTime.now())
                 .updatedAt(LocalDateTime.now())
                 .description("")
                 .build();
-
-        return newProject;
     }
 
     private void createDefaultFile(ProjectDTO project) {

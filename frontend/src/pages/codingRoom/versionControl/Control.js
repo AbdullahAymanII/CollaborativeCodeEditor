@@ -232,7 +232,7 @@ const Control = ({ room, currentFile, isConnected, subscribeToCodeUpdates }) => 
             <Action
                 show={showDownloadModal}
                 title="Download Project"
-                actionLabel="Create"
+                actionLabel="Download"
                 inputs={[
                     { label: 'Branch Name', placeholder: '/ Enter branch name', name: 'branchName' },
 

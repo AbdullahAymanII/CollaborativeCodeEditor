@@ -28,12 +28,16 @@ public interface FileRepository extends MongoRepository<File, String> {
     Optional<List<File>> findByProjectNameAndRoomId(@Param("projectName") String projectName, @Param("roomId") String roomId);
 
     @Modifying
-    @Update(update = "{ 'filename' : ?0, 'projectName' : ?1, 'roomId' : ?2, 'content' : ?3 }")
+    @Update(update = "{ 'filename' : ?0, 'projectName' : ?1, 'roomId' : ?2, 'content' : ?3, 'createdAt' : ?4, 'lastModifiedAt' : ?5, 'extension': ?6 }")
     @Query(value = "{ 'filename' : ?0, 'projectName' : ?1, 'roomId' : ?2}")
     @Lock(LockModeType.PESSIMISTIC_WRITE)
     void upsertFileContent(@Param("filename") String filename,
                            @Param("projectName") String projectName,
                            @Param("roomId") String roomId,
-                           @Param("content") String content);
+                           @Param("content") String content,
+                           @Param("createdAt") Long createdAt,
+                           @Param("lastModifiedAt") Long lastModifiedAt,
+                           @Param("extension") String extension
+                           );
 
 }

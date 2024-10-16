@@ -82,15 +82,15 @@ public class FileServiceImpl implements FileService {
             Optional<File> existingFile = checkExistingFile(file);
 
             if (existingFile.isPresent()) {
-                File dbFile = existingFile.get();
-                dbFile.setContent(file.getContent());
-                dbFile.setLastModifiedAt(System.currentTimeMillis());
-
+                file.setLastModifiedAt(System.currentTimeMillis());
                 fileVersionRepository.upsertFileContent(
-                        dbFile.getFilename(),
-                        dbFile.getProjectName(),
-                        dbFile.getRoomId(),
-                        dbFile.getContent()
+                        file.getFilename(),
+                        file.getProjectName(),
+                        file.getRoomId(),
+                        file.getContent(),
+                        file.getCreatedAt(),
+                        file.getLastModifiedAt(),
+                        file.getExtension()
                 );
             } else {
                 throw new RuntimeException("File not found for pushing content.");

@@ -137,7 +137,7 @@ const CodingPage = () => {
     const [output, setOutput] = useState('');
     const [input, setInput] = useState('');
     const [selectedLanguage, setSelectedLanguage] = useState('python');
-    const [currentFile, setCurrentFile] = useState({filename: '', roomId: '', projectName: '', content: ''});
+    const [currentFile, setCurrentFile] = useState({filename: '', roomId: '', projectName: '', content: '', createdAt: '', lastModifiedAt: '', extension: ''});
     const [messages, setMessages] = useState([]); // Store chat messages
     const [liveEditing, setLiveEditing] = useState(false); // New state to control live editing
     const [isJoined, setIsJoined] = useState(true);

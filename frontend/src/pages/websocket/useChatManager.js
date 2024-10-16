@@ -1,50 +1,3 @@
-// const useChatManager = (wsRef, isConnected, currentFile, setMessages, user, role, room) => {
-//     const subscribeToChat = () => {
-//         console.log('subscribe to chat');
-//         if (isConnected) {
-//             console.log('subscribe to chat');
-//             wsRef.current.subscribe(`/topic/chat/${room.roomId}`, (message) => {
-//                 const chatData = JSON.parse(message.body);
-//                 if (chatData.roomId === room.roomId) {
-//                     setMessages((prev) => [...prev, chatData]);
-//                 }
-//                 console.log('subscribe to chatttttttttttttttttttttttttttttt');
-//             });
-//
-//         }
-//     };
-//
-//     const sendChatMessage = (chatMessage) => {
-//         if (wsRef.current && isConnected) {
-//             console.log('sendChatMessage');
-//             console.log(chatMessage);
-//             wsRef.current.publish({
-//                 destination: `/app/chat/${room.roomId}`,
-//                 body: JSON.stringify(chatMessage),
-//                 headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
-//             });
-//         }
-//     };
-//
-//     const sendActionMessage = (actionType) => {
-//         if (wsRef.current && isConnected) {
-//             const actionMessage = {
-//                 content: `${user.name} performed a ${actionType} on ${currentFile.filename}`,
-//                 sender: user.name,
-//                 roomId: currentFile.roomId,
-//                 projectName: currentFile.projectName,
-//                 role: role,
-//             };
-//             sendChatMessage(actionMessage);
-//         }
-//     };
-//
-//     return { subscribeToChat, sendChatMessage, sendActionMessage };
-// };
-//
-// export default useChatManager;
-
-
 import { useCallback } from 'react';
 
 const useChatManager = (wsRef, isConnected, currentFile, setMessages, user, role, room) => {
@@ -66,9 +19,8 @@ const useChatManager = (wsRef, isConnected, currentFile, setMessages, user, role
         } else {
             console.log('Cannot subscribe to chat, WebSocket is not connected.');
         }
-    }, [isConnected, wsRef, room, setMessages]); // Memoize the callback to avoid re-creating it on every render
+    }, [isConnected, wsRef, room, setMessages]);
 
-    // Send a chat message
     const sendChatMessage = useCallback((chatMessage) => {
         if (wsRef.current && isConnected) {
             console.log('Sending chat message:', chatMessage);
@@ -83,7 +35,6 @@ const useChatManager = (wsRef, isConnected, currentFile, setMessages, user, role
         }
     }, [wsRef, isConnected, room]);
 
-    // Send an action message (such as file save or other user actions)
     const sendActionMessage = useCallback((actionType) => {
         if (wsRef.current && isConnected) {
             const actionMessage = {

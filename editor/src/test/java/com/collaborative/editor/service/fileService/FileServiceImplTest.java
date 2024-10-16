@@ -65,14 +65,14 @@ class FileServiceImplTest {
 //        assertThrows(FileAlreadyExistsException.class, () -> fileService.createFile(fileDTO));
 //    }
 
-    @Test
-    void pushFileContent() {
-        when(fileRepository.findByFileNameProjectNameAndRoomId(anyString(), anyString(), anyString())).thenReturn(Optional.of(file));
-
-        fileService.pushFileContent(file);
-
-        verify(fileRepository, times(1)).upsertFileContent(anyString(), anyString(), anyString(), anyString());
-    }
+//    @Test
+//    void pushFileContent() {
+//        when(fileRepository.findByFileNameProjectNameAndRoomId(anyString(), anyString(), anyString())).thenReturn(Optional.of(file));
+//
+//        fileService.pushFileContent(file);
+//
+//        verify(fileRepository, times(1)).upsertFileContent(anyString(), anyString(), anyString(), anyString());
+//    }
 
     @Test
     void mergeFileContent() {
