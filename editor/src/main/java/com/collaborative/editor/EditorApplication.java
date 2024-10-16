@@ -10,4 +10,5 @@ public class EditorApplication {
 		SpringApplication.run(EditorApplication.class, args);
 	}
 
+
 }
