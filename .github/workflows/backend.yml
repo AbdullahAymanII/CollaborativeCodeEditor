@@ -35,7 +35,7 @@ jobs:
           java-version: '17'
 
       - name: Run Unit Tests
-        run: mvn test -DskipTests=false # Ensure tests run, but later you can enable skipping if needed
+        run: mvn test -DskipTests=false # Ensure tests run
         working-directory: ./editor
 
 

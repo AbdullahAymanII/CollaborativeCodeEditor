@@ -1,5 +1,6 @@
 package com.collaborative.editor.controller.versionControl.file;
 
+import com.collaborative.editor.controller.room.RoomController;
 import com.collaborative.editor.controller.versionControl.FileController;
 import com.collaborative.editor.dto.file.FileDTO;
 import com.collaborative.editor.model.file.File;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
