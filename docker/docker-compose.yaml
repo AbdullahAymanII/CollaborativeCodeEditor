@@ -1,0 +1,72 @@
+version: "3.8"
+services:
+
+  backend:
+    build:
+      context: './docker/backend'
+      dockerfile: Dockerfile
+    container_name: collaborative-backend
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+      - mongo
+    networks:
+      - backend
+    volumes:
+      - ./editor/src:/editor/src
+      - ./editor/target:/editor/target
+      - ~/.m2:/root/.m2
+
+  # Frontend Service
+  frontend:
+    build:
+      context: './docker/frontend'
+      dockerfile: Dockerfile
+    container_name: collaborative-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend
+    networks:
+      - backend
+    volumes:
+      - ./frontend/src:/app/src
+
+  # MySQL Service
+  mysql:
+    image: mysql:8.0
+    container_name: collaborative-mysql
+    environment:
+      MYSQL_DATABASE: mysql_db
+      MYSQL_ROOT_PASSWORD: root
+    ports:
+      - "3306:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    networks:
+      - backend
+
+  # MongoDB Service
+  mongo:
+    image: mongo
+    container_name: collaborative-mongo
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: devroot
+      MONGO_INITDB_ROOT_PASSWORD: devroot
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    networks:
+      - backend
+
+volumes:
+  mysql_data:
+    driver: local
+  mongo_data:
+    driver: local
+
+networks:
+  backend:
+    driver: bridge
