@@ -35,13 +35,14 @@ jobs:
           java-version: '17'
 
       - name: Run Unit Tests
-        run: mvn test
+        run: mvn test -DskipTests=false # Ensure tests run, but later you can enable skipping if needed
         working-directory: ./editor
+
 
   # Build job (waits for compile and test jobs to complete)
   build:
     runs-on: ubuntu-latest
-    needs: [test, compile]  # Run after both compile and test are finished
+    needs: [ test, compile ]  # Run after both compile and test are finished
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
