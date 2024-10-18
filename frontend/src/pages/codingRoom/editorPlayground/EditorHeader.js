@@ -1,23 +1,3 @@
-// import React from 'react';
-// import LanguageSelector from './LanguageSelector';
-//
-// const EditorHeader = ({ selectedLanguage, onLanguageChange, room }) => {
-//     return (
-//         <div className="editor-header">
-//             <h2>Room Name</h2>
-//             <div className="actions">
-//                 <label htmlFor="language-select" className="language-label">Language</label>
-//                 <LanguageSelector
-//                     selectedLanguage={selectedLanguage}
-//                     onLanguageChange={onLanguageChange}
-//                 />
-//             </div>
-//         </div>
-//     );
-// };
-//
-// export default EditorHeader;
-
 import React, { useState } from 'react';
 import LanguageSelector from './LanguageSelector';
 
@@ -27,7 +7,7 @@ const EditorHeader = ({ selectedLanguage, onLanguageChange, room }) => {
     const handleCopyRoomId = () => {
         navigator.clipboard.writeText(room.roomId);
         setShowToast(true);
-        setTimeout(() => setShowToast(false), 3000); // Hide toast after 3 seconds
+        setTimeout(() => setShowToast(false), 3000);
     };
 
     return (

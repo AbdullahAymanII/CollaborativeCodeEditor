@@ -13,5 +13,8 @@ public class CodeDTO {
     private String filename;
     private String roomId;
     private String projectName;
+    private String lineNumber;
+    private String column;
+    private String lineContent;
     private String code;
 }

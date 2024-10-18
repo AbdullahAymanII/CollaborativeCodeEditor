@@ -5,6 +5,7 @@ import com.collaborative.editor.dto.code.CodeMetricsRequest;
 import com.collaborative.editor.dto.project.ProjectDTO;
 import com.collaborative.editor.model.messageLog.MessageLog;
 
+import com.collaborative.editor.service.editorService.EditorService;
 import com.collaborative.editor.service.editorService.EditorServiceImpl;
 import com.collaborative.editor.service.messageLogsService.LogsService;
 import com.collaborative.editor.service.messageLogsService.LogsServiceImpl;
@@ -21,11 +22,11 @@ import java.util.Map;
 @CrossOrigin
 public class LogsController {
 
-    private final EditorServiceImpl editorService;
+    private final EditorService editorService;
 
     private final LogsService logService;
 
-    public LogsController(@Qualifier("EditorServiceImpl") EditorServiceImpl editorService,
+    public LogsController(@Qualifier("EditorServiceImpl") EditorService editorService,
                           @Qualifier("LogsServiceImpl") LogsService logService) {
         this.editorService = editorService;
         this.logService = logService;

@@ -1,7 +1,6 @@
 import React, {useState, useEffect, useRef} from 'react';
 import {useLocation, useNavigate} from 'react-router-dom';
 import './JoinRoom.css';
-import useWebSocketConnection from "../websocket/useWebSocketConnection";
 
 const JoinRoom = () => {
     const [darkMode, setDarkMode] = useState(false);
@@ -11,13 +10,10 @@ const JoinRoom = () => {
     const location = useLocation();
     const [role, setRole] = useState('');
 
-
-    // const { userName, profileImage } = location.state; // Retrieve userEmail from state
-    const {user} = location.state; // Retrieve userEmail from state
+    const {user} = location.state;
 
     const fetchUserRooms = async () => {
         try {
-            // Pass userName as a query parameter in the URL
             const response = await fetch(`http://localhost:8080/api/rooms/join-room?username=${encodeURIComponent(user.name)}`, {
                 method: 'GET',
                 headers: {

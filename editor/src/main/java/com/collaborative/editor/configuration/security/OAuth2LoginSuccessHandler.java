@@ -14,6 +14,7 @@ import org.springframework.security.web.authentication.SimpleUrlAuthenticationSu
 import org.springframework.stereotype.Component;
 
 import java.io.IOException;
+import java.security.SecureRandom;
 
 @Component
 public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHandler {
@@ -31,9 +32,7 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
             throws IOException {
 
         if (authentication instanceof OAuth2AuthenticationToken oauthToken) {
-
             String registrationId = oauthToken.getAuthorizedClientRegistrationId();
-
             if ("google".equalsIgnoreCase(registrationId)) {
                 handleGoogleLogin(oauthToken.getPrincipal());
             } else if ("github".equalsIgnoreCase(registrationId)) {
@@ -79,9 +78,18 @@ public class OAuth2LoginSuccessHandler extends SimpleUrlAuthenticationSuccessHan
         user.setEmail(email);
         user.setUsername(username);
         user.setRole(role);
-        user.setPassword("RANDOM-PASSWORD");
+        user.setPassword(generateRandomPassword());
         user.setSource(source);
         userService.createUser(user);
+    }
+
+
+    private String generateRandomPassword() {
+        return new SecureRandom()
+                .ints(16, 33, 126)
+                .mapToObj(i -> String.valueOf((char) i))
+                .reduce((a, b) -> a + b)
+                .orElseThrow();
     }
 
     private String generateJwtToken(Authentication authentication) {

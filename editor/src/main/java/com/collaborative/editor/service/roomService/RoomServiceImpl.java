@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -37,6 +38,8 @@ public class RoomServiceImpl implements RoomService {
 
     @Autowired
     private FileService fileService;
+
+    private final Map<String, Object> roomLocks = new ConcurrentHashMap<>();
 
     private Lock lock = new ReentrantLock();
 
@@ -108,10 +111,12 @@ public class RoomServiceImpl implements RoomService {
     @Override
     @Transactional
     public void deleteRoom(String roomId) {
-        Room room = roomRepository.findByRoomId(roomId)
-                .orElseThrow(() -> new RoomNotFoundException("Room not found with ID: " + roomId));
+        synchronized (getRoomLock(roomId)) {
+            Room room = roomRepository.findByRoomId(roomId)
+                    .orElseThrow(() -> new RoomNotFoundException("Room not found with ID: " + roomId));
 
-        roomRepository.deleteByRoomId(roomId);
+            roomRepository.deleteByRoomId(roomId);
+        }
     }
 
     @Override
@@ -224,4 +229,7 @@ public class RoomServiceImpl implements RoomService {
         }
     }
 
+    private Object getRoomLock(String roomId) {
+        return roomLocks.computeIfAbsent(roomId, k -> new Object());
+    }
 }

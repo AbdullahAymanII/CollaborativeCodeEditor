@@ -1,361 +1,23 @@
-// import React, { useState } from 'react';
-// import { Editor } from '@monaco-editor/react';
-// import ActionModal from './ActionModal';
-// import EditorHeader from './EditorHeader';
-// import EditorFooter from './EditorFooter';
-// import useWebSocketManager from './WebSocketManager';
-// import useFileManager from './FileManager';
-// import useEditorLogic from './EditorLogic';
-//
-// const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user, room ,selectedLanguage,setSelectedLanguage, role}) => {
-//
-//     // const [selectedLanguage, setSelectedLanguage] = useState('python');
-//     const [showConfirmPushModal, setShowConfirmPushModal] = useState(false);
-//     const [showConfirmMergeModal, setShowConfirmMergeModal] = useState(false);
-//
-//     const { publishCodeChange, isConnected } = useWebSocketManager(setCode, user, currentFile, role);
-//     const { pushFileToServer, mergeFileFromServer, successMessage } = useFileManager(code, currentFile, room, setCode, setShowConfirmMergeModal, setShowConfirmPushModal);
-//     const { handleEditorChange, handleEditorDidMount, currentLine } = useEditorLogic(setCode, publishCodeChange, user);
-//
-//
-//     return (
-//         <div className={`code-editor-container ${darkMode ? 'dark' : 'light'}`}>
-//             <EditorHeader
-//                 selectedLanguage={selectedLanguage}
-//                 onLanguageChange={e => setSelectedLanguage(e.target.value)}
-//             />
-//             <Editor
-//                 height="67vh"
-//                 language={selectedLanguage}
-//                 theme={darkMode ? 'vs-dark' : 'light-plus'}
-//                 value={code}
-//                 onChange={handleEditorChange}
-//                 editorDidMount={handleEditorDidMount}
-//                 options={{
-//                     fontSize: 20,
-//                     automaticLayout: true,
-//                     readOnly: false, // Users can edit code unless lines are locked
-//                     minimap: {
-//                         enabled: true,
-//                         scale: 2,
-//                         showSlider: 'always',
-//                         maxColumn: 150
-//                     },
-//                     glyphMargin: true, // Enable glyph margin to show comment icons
-//                     scrollBeyondLastLine: true,
-//                     smoothScrolling: true,
-//                     wordWrap: 'bounded',
-//                     tabSize: 4,
-//                     renderLineHighlight: 'all',
-//                     lineNumbers: 'on',
-//                     bracketPairColorization: true,
-//                     fontLigatures: true,
-//                     renderWhitespace: 'boundary',
-//                     highlightActiveIndentGuide: true,
-//                     codeLens: true,
-//                     links: true,
-//                     renderValidationDecorations: 'on',
-//                     autoIndent: 'advanced',
-//                     suggestOnTriggerCharacters: true,
-//                     quickSuggestions: {
-//                         other: true,
-//                         comments: true,
-//                         strings: true
-//                     },
-//                     parameterHints: {enabled: true},
-//                     inlineSuggest: {enabled: true},
-//                     acceptSuggestionOnEnter: 'on',
-//                     foldingStrategy: 'indentation',
-//                     cursorBlinking: 'expand',
-//                     cursorSmoothCaretAnimation: true,
-//                     cursorStyle: 'block',
-//                     cursorWidth: 2,
-//                     find: {addExtraSpaceOnTop: true},
-//                     lightbulb: {enabled: true},
-//                     hover: {enabled: true},
-//                 }}
-//             />
-//             {successMessage && <div className="success-message">{successMessage}</div>}
-//             <EditorFooter
-//                 runCode={runCode}
-//                 onMergeClick={() => setShowConfirmMergeModal(true)}
-//                 onPushClick={() => setShowConfirmPushModal(true)}
-//             />
-//             <ActionModal
-//                 show={showConfirmPushModal}
-//                 title="Confirm Code Push"
-//                 actionLabel="PUSH"
-//                 onConfirm={pushFileToServer}
-//                 onCancel={() => setShowConfirmPushModal(false)}
-//             />
-//             <ActionModal
-//                 show={showConfirmMergeModal}
-//                 title="Confirm Code Merge"
-//                 actionLabel="MERGE"
-//                 onConfirm={mergeFileFromServer}
-//                 onCancel={() => setShowConfirmMergeModal(false)}
-//             />
-//         </div>
-//     );
-// };
-//
-// export default EditorPlayGround;
-//
-//
-//
-
-
-// import React, { useState } from 'react';
-// import { Editor } from '@monaco-editor/react';
-// import ActionModal from './ActionModal';
-// import EditorHeader from './EditorHeader';
-// import EditorFooter from './EditorFooter';
-// import useWebSocketManager from './WebSocketManager';
-// import useFileManager from './FileManager';
-// import useEditorLogic from './EditorLogic';
-// import CodeMetricsDisplay from './CodeMetricsDisplay'; // Import the CodeMetricsDisplay component
-//
-// const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user, room, selectedLanguage, setSelectedLanguage, role }) => {
-//     const [showConfirmPushModal, setShowConfirmPushModal] = useState(false);
-//     const [showConfirmMergeModal, setShowConfirmMergeModal] = useState(false);
-//
-//     const { publishCodeChange, isConnected } = useWebSocketManager(setCode, user, currentFile, role);
-//     const { pushFileToServer, mergeFileFromServer, successMessage } = useFileManager(code, currentFile, room, setCode, setShowConfirmMergeModal, setShowConfirmPushModal);
-//     const { handleEditorChange, handleEditorDidMount, currentLine } = useEditorLogic(setCode, publishCodeChange, user, role);
-//
-//     return (
-//         <div className={`code-editor-container ${darkMode ? 'dark' : 'light'}`}>
-//             <EditorHeader
-//                 selectedLanguage={selectedLanguage}
-//                 onLanguageChange={e => setSelectedLanguage(e.target.value)}
-//             />
-//             <Editor
-//                 height="67vh"
-//                 language={selectedLanguage}
-//                 theme={darkMode ? 'vs-dark' : 'light-plus'}
-//                 value={code}
-//                 onChange={handleEditorChange}
-//                 editorDidMount={handleEditorDidMount}
-//                 options={{
-//                     fontSize: 20,
-//                     automaticLayout: true,
-//                     readOnly: role === 'viewer', // Viewer role cannot edit code
-//                     minimap: {
-//                         enabled: true,
-//                         scale: 2,
-//                         showSlider: 'always',
-//                         maxColumn: 150,
-//                     },
-//                     glyphMargin: true,
-//                     scrollBeyondLastLine: true,
-//                     smoothScrolling: true,
-//                     wordWrap: 'bounded',
-//                     tabSize: 4,
-//                     renderLineHighlight: 'all',
-//                     lineNumbers: 'on',
-//                     bracketPairColorization: true,
-//                     fontLigatures: true,
-//                     renderWhitespace: 'boundary',
-//                     highlightActiveIndentGuide: true,
-//                     codeLens: true,
-//                     links: true,
-//                     renderValidationDecorations: 'on',
-//                     autoIndent: 'advanced',
-//                     suggestOnTriggerCharacters: true,
-//                     quickSuggestions: {
-//                         other: true,
-//                         comments: true,
-//                         strings: true,
-//                     },
-//                     parameterHints: { enabled: true },
-//                     inlineSuggest: { enabled: true },
-//                     acceptSuggestionOnEnter: 'on',
-//                     foldingStrategy: 'indentation',
-//                     cursorBlinking: 'expand',
-//                     cursorSmoothCaretAnimation: true,
-//                     cursorStyle: 'block',
-//                     cursorWidth: 2,
-//                     find: { addExtraSpaceOnTop: true },
-//                     lightbulb: { enabled: true },
-//                     hover: { enabled: true },
-//                 }}
-//             />
-//             {successMessage && <div className="success-message">{successMessage}</div>}
-//
-//             {/* Pass the role prop down to EditorFooter for conditional rendering */}
-//             <EditorFooter
-//                 role={role}
-//                 runCode={runCode}
-//                 onMergeClick={() => setShowConfirmMergeModal(true)}
-//                 onPushClick={() => setShowConfirmPushModal(true)}
-//             />
-//
-//             {/* Display Code Metrics */}
-//             <CodeMetricsDisplay code={code} language={selectedLanguage} />
-//
-//             <ActionModal
-//                 show={showConfirmPushModal}
-//                 title="Confirm Code Push"
-//                 actionLabel="PUSH"
-//                 onConfirm={pushFileToServer}
-//                 onCancel={() => setShowConfirmPushModal(false)}
-//             />
-//             <ActionModal
-//                 show={showConfirmMergeModal}
-//                 title="Confirm Code Merge"
-//                 actionLabel="MERGE"
-//                 onConfirm={mergeFileFromServer}
-//                 onCancel={() => setShowConfirmMergeModal(false)}
-//             />
-//         </div>
-//     );
-// };
-//
-// export default EditorPlayGround;
-
-// import React, { useState } from 'react';
-// import { Editor } from '@monaco-editor/react';
-// import ActionModal from './ActionModal';
-// import EditorHeader from './EditorHeader';
-// import EditorFooter from './EditorFooter';
-// import useWebSocketManager from './WebSocketManager';
-// import useFileManager from './FileManager';
-// import useEditorLogic from './EditorLogic';
-// import CodeMetricsDisplay from './CodeMetricsDisplay';
-//
-// const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user, room, selectedLanguage, setSelectedLanguage, role, setMessages }) => {
-//     const [showConfirmPushModal, setShowConfirmPushModal] = useState(false);
-//     const [showConfirmMergeModal, setShowConfirmMergeModal] = useState(false);
-//     const [showMetricsModal, setShowMetricsModal] = useState(false); // New state for metrics modal
-//
-//     const { publishCodeChange ,isConnected } = useWebSocketManager(setCode, setMessages, user, currentFile, role);
-//     const { pushFileToServer, mergeFileFromServer, successMessage } = useFileManager(code, currentFile, room, setCode, setShowConfirmMergeModal, setShowConfirmPushModal);
-//     const { handleEditorChange, handleEditorDidMount, currentLine } = useEditorLogic(setCode, publishCodeChange, user, role);
-//
-//     const handleViewDetailsClick = () => {
-//         setShowMetricsModal(true); // Open the metrics modal when "View Details" is clicked
-//     };
-//
-//     const handleCloseMetricsModal = () => {
-//         setShowMetricsModal(false); // Close the modal
-//     };
-//
-//     return (
-//         <div className={`code-editor-container ${darkMode ? 'dark' : 'light'}`}>
-//             <EditorHeader
-//                 selectedLanguage={selectedLanguage}
-//                 onLanguageChange={e => setSelectedLanguage(e.target.value)}
-//             />
-//             <Editor
-//                 height="67vh"
-//                 language={selectedLanguage}
-//                 theme={darkMode ? 'vs-dark' : 'light-plus'}
-//                 value={code}
-//                 onChange={handleEditorChange}
-//                 editorDidMount={handleEditorDidMount}
-//                 options={{
-//                     fontSize: 20,
-//                     automaticLayout: true,
-//                     readOnly: role === 'viewer', // Viewer role cannot edit code
-//                     minimap: {
-//                         enabled: true,
-//                         scale: 2,
-//                         showSlider: 'always',
-//                         maxColumn: 150,
-//                     },
-//                     glyphMargin: true,
-//                     scrollBeyondLastLine: true,
-//                     smoothScrolling: true,
-//                     wordWrap: 'bounded',
-//                     tabSize: 4,
-//                     renderLineHighlight: 'all',
-//                     lineNumbers: 'on',
-//                     bracketPairColorization: true,
-//                     fontLigatures: true,
-//                     renderWhitespace: 'boundary',
-//                     highlightActiveIndentGuide: true,
-//                     codeLens: true,
-//                     links: true,
-//                     renderValidationDecorations: 'on',
-//                     autoIndent: 'advanced',
-//                     suggestOnTriggerCharacters: true,
-//                     quickSuggestions: {
-//                         other: true,
-//                         comments: true,
-//                         strings: true,
-//                     },
-//                     parameterHints: { enabled: true },
-//                     inlineSuggest: { enabled: true },
-//                     acceptSuggestionOnEnter: 'on',
-//                     foldingStrategy: 'indentation',
-//                     cursorBlinking: 'expand',
-//                     cursorSmoothCaretAnimation: true,
-//                     cursorStyle: 'block',
-//                     cursorWidth: 2,
-//                     find: { addExtraSpaceOnTop: true },
-//                     lightbulb: { enabled: true },
-//                     hover: { enabled: true },
-//                 }}
-//             />
-//             {successMessage && <div className="success-message">{successMessage}</div>}
-//
-//             {/* Footer with the buttons, including "View Details" */}
-//             <EditorFooter
-//                 role={role}
-//                 runCode={runCode}
-//                 onMergeClick={() => setShowConfirmMergeModal(true)}
-//                 onPushClick={() => setShowConfirmPushModal(true)}
-//                 onViewDetailsClick={handleViewDetailsClick} // Pass the handler to show modal
-//             />
-//
-//             {/* Code Metrics Modal */}
-//             {showMetricsModal && (
-//                 <CodeMetricsDisplay
-//                     code={code}
-//                     language={selectedLanguage}
-//                     onClose={handleCloseMetricsModal} // Pass close handler to the modal
-//                 />
-//             )}
-//
-//             <ActionModal
-//                 show={showConfirmPushModal}
-//                 title="Confirm Code Push"
-//                 actionLabel="PUSH"
-//                 onConfirm={pushFileToServer}
-//                 onCancel={() => setShowConfirmPushModal(false)}
-//             />
-//             <ActionModal
-//                 show={showConfirmMergeModal}
-//                 title="Confirm Code Merge"
-//                 actionLabel="MERGE"
-//                 onConfirm={mergeFileFromServer}
-//                 onCancel={() => setShowConfirmMergeModal(false)}
-//             />
-//         </div>
-//     );
-// };
-//
-// export default EditorPlayGround;
 import React, { useState } from 'react';
 import { Editor } from '@monaco-editor/react';
 import ActionModal from './ActionModal';
 import EditorHeader from './EditorHeader';
 import EditorFooter from './EditorFooter';
-// import useWebSocketManager from './WebSocketManager';
 import useFileManager from './FileManager';
 import useEditorLogic from './EditorLogic';
 import CodeMetricsDisplay from './CodeMetricsDisplay';
 
-const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user, room, selectedLanguage, setSelectedLanguage, role, setLiveEditing, liveEditing, publishCodeChange, sendActionMessage, isConnected, sender, setSender}) => {
+const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user, room, selectedLanguage, setSelectedLanguage, role, setLiveEditing, liveEditing, sendActionMessage, isConnected, sender, setSender, handleEditorDidMount, handleEditorChange}) => {
     const [showConfirmPushModal, setShowConfirmPushModal] = useState(false);
     const [showConfirmMergeModal, setShowConfirmMergeModal] = useState(false);
     const [showMetricsModal, setShowMetricsModal] = useState(false); // New state for metrics modal
 
     const { pushFileToServer, mergeFileFromServer, successMessage } = useFileManager(code, currentFile, room, setCode, setShowConfirmMergeModal, setShowConfirmPushModal);
-    const { handleEditorChange, handleEditorDidMount, currentLine } = useEditorLogic(setCode, publishCodeChange, user, role);
+    // const { handleEditorChange, handleEditorDidMount } = useEditorLogic(setCode, publishCodeChange, user, role, editorRef);
+    // const { handleEditorDidMount } = useEditorLogic(setCode, publishCodeChange, user, role, editorRef);
 
     const handleViewDetailsClick = () => {
-        setShowMetricsModal(true); // Open the metrics modal when "View Details" is clicked
+        setShowMetricsModal(true);
     };
 
     const handleCloseMetricsModal = () => {
@@ -390,17 +52,14 @@ const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user,
             if (!response.ok) throw new Error('Failed to fetch room logs');
 
             const data = await response.json();
-
-            // Creating a blob from the room logs data
             const blob = new Blob([JSON.stringify(data.roomLogs, null, 2)], { type: 'application/json' });
 
-            // Creating a link to download the file
             const link = document.createElement('a');
             link.href = URL.createObjectURL(blob);
-            link.download = `room_logs_${room.roomId}.json`; // Filename to download
-            document.body.appendChild(link); // Append link to body
-            link.click(); // Trigger the download
-            document.body.removeChild(link); // Remove link from DOM
+            link.download = `room_logs_${room.roomId}.json`;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
 
         } catch (error) {
             console.error('Error fetching room logs:', error);
@@ -435,11 +94,12 @@ const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user,
                 theme={darkMode ? 'light-plus' : 'vs-dark'}
                 value={code}
                 onChange={handleEditorChange}
-                editorDidMount={handleEditorDidMount}
+                onMount={handleEditorDidMount}
                 options={{
                     fontSize: 20,
                     automaticLayout: true,
-                    readOnly: role === 'viewer', // Viewer role cannot edit code
+                    readOnly: role === 'VIEWER', // Viewer role cannot edit code
+                    // readOnly: false, // Viewer role cannot edit code
                     minimap: {
                         enabled: true,
                         scale: 2,
@@ -515,7 +175,7 @@ const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user,
                 show={showConfirmMergeModal}
                 title="Confirm Code Merge"
                 actionLabel="MERGE"
-                onConfirm={handleMergeConfirm} // Call the new confirm handler
+                onConfirm={handleMergeConfirm} // Call the new confirmation handler
                 onCancel={() => setShowConfirmMergeModal(false)}
             />
         </div>

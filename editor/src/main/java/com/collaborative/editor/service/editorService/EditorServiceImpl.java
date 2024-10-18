@@ -1,11 +1,53 @@
 package com.collaborative.editor.service.editorService;
 
 
+import com.collaborative.editor.dto.code.CodeDTO;
 import com.collaborative.editor.dto.code.CodeMetrics;
 import org.springframework.stereotype.Service;
 
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+
 @Service("EditorServiceImpl")
 public class EditorServiceImpl implements EditorService {
+
+    private final Map<String, Object> fileLocks = new ConcurrentHashMap<>();
+
+    @Override
+    public CodeDTO insertComment(CodeDTO codeDTO) {
+        String fileKey = codeDTO.getRoomId() + "-" + codeDTO.getProjectName() + "-" + codeDTO.getFilename();
+
+        synchronized (getFileLock(fileKey)) {
+
+            String code = codeDTO.getCode();
+            int lineNumber = Integer.parseInt(codeDTO.getLineNumber());
+            String comment = codeDTO.getLineContent();
+
+            String[] lines = code.split("\n");
+            int targetLine = lineNumber - 1;
+
+            if (targetLine >= 0 && targetLine < lines.length) {
+                String lineContent = lines[targetLine];
+
+                if (lineContent.trim().isEmpty()) {
+                    lines[targetLine] = "//" + comment;
+                } else {
+                    lines[targetLine] = lineContent.trim() + " //" + comment;
+                }
+            }
+
+            String updatedCode = String.join("\n", lines);
+            codeDTO.setCode(updatedCode);
+
+            return codeDTO;
+        }
+    }
+
+    private Object getFileLock(String fileKey) {
+        return fileLocks.computeIfAbsent(fileKey, k -> new Object());
+    }
+
+
     @Override
     public CodeMetrics calculateMetrics(String code, String language) {
         int lines = code.split("\n").length;
