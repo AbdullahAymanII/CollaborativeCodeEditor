@@ -20,8 +20,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.locks.Lock;
-import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 @Service("RoomServiceImpl")
@@ -40,8 +38,6 @@ public class RoomServiceImpl implements RoomService {
     private FileService fileService;
 
     private final Map<String, Object> roomLocks = new ConcurrentHashMap<>();
-
-    private Lock lock = new ReentrantLock();
 
 
     @Override
@@ -121,9 +117,9 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public void addUserToRoom(Room room, User user, RoomRole role) {
-        try {
+        Object roomLock = getRoomLock(room.getRoomId()); // Get the lock based on roomId
 
-            lock.lock();
+        synchronized (roomLock) {
             RoomMembership newMembership = RoomMembership
                     .builder()
                     .room(room)
@@ -134,11 +130,6 @@ public class RoomServiceImpl implements RoomService {
             room.getRoomMemberships().add(newMembership);
             user.getRoomMemberships().add(newMembership);
             roomMembershipRepository.save(newMembership);
-
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to add user to room.");
-        } finally {
-            lock.unlock();
         }
     }
 
@@ -201,7 +192,9 @@ public class RoomServiceImpl implements RoomService {
     @Override
     @Transactional
     public void removeUserFromRoom(Room room, User user, RoomRole role) {
-        try {
+        Object roomLock = getRoomLock(room.getRoomId());
+
+        synchronized (roomLock) {
             RoomMembership membership = roomMembershipRepository.findByRole(room, user, role)
                     .orElseThrow(() -> new RoomMembershipNotFoundException("Room membership not found"));
 
@@ -209,9 +202,6 @@ public class RoomServiceImpl implements RoomService {
             user.getRoomMemberships().remove(membership);
 
             roomMembershipRepository.delete(membership);
-
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to remove user from room.");
         }
     }
 
@@ -219,13 +209,11 @@ public class RoomServiceImpl implements RoomService {
     @Override
     @Transactional
     public void rename(Room room) {
-        try {
-            lock.lock();
+
+        Object roomLock = getRoomLock(room.getRoomId());
+
+        synchronized (roomLock) {
             roomRepository.save(room);
-        } catch (Exception e) {
-            throw new RuntimeException("Failed to rename room.");
-        } finally {
-            lock.unlock();
         }
     }
 

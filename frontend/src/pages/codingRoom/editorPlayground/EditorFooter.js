@@ -8,7 +8,6 @@ const EditorFooter = ({ role, runCode, onMergeClick, onPushClick, onViewDetailsC
         if (sender) {
             setIsTyping(true);
 
-            // Set a timeout to clear typing status after 3 seconds
             const typingTimeout = setTimeout(() => {
                 setSender('');
                 setIsTyping(false);

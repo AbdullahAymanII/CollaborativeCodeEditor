@@ -11,7 +11,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Service("FileServiceImpl")
@@ -20,6 +22,9 @@ public class FileServiceImpl implements FileService {
     private static final String DEFAULT_CONTENT_FILE = "Typing your first code here...";
     private final FileRepository fileVersionRepository;
     private final FileMergeHandler fileMergeHandler;
+
+    private final Map<String, Object> fileLocks = new ConcurrentHashMap<>();
+
 
     @Autowired
     public FileServiceImpl(FileRepository fileVersionRepository, FileMergeHandler fileMergeHandler) {
@@ -77,38 +82,48 @@ public class FileServiceImpl implements FileService {
 
     @Override
     @Transactional
-    public synchronized void pushFileContent(File file) {
-        try {
-            Optional<File> existingFile = checkExistingFile(file);
+    public void pushFileContent(File file) {
+        String fileKey = file.getRoomId() + "-" + file.getProjectName() + "-" + file.getFilename();
 
-            if (existingFile.isPresent()) {
-                file.setLastModifiedAt(System.currentTimeMillis());
-                fileVersionRepository.upsertFileContent(
-                        file.getFilename(),
-                        file.getProjectName(),
-                        file.getRoomId(),
-                        file.getContent(),
-                        file.getCreatedAt(),
-                        file.getLastModifiedAt(),
-                        file.getExtension()
-                );
-            } else {
-                throw new RuntimeException("File not found for pushing content.");
+        synchronized (getFileLock(fileKey)) {
+            try {
+                Optional<File> existingFile = checkExistingFile(file);
+
+                if (existingFile.isPresent()) {
+                    file.setLastModifiedAt(System.currentTimeMillis());
+                    fileVersionRepository.upsertFileContent(
+                            file.getFilename(),
+                            file.getProjectName(),
+                            file.getRoomId(),
+                            file.getContent(),
+                            file.getCreatedAt(),
+                            file.getLastModifiedAt(),
+                            file.getExtension()
+                    );
+                } else {
+                    throw new RuntimeException("File not found for pushing content.");
+                }
+            } catch (OptimisticLockException e) {
+                throw new RuntimeException("Failed to push content due to concurrent modification.", e);
             }
-        } catch (OptimisticLockException e) {
-            throw new RuntimeException("Failed to push content due to concurrent modification.", e);
         }
     }
 
+
     @Override
     public File mergeFileContent(File newVersion) {
-        File oldVersion = fileVersionRepository.findByFileNameProjectNameAndRoomId(
-                newVersion.getProjectName(),
-                newVersion.getFilename(),
-                newVersion.getRoomId()).orElseThrow(() -> new RuntimeException("Old version not found"));
+        String fileKey = newVersion.getRoomId() + "-" + newVersion.getProjectName() + "-" + newVersion.getFilename();
 
-        return fileMergeHandler.mergeFileContent(oldVersion, newVersion.getContent());
+        synchronized (getFileLock(fileKey)) {
+            File oldVersion = fileVersionRepository.findByFileNameProjectNameAndRoomId(
+                    newVersion.getProjectName(),
+                    newVersion.getFilename(),
+                    newVersion.getRoomId()).orElseThrow(() -> new RuntimeException("Old version not found"));
+
+            return fileMergeHandler.mergeFileContent(oldVersion, newVersion.getContent());
+        }
     }
+
 
     @Override
     public File pullFileContent(FileDTO fileDTO) {
@@ -124,5 +139,9 @@ public class FileServiceImpl implements FileService {
                 file.getFilename(),
                 file.getRoomId()
         );
+    }
+
+    private Object getFileLock(String roomId) {
+        return fileLocks.computeIfAbsent(roomId, k -> new Object());
     }
 }

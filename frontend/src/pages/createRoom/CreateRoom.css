@@ -84,12 +84,12 @@
     font-size: 1rem;
     cursor: pointer;
     transition: background-color 0.3s;
-    margin-bottom: 10px; /* Add margin to the button */
+    margin-bottom: 10px;
 }
 
 .finish-button {
     background-color: #636363;
-    margin-top: 10px; /* Optional: Add margin-top for more separation from previous button */
+    margin-top: 10px;
 }
 .add-member-headerForm {
     margin-bottom: 26px;

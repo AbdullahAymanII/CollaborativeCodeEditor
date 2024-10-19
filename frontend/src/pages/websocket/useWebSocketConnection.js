@@ -31,7 +31,7 @@ const useWebSocketConnection = () => {
         });
 
         stompClient.activate();
-        wsRef.current = stompClient; // Store WebSocket client in ref
+        wsRef.current = stompClient;
         console.log('WebSocket connected');
     }, [isConnected, setIsConnected, wsRef, wsRef]);
 

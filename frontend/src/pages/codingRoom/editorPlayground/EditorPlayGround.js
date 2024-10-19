@@ -4,17 +4,14 @@ import ActionModal from './ActionModal';
 import EditorHeader from './EditorHeader';
 import EditorFooter from './EditorFooter';
 import useFileManager from './FileManager';
-import useEditorLogic from './EditorLogic';
 import CodeMetricsDisplay from './CodeMetricsDisplay';
 
 const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user, room, selectedLanguage, setSelectedLanguage, role, setLiveEditing, liveEditing, sendActionMessage, isConnected, sender, setSender, handleEditorDidMount, handleEditorChange}) => {
     const [showConfirmPushModal, setShowConfirmPushModal] = useState(false);
     const [showConfirmMergeModal, setShowConfirmMergeModal] = useState(false);
-    const [showMetricsModal, setShowMetricsModal] = useState(false); // New state for metrics modal
+    const [showMetricsModal, setShowMetricsModal] = useState(false);
 
     const { pushFileToServer, mergeFileFromServer, successMessage } = useFileManager(code, currentFile, room, setCode, setShowConfirmMergeModal, setShowConfirmPushModal);
-    // const { handleEditorChange, handleEditorDidMount } = useEditorLogic(setCode, publishCodeChange, user, role, editorRef);
-    // const { handleEditorDidMount } = useEditorLogic(setCode, publishCodeChange, user, role, editorRef);
 
     const handleViewDetailsClick = () => {
         setShowMetricsModal(true);
@@ -98,8 +95,7 @@ const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user,
                 options={{
                     fontSize: 20,
                     automaticLayout: true,
-                    readOnly: role === 'VIEWER', // Viewer role cannot edit code
-                    // readOnly: false, // Viewer role cannot edit code
+                    readOnly: role === 'VIEWER',
                     minimap: {
                         enabled: true,
                         scale: 2,
@@ -142,13 +138,12 @@ const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user,
             />
             {successMessage && <div className="success-message">{successMessage}</div>}
 
-            {/* Footer with the buttons, including "View Details" */}
             <EditorFooter
                 role={role}
                 runCode={runCode}
                 onMergeClick={() => setShowConfirmMergeModal(true)}
                 onPushClick={() => setShowConfirmPushModal(true)}
-                onViewDetailsClick={handleViewDetailsClick} // Pass the handler to show modal
+                onViewDetailsClick={handleViewDetailsClick}
                 startConnection={handleStartConnection}
                 endConnection={handleEndConnection}
                 viewLogs={handleDisplayLogs}
@@ -160,7 +155,7 @@ const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user,
                 <CodeMetricsDisplay
                     code={code}
                     language={selectedLanguage}
-                    onClose={handleCloseMetricsModal} // Pass close handler to the modal
+                    onClose={handleCloseMetricsModal}
                 />
             )}
 
@@ -168,14 +163,14 @@ const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user,
                 show={showConfirmPushModal}
                 title="Confirm Code Push"
                 actionLabel="PUSH"
-                onConfirm={handlePushConfirm} // Call the new confirm handler
+                onConfirm={handlePushConfirm}
                 onCancel={() => setShowConfirmPushModal(false)}
             />
             <ActionModal
                 show={showConfirmMergeModal}
                 title="Confirm Code Merge"
                 actionLabel="MERGE"
-                onConfirm={handleMergeConfirm} // Call the new confirmation handler
+                onConfirm={handleMergeConfirm}
                 onCancel={() => setShowConfirmMergeModal(false)}
             />
         </div>

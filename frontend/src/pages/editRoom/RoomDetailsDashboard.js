@@ -298,7 +298,6 @@ const RoomAdmin = () => {
     const navigate = useNavigate();
     const { user, room } = location.state;
 
-    // Fetch room details (viewers, collaborators, projects)
     const fetchRoomDetails = async () => {
         try {
             const response = await fetch(`http://localhost:8080/api/rooms/${room.roomId}/details`, {

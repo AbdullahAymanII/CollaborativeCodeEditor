@@ -3,25 +3,22 @@ import { BrowserRouter as Router, Route, Routes, useLocation } from 'react-route
 import { AnimatePresence } from 'framer-motion';
 import Loading from "./pages/app/Loading";
 import Login from "./pages/loginForm/Login";
-import Registration from "./pages/loginForm/Registration";
 import Home from "./pages/home/Home";
 import CreateRoom from "./pages/createRoom/CreateRoom";
-import AddMembers from "./pages/createRoom/AddMembers";
 import JoinRoom from "./pages/joinRoom/JoinRoom";
 import CodingPage from "./pages/codingRoom/CodingPage";
 import OAuth2RedirectHandler from "./pages/app/OAuth2RedirectHandler";
 import NotFound from "./pages/app/NotFound";
 import EditRoom from "./pages/editRoom/EditRoom";
 import RoomDetailsDashboard from "./pages/editRoom/RoomDetailsDashboard";
+import LandingPage from "./pages/LandingPage/LandingPage";
 
 function App() {
     const [loading, setLoading] = useState(true);
     const location = useLocation();
     const [user, setUser] = useState(null);
     const [room, setRoom] = useState({ roomId: "", roomName: "" });
-    const [project, setProject] = useState({ projectName: '', projectDescription: '' });
 
-    // Fetch user info and set globally
     useEffect(() => {
         const fetchUser = async () => {
             try {
@@ -34,10 +31,7 @@ function App() {
                 });
                 if (!response.ok) throw new Error('Failed to fetch user');
                 const userData = await response.json();
-                console.log('---------------------------------');
                 setUser(userData);
-                console.log(userData);
-                console.log('---------------------------------');
             } catch (error) {
                 console.error('Error fetching user:', error);
             }
@@ -45,7 +39,6 @@ function App() {
         fetchUser();
     }, []);
 
-    // Handle loading animation during route changes
     useEffect(() => {
         setLoading(true);
         const timeout = setTimeout(() => setLoading(false), 1000);
@@ -60,18 +53,15 @@ function App() {
 
             {!loading && (
                 <AnimatePresence mode="wait">
-                    <Routes location={location} key={location.pathname}>
-                        <Route path="/" element={<Login />} />
-                        <Route path="/register" element={<Registration />} />
+                    <Routes location={location} key={location.pathname}>LandingPage
+                        <Route path="/" element={<LandingPage />} />
+                        <Route path="/login" element={<Login />} />
                         <Route path="/home" element={<Home user={user} />} />
                         <Route path="/create-room" element={<CreateRoom user={user} room={room}/>} />
-                        {/*<Route path="/create-project" element={<CreateProject user={user} room={room} projec={project}/>} />*/}
-                        <Route path="/add-members" element={<AddMembers user={user} room={room} projec={project}/>} />
                         <Route path="/join-room" element={<JoinRoom />} />
-                        <Route path="/join-room/:roomId/:roleClick" element={<CodingPage />} /> {/* New dynamic route for CodingRoom */}
+                        <Route path="/join-room/:roomId/:roleClick" element={<CodingPage />} />
                         <Route path="/edit-room" element={<EditRoom />} />
                         <Route path="/edit-room/room/:roomId" element={<RoomDetailsDashboard />} />
-                        {/*<Route path="/join-room/:roomId/VIEWER" element={<ViewerPage />} /> /!* New dynamic route for CodingRoom *!/*/}
                         <Route path="/oauth2/redirect" element={<OAuth2RedirectHandler />} />
                         <Route path="*" element={<NotFound />} />
                     </Routes>

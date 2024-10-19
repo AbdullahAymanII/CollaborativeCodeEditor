@@ -19,6 +19,8 @@ import org.springframework.transaction.annotation.Transactional;
 import java.io.IOException;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
@@ -29,6 +31,9 @@ public class ProjectServiceImpl implements ProjectService {
     private static final String MAIN_VERSION = "Main-version";
     private static final String DEFAULT_EXTENSION = ".txt";
 
+    private final Map<String, Object> projectLocks = new ConcurrentHashMap<>();
+
+
     @Autowired
     private FileService fileService;
 
@@ -38,7 +43,6 @@ public class ProjectServiceImpl implements ProjectService {
     private final ProjectRepository projectRepository;
     private final RoomRepository roomRepository;
     private final FileRepository fileRepository;
-    private Lock lock = new ReentrantLock();
 
     @Autowired
     public ProjectServiceImpl(ProjectRepository projectRepository,
@@ -95,13 +99,21 @@ public class ProjectServiceImpl implements ProjectService {
 
     @Override
     public void deleteProject(ProjectDTO projectDTO) {
-        try {
-            lock.lock();
-            Project project = projectRepository.findByRoomIdAndProjectName(projectDTO.getRoomId(), projectDTO.getProjectName())
-                    .orElseThrow(() -> new ProjectNotFoundException("Project not found for room ID " + projectDTO.getRoomId()));
-            projectRepository.delete(project);
-        } finally {
-            lock.unlock();
+        String fileKey = projectDTO.getRoomId() + "-" + projectDTO.getProjectName();
+
+        synchronized (getProjectLock(fileKey)) {
+            try {
+                Project project = projectRepository.findByRoomIdAndProjectName(
+                        projectDTO.getRoomId(),
+                        projectDTO.getProjectName()
+                ).orElseThrow(() -> new ProjectNotFoundException(
+                        "Project not found for room ID " + projectDTO.getRoomId()
+                ));
+
+                projectRepository.delete(project);
+            } catch (Exception e) {
+                throw new RuntimeException("Failed to delete project.", e);
+            }
         }
     }
 
@@ -144,5 +156,9 @@ public class ProjectServiceImpl implements ProjectService {
         return fileRepository.findByProjectNameAndRoomId(projectName, roomId)
                 .filter(files -> !files.isEmpty())
                 .orElseThrow(() -> new ProjectNotFoundException("No files found for the project"));
+    }
+
+    private Object getProjectLock(String roomId) {
+        return projectLocks.computeIfAbsent(roomId, k -> new Object());
     }
 }
