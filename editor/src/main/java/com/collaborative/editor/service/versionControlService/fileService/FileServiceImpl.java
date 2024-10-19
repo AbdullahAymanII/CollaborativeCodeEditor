@@ -3,6 +3,8 @@ package com.collaborative.editor.service.versionControlService.fileService;
 import com.collaborative.editor.dto.file.FileDTO;
 import com.collaborative.editor.dto.project.ProjectDTO;
 import com.collaborative.editor.exception.versionControlException.fileException.FileAlreadyExistsException;
+import com.collaborative.editor.model.codeUpdate.CodeUpdate;
+import com.collaborative.editor.repository.mongodb.CodeUpdateRepository;
 import com.collaborative.editor.repository.mongodb.FileRepository;
 import com.collaborative.editor.model.file.File;
 import jakarta.persistence.OptimisticLockException;
@@ -22,14 +24,19 @@ public class FileServiceImpl implements FileService {
     private static final String DEFAULT_CONTENT_FILE = "Typing your first code here...";
     private final FileRepository fileVersionRepository;
     private final FileMergeHandler fileMergeHandler;
+    private final CodeUpdateRepository codeUpdateRepository;
 
     private final Map<String, Object> fileLocks = new ConcurrentHashMap<>();
 
 
+
     @Autowired
-    public FileServiceImpl(FileRepository fileVersionRepository, FileMergeHandler fileMergeHandler) {
+    public FileServiceImpl(FileRepository fileVersionRepository,
+                           FileMergeHandler fileMergeHandler,
+                           CodeUpdateRepository codeUpdateRepository) {
         this.fileVersionRepository = fileVersionRepository;
         this.fileMergeHandler = fileMergeHandler;
+        this.codeUpdateRepository = codeUpdateRepository;
     }
 
     @Override
@@ -127,14 +134,34 @@ public class FileServiceImpl implements FileService {
 
     @Override
     public File pullFileContent(FileDTO fileDTO) {
-        return fileVersionRepository.findByFileNameProjectNameAndRoomId(
-                fileDTO.getProjectName(),
-                fileDTO.getFilename(),
-                fileDTO.getRoomId()).orElseThrow(() -> new RuntimeException("File not found"));
+
+        Optional<CodeUpdate> codeUpdate = checkExistingCodeUpdate(fileDTO);
+
+        if(codeUpdate.isEmpty()){
+            return fileVersionRepository.findByFileNameProjectNameAndRoomId(
+                    fileDTO.getProjectName(),
+                    fileDTO.getFilename(),
+                    fileDTO.getRoomId()).orElseThrow(() -> new RuntimeException("File not found"));
+        } else {
+            File file =  fileVersionRepository.findByFileNameProjectNameAndRoomId(
+                    fileDTO.getProjectName(),
+                    fileDTO.getFilename(),
+                    fileDTO.getRoomId()).get();
+            file.setContent(codeUpdate.get().getCode());
+            return file;
+        }
+
     }
 
     private Optional<File> checkExistingFile(File file) {
         return fileVersionRepository.findByFileNameProjectNameAndRoomId(
+                file.getProjectName(),
+                file.getFilename(),
+                file.getRoomId()
+        );
+    }
+    private Optional<CodeUpdate> checkExistingCodeUpdate(FileDTO file) {
+        return codeUpdateRepository.findByFileNameProjectNameAndRoomId(
                 file.getProjectName(),
                 file.getFilename(),
                 file.getRoomId()

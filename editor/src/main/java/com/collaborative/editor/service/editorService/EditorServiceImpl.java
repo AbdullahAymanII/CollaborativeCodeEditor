@@ -3,25 +3,34 @@ package com.collaborative.editor.service.editorService;
 
 import com.collaborative.editor.dto.code.CodeDTO;
 import com.collaborative.editor.dto.code.CodeMetrics;
+import com.collaborative.editor.model.codeUpdate.CodeUpdate;
+import com.collaborative.editor.model.file.File;
+import com.collaborative.editor.repository.mongodb.CodeUpdateRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 @Service("EditorServiceImpl")
 public class EditorServiceImpl implements EditorService {
 
-    private final Map<String, Object> fileLocks = new ConcurrentHashMap<>();
+    @Autowired
+    private CodeUpdateRepository codeUpdateRepository;
+    
+    private final Map<String, Object> CodeLocks = new ConcurrentHashMap<>();
+
 
     @Override
-    public CodeDTO insertComment(CodeDTO codeDTO) {
-        String fileKey = codeDTO.getRoomId() + "-" + codeDTO.getProjectName() + "-" + codeDTO.getFilename();
+    public CodeUpdate insertComment(CodeUpdate codeUpdate) {
+        String fileKey = codeUpdate.getRoomId() + "-" + codeUpdate.getProjectName() + "-" + codeUpdate.getFilename();
 
-        synchronized (getFileLock(fileKey)) {
+        synchronized (getCodeLock(fileKey)) {
 
-            String code = codeDTO.getCode();
-            int lineNumber = Integer.parseInt(codeDTO.getLineNumber());
-            String comment = codeDTO.getLineContent();
+            String code = codeUpdate.getCode();
+            int lineNumber = Integer.parseInt(codeUpdate.getLineNumber());
+            String comment = codeUpdate.getLineContent();
 
             String[] lines = code.split("\n");
             int targetLine = lineNumber - 1;
@@ -37,16 +46,39 @@ public class EditorServiceImpl implements EditorService {
             }
 
             String updatedCode = String.join("\n", lines);
-            codeDTO.setCode(updatedCode);
+            codeUpdate.setCode(updatedCode);
 
-            return codeDTO;
+            return codeUpdate;
         }
     }
 
-    private Object getFileLock(String fileKey) {
-        return fileLocks.computeIfAbsent(fileKey, k -> new Object());
+    @Override
+    public void saveCodeUpdate(CodeUpdate codeUpdate) {
+
+        String codeKey = codeUpdate.getRoomId() + "-" + codeUpdate.getProjectName() + "-" + codeUpdate.getFilename();
+
+        synchronized (getCodeLock(codeKey)) {
+            updateCode(codeUpdate);
+        }
+
     }
 
+    void updateCode(CodeUpdate codeUpdate){
+        if (checkExistingCodeUpdate(codeUpdate).isEmpty()) {
+            codeUpdateRepository.save(codeUpdate);
+        } else {
+            codeUpdateRepository.updateCode(
+                    codeUpdate.getFilename(),
+                    codeUpdate.getProjectName(),
+                    codeUpdate.getRoomId(),
+                    codeUpdate.getCode(),
+                    codeUpdate.getUserId(),
+                    codeUpdate.getLineNumber(),
+                    codeUpdate.getColumn(),
+                    codeUpdate.getLineContent()
+            );
+        }
+    }
 
     @Override
     public CodeMetrics calculateMetrics(String code, String language) {
@@ -100,5 +132,17 @@ public class EditorServiceImpl implements EditorService {
         }
 
         return complexity;
+    }
+
+    private Optional<CodeUpdate> checkExistingCodeUpdate(CodeUpdate codeUpdate) {
+        return codeUpdateRepository.findByFileNameProjectNameAndRoomId(
+                codeUpdate.getProjectName(),
+                codeUpdate.getFilename(),
+                codeUpdate.getRoomId()
+        );
+    }
+
+    private Object getCodeLock(String fileKey) {
+        return CodeLocks.computeIfAbsent(fileKey, k -> new Object());
     }
 }
