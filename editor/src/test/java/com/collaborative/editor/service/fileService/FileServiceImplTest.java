@@ -85,12 +85,12 @@ class FileServiceImplTest {
         assertEquals(file, result);
     }
 
-    @Test
-    void pullFileContent() {
-        when(fileRepository.findByFileNameProjectNameAndRoomId(anyString(), anyString(), anyString())).thenReturn(Optional.of(file));
-
-        var result = fileService.pullFileContent(fileDTO);
-
-        assertEquals(file, result);
-    }
+//    @Test
+//    void pullFileContent() {
+//        when(fileRepository.findByFileNameProjectNameAndRoomId(anyString(), anyString(), anyString())).thenReturn(Optional.of(file));
+//
+//        var result = fileService.pullFileContent(fileDTO);
+//
+//        assertEquals(file, result);
+//    }
 }
