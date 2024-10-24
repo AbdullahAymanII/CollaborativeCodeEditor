@@ -1,17 +1,13 @@
 # Stage 1: Build the application
 FROM maven:3.8.5-openjdk-17 AS build
 
-# Set working directory
 WORKDIR /editor
-
-# Copy the pom.xml and install dependencies
 COPY pom.xml /editor/
+
 RUN mvn dependency:go-offline
 
-# Copy the source code
 COPY src /editor/src/
 
-# Install Spring Boot DevTools for live reload
 RUN mvn clean install -DskipTests
 
 # Stage 2: Run the application

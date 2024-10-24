@@ -3,7 +3,7 @@ name: Frontend CI/CD Pipeline
 on:
   push:
     branches:
-      - feature-websocket
+      - feature-owner-dashboard
 
 jobs:
   build-and-push-docker:
