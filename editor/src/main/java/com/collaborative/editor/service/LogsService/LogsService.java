@@ -1,4 +1,4 @@
-package com.collaborative.editor.service.messageLogsService;
+package com.collaborative.editor.service.LogsService;
 
 import com.collaborative.editor.dto.project.ProjectDTO;
 import com.collaborative.editor.model.messageLog.MessageLog;

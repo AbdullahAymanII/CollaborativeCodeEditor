@@ -7,7 +7,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.servlet.view.RedirectView;
@@ -93,15 +92,15 @@ public class SignUpControllerTest {
     }
 
     @Test
-    void githubGoogleSignIn() {
-        RedirectView redirectView = signUpController.githubGoogleSignIn("google");
+    void providerSignIn() {
+        RedirectView redirectView = signUpController.providerSignIn("google");
 
         assertEquals("/oauth2/authorization/google", redirectView.getUrl());
     }
 
     @Test
     void githubGithubSignIn() {
-        RedirectView redirectView = signUpController.githubGoogleSignIn("github");
+        RedirectView redirectView = signUpController.providerSignIn("github");
 
         assertEquals("/oauth2/authorization/github", redirectView.getUrl());
     }

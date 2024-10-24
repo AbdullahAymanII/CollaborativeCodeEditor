@@ -17,6 +17,7 @@ import java.util.List;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class User {
 
     @jakarta.persistence.Id
@@ -24,7 +25,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Version // Optimistic locking
+    @Version
     private Long version;
 
     @Column(nullable = false, unique = true)
@@ -43,9 +44,6 @@ public class User {
     @Column(name = "source")
     @Enumerated(EnumType.STRING)
     private AccountSource source;
-
-//    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
-//    private Set<Room> ownedRooms = new HashSet<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<RoomMembership> roomMemberships = new ArrayList<>();

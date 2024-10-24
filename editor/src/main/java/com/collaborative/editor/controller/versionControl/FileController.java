@@ -5,10 +5,12 @@ import com.collaborative.editor.dto.project.ProjectDTO;
 import com.collaborative.editor.exception.versionControlException.fileException.FileAlreadyExistsException;
 import com.collaborative.editor.exception.versionControlException.fileException.FileNotFoundException;
 import com.collaborative.editor.model.file.File;
+import com.collaborative.editor.service.roomMembershipService.RoomSecurityService;
 import com.collaborative.editor.service.versionControlService.fileService.FileService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,11 +22,13 @@ import java.util.Map;
 public class FileController {
 
     private final FileService fileService;
-
-    public FileController(@Qualifier("FileServiceImpl") FileService fileService) {
+    private final RoomSecurityService roomSecurityService;
+    public FileController(@Qualifier("FileServiceImpl") FileService fileService, RoomSecurityService roomSecurityService) {
         this.fileService = fileService;
+        this.roomSecurityService = roomSecurityService;
     }
 
+    @PreAuthorize("@roomSecurityService.canViewRoom(principal.username, #roomId)")
     @GetMapping("/list-files/{projectName}/{roomId}")
     public ResponseEntity<Map<String, List<FileDTO>>> listFiles(@PathVariable String projectName, @PathVariable String roomId) {
         ProjectDTO projectDTO = ProjectDTO

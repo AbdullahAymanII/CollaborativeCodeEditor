@@ -1,6 +1,5 @@
 package com.collaborative.editor.model.project;
 
-//import com.collaborative.editor.model.mysql.file.File;
 import com.collaborative.editor.model.room.Room;
 import jakarta.persistence.*;
 import lombok.*;

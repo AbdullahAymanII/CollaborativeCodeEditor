@@ -1,4 +1,4 @@
-package com.collaborative.editor.controller.executor;
+package com.collaborative.editor.controller.editor.executor;
 
 
 import com.collaborative.editor.dto.code.CodeExecution;

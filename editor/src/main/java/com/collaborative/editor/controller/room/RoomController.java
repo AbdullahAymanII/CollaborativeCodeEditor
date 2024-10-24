@@ -7,12 +7,14 @@ import com.collaborative.editor.exception.roomException.RoomCreationException;
 import com.collaborative.editor.model.room.Room;
 import com.collaborative.editor.model.room.RoomRole;
 import com.collaborative.editor.model.user.User;
+import com.collaborative.editor.service.roomMembershipService.RoomSecurityService;
 import com.collaborative.editor.service.versionControlService.projectService.ProjectService;
 import com.collaborative.editor.service.roomService.RoomService;
 import com.collaborative.editor.service.userService.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collections;
@@ -28,16 +30,18 @@ public class RoomController {
     private final RoomService roomService;
     private final UserService userService;
     private final ProjectService projectService;
+    private final RoomSecurityService roomSecurityService;
 
     @Autowired
     public RoomController(
             @Qualifier("RoomServiceImpl") RoomService roomService,
             @Qualifier("UserServiceImpl") UserService userService,
-            @Qualifier("ProjectServiceImpl") ProjectService projectService) {
+            @Qualifier("ProjectServiceImpl") ProjectService projectService, RoomSecurityService roomSecurityService) {
 
         this.roomService = roomService;
         this.userService = userService;
         this.projectService = projectService;
+        this.roomSecurityService = roomSecurityService;
     }
 
     @PostMapping("/createRoom")
@@ -106,6 +110,7 @@ public class RoomController {
         }
     }
 
+    @PreAuthorize("@roomSecurityService.canViewRoom(principal.username, #roomId)")
     @PostMapping("/join-room/{roomId}")
     public ResponseEntity<String> joinRoom(@PathVariable("roomId") String roomId, @RequestBody String roomName) {
         return ResponseEntity.ok("Room");
@@ -146,6 +151,7 @@ public class RoomController {
         }
     }
 
+    @PreAuthorize("@roomSecurityService.isOwner(principal.username, #roomId)")
     @GetMapping("/{roomId}/details")
     public ResponseEntity<Map<String, List<Object>>> getRoomDetails(@PathVariable("roomId") String roomId) {
         try {

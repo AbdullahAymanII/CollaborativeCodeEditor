@@ -21,150 +21,93 @@ public class GlobalExceptionHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
-
     @ExceptionHandler(UserNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> handleUserNotFoundException(UserNotFoundException ex) {
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("error", "User Not Found");
-        errorResponse.put("message", ex.getMessage());
-
-        logger.error("Exception occurred:", ex.getMessage(), ex);
-
-        return errorResponse;
+        logger.warn("User not found: {}", ex.getMessage(), ex);
+        return createErrorResponse("User Not Found", ex.getMessage(), "USER_NOT_FOUND");
     }
 
     @ExceptionHandler(InvalidCredentialsException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public Map<String, String> handleInvalidCredentialsException(InvalidCredentialsException ex) {
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("error", "Invalid Credentials Exception");
-        errorResponse.put("message", ex.getMessage());
-
-        logger.error("Exception occurred:", ex.getMessage(), ex);
-
-        return errorResponse;
-    }
-
-    @ExceptionHandler(Exception.class)
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Map<String, String> handleGeneralException(Exception ex) {
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("error", "Internal Server Error");
-        errorResponse.put("message", ex.getMessage());
-
-        logger.error("Exception occurred:", ex.getMessage(), ex);
-
-        return errorResponse;
-    }
-
-    @ExceptionHandler(FileAlreadyExistsException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public Map<String, String> handleFileAlreadyExistsException(Exception ex) {
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("error", ex.getMessage());
-        errorResponse.put("message", ex.getMessage());
-
-        logger.error("Exception occurred:", ex.getMessage(), ex);
-
-        return errorResponse;
-    }
-
-    @ExceptionHandler(FileNotFoundException.class)
-    @ResponseStatus(HttpStatus.CONFLICT)
-    public Map<String, String> handleFileNotFoundException(Exception ex) {
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("error", ex.getMessage());
-        errorResponse.put("message", ex.getMessage());
-
-        logger.error("Exception occurred:", ex.getMessage(), ex);
-
-        return errorResponse;
+        logger.warn("Invalid credentials attempt: {}", ex.getMessage(), ex);
+        return createErrorResponse("Invalid Credentials", ex.getMessage(), "INVALID_CREDENTIALS");
     }
 
     @ExceptionHandler(ProjectNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> handleProjectNotFoundException(ProjectNotFoundException ex) {
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("error", "Project Not Found");
-        errorResponse.put("message", ex.getMessage());
+        logger.error("Project not found: {}", ex.getMessage(), ex);
+        return createErrorResponse("Project Not Found", ex.getMessage(), "PROJECT_NOT_FOUND");
+    }
 
-        logger.error("Exception occurred:", ex.getMessage(), ex);
+    @ExceptionHandler(FileNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> handleFileNotFoundException(FileNotFoundException ex) {
+        logger.error("File not found: {}", ex.getMessage(), ex);
+        return createErrorResponse("File Not Found", ex.getMessage(), "FILE_NOT_FOUND");
+    }
 
-        return errorResponse;
+    @ExceptionHandler(FileAlreadyExistsException.class)
+    @ResponseStatus(HttpStatus.CONFLICT)
+    public Map<String, String> handleFileAlreadyExistsException(FileAlreadyExistsException ex) {
+        logger.warn("File already exists: {}", ex.getMessage(), ex);
+        return createErrorResponse("File Already Exists", ex.getMessage(), "FILE_ALREADY_EXISTS");
     }
 
     @ExceptionHandler(RoomNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> handleRoomNotFoundException(RoomNotFoundException ex) {
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("error", "Room Not Found");
-        errorResponse.put("message", ex.getMessage());
+        logger.error("Room not found: {}", ex.getMessage(), ex);
+        return createErrorResponse("Room Not Found", ex.getMessage(), "ROOM_NOT_FOUND");
+    }
 
-        logger.error("Exception occurred:", ex.getMessage(), ex);
+    @ExceptionHandler(RoomUpdateException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleRoomUpdateException(RoomUpdateException ex) {
+        logger.warn("Room update failed: {}", ex.getMessage(), ex);
+        return createErrorResponse("Room Update Failed", ex.getMessage(), "ROOM_UPDATE_FAILED");
+    }
 
-        return errorResponse;
+    @ExceptionHandler(RoomCreationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleRoomCreationException(RoomCreationException ex) {
+        logger.error("Room creation failed: {}", ex.getMessage(), ex);
+        return createErrorResponse("Room Creation Failed", ex.getMessage(), "ROOM_CREATION_FAILED");
+    }
+
+    @ExceptionHandler(RoomDeletionException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public Map<String, String> handleRoomDeletionException(RoomDeletionException ex) {
+        logger.warn("Room deletion failed: {}", ex.getMessage(), ex);
+        return createErrorResponse("Room Deletion Failed", ex.getMessage(), "ROOM_DELETION_FAILED");
     }
 
     @ExceptionHandler(RoomMembershipNotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public Map<String, String> handleRoomMembershipNotFoundException(RoomMembershipNotFoundException ex) {
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("error", "RoomMembership Not Found Exception");
-        errorResponse.put("message", ex.getMessage());
-
-        logger.error("Exception occurred:", ex.getMessage(), ex);
-
-        return errorResponse;
+        logger.warn("Room membership not found: {}", ex.getMessage(), ex);
+        return createErrorResponse("Room Membership Not Found", ex.getMessage(), "ROOM_MEMBERSHIP_NOT_FOUND");
     }
 
-    @ExceptionHandler(ResourceNotFoundException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> handleResourceNotFoundException(ResourceNotFoundException ex) {
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("error", "ResourceNotFoundException Not Found Exception");
-        errorResponse.put("message", ex.getMessage());
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Map<String, String> handleGeneralException(Exception ex) {
+        logger.error("An internal server error occurred: {}", ex.getMessage(), ex);
 
-        logger.error("Exception occurred:", ex.getMessage(), ex);
-
-        return errorResponse;
+        return createErrorResponse(
+                "Internal Server Error",
+                "An unexpected error occurred." + " Please try again later.",
+                "INTERNAL_SERVER_ERROR"
+        );
     }
 
-
-    @ExceptionHandler(RoomUpdateException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> handleRoomUpdateException(RoomUpdateException ex) {
+    private Map<String, String> createErrorResponse(String error, String message, String code) {
         Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("error", "ResourceNotFoundException Not Found Exception");
-        errorResponse.put("message", ex.getMessage());
-
-        logger.error("Exception occurred:", ex.getMessage(), ex);
-
+        errorResponse.put("error", error);
+        errorResponse.put("message", message);
+        errorResponse.put("code", code);
         return errorResponse;
     }
-
-    @ExceptionHandler(RoomCreationException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> handleRoomCreationException(RoomCreationException ex) {
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("error", "ResourceNotFoundException Not Found Exception");
-        errorResponse.put("message", ex.getMessage());
-
-        logger.error("Exception occurred:", ex.getMessage(), ex);
-
-        return errorResponse;
-    }
-
-    @ExceptionHandler(RoomDeletionException.class)
-    @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> handleRoomDeletionException(RoomDeletionException ex) {
-        Map<String, String> errorResponse = new HashMap<>();
-        errorResponse.put("error", "ResourceNotFoundException Not Found Exception");
-        errorResponse.put("message", ex.getMessage());
-
-        logger.error("Exception occurred:", ex.getMessage(), ex);
-
-        return errorResponse;
-    }
-
 }

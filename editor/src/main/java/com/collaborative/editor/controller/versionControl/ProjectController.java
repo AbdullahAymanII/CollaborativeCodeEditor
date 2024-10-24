@@ -6,6 +6,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,7 +35,7 @@ public class ProjectController {
             return ResponseEntity.badRequest().body("Failed to create project.");
         }
     }
-
+    @PreAuthorize("@roomSecurityService.canViewRoom(principal.username, #roomId)")
     @GetMapping("/room/{roomId}")
     public ResponseEntity<Map<String, List<ProjectDTO>>> listProjects(@PathVariable String roomId) {
         try {
@@ -54,7 +55,7 @@ public class ProjectController {
             return ResponseEntity.notFound().build();
         }
     }
-
+    @PreAuthorize("@roomSecurityService.canViewRoom(principal.username, #roomId)")
     @GetMapping("/{roomId}/{projectName}/download-project")
     public void downloadProject(@PathVariable String roomId,
                                 @PathVariable String projectName,

@@ -117,8 +117,7 @@ public class RoomServiceImpl implements RoomService {
 
     @Override
     public void addUserToRoom(Room room, User user, RoomRole role) {
-        Object roomLock = getRoomLock(room.getRoomId()); // Get the lock based on roomId
-
+        Object roomLock = getRoomLock(room.getRoomId());
         synchronized (roomLock) {
             RoomMembership newMembership = RoomMembership
                     .builder()

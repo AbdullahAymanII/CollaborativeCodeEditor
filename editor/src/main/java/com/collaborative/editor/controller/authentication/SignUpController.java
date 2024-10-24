@@ -2,7 +2,6 @@ package com.collaborative.editor.controller.authentication;
 
 import com.collaborative.editor.model.user.User;
 import com.collaborative.editor.service.userService.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -41,7 +40,7 @@ public class SignUpController {
     }
 
     @GetMapping("/sign-in/provider/{provider}")
-    public RedirectView githubGoogleSignIn(@PathVariable String provider) {
+    public RedirectView providerSignIn(@PathVariable String provider) {
         return new RedirectView("/oauth2/authorization/" + provider);
     }
 

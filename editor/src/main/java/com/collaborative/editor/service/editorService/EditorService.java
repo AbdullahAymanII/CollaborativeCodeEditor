@@ -1,7 +1,7 @@
 package com.collaborative.editor.service.editorService;
 
 
-import com.collaborative.editor.dto.code.CodeDTO;
+
 import com.collaborative.editor.dto.code.CodeMetrics;
 import com.collaborative.editor.model.codeUpdate.CodeUpdate;
 

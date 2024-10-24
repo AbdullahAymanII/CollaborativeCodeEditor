@@ -24,8 +24,9 @@ public class DockerExecutorService {
     @PostConstruct
     public void loadCommandTemplates() throws Exception {
         ObjectMapper objectMapper = new ObjectMapper();
-        InputStream templateStream = new ClassPathResource("data/commandTemplates.json").getInputStream();
-        commandTemplates = objectMapper.readValue(templateStream, new TypeReference<>() {});
+        try (InputStream templateStream = new ClassPathResource("data/commandTemplates.json").getInputStream()) {
+            commandTemplates = objectMapper.readValue(templateStream, new TypeReference<>() {});
+        }
     }
 
     public String executeCode(CodeExecution codeRequest) throws Exception {

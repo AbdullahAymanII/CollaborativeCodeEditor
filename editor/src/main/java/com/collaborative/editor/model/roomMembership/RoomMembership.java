@@ -14,8 +14,6 @@ import lombok.*;
 @Entity
 @Table(name = "room_memberships",
         uniqueConstraints = {@UniqueConstraint(columnNames = {"room_id", "user_id", "role"})})
-//@Table(name = "room_memberships",
-//        uniqueConstraints = {@UniqueConstraint(columnNames = {"room_id", "user_id"})})
 public class RoomMembership {
 
     @Id
