@@ -5,13 +5,11 @@ import com.collaborative.editor.service.editorService.EditorService;
 import com.collaborative.editor.service.LogsService.LogsService;
 import com.collaborative.editor.service.roomMembershipService.RoomSecurityService;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.context.annotation.Bean;
 import org.springframework.messaging.handler.annotation.*;
 import org.springframework.stereotype.Controller;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 @Controller
 public class WebsocketController {
@@ -61,10 +59,6 @@ public class WebsocketController {
             @DestinationVariable String filename,
             @Payload CodeUpdate codeUpdate) {
 
-        System.out.println("Received code update for room: " + roomId
-                + ", project: " + projectName
-                + ", filename: " + filename
-                + ", role: " + "VIEWER");
 
         String lineKey = roomId + "-" + projectName + "-" + filename + "-" + codeUpdate.getLineNumber();
 

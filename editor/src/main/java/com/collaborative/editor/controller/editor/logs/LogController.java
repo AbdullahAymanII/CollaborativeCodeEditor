@@ -1,11 +1,7 @@
 package com.collaborative.editor.controller.editor.logs;
 
-import com.collaborative.editor.dto.code.CodeMetrics;
-import com.collaborative.editor.dto.code.CodeMetricsRequest;
 import com.collaborative.editor.dto.project.ProjectDTO;
 import com.collaborative.editor.model.messageLog.MessageLog;
-
-import com.collaborative.editor.service.editorService.EditorService;
 import com.collaborative.editor.service.LogsService.LogsService;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.ResponseEntity;

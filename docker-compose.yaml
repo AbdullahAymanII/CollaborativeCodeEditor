@@ -1,5 +1,4 @@
 services:
-  # Backend Service
   app:
     build:
       context: './editor'
@@ -18,7 +17,6 @@ services:
       - ~/.m2:/root/.m2                 # Cache Maven dependencies
       - /var/run/docker.sock:/var/run/docker.sock  # Mount Docker socket for Docker-in-Docker access
 
-  # Frontend Service
   frontend:
     build:
       context: './frontend'
@@ -33,7 +31,6 @@ services:
     volumes:
       - ./frontend/src:/app/src                 # Mount frontend code for live reload
 
-  # MySQL Service
   mysql:
     image: mysql:8.0
     container_name: collaborative-mysql
@@ -49,7 +46,6 @@ services:
     networks:
       - backend
 
-  # MongoDB Service
   mongo:
     image: mongo
     container_name: collaborative-mongo
@@ -65,7 +61,6 @@ services:
     networks:
       - backend
 
-  # Mongo Express UI Service
   mongo-express:
     image: mongo-express
     environment:
@@ -84,7 +79,6 @@ services:
     networks:
       - backend
 
-  # phpMyAdmin Service
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
     container_name: collaborative-phpmyadmin

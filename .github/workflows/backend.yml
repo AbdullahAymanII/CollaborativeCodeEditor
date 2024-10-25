@@ -3,10 +3,9 @@ name: Backend CI/CD Pipeline
 on:
   push:
     branches:
-      - feature-owner-dashboard
+      - master
 
 jobs:
-  # Compile job
   compile:
     runs-on: ubuntu-latest
     steps:
@@ -21,8 +20,6 @@ jobs:
       - name: Compile Project
         run: mvn clean compile
         working-directory: ./editor
-
-  # Test job
   test:
     runs-on: ubuntu-latest
     steps:
@@ -35,14 +32,12 @@ jobs:
           java-version: '17'
 
       - name: Run Unit Tests
-        run: mvn test -DskipTests=false # Ensure tests run
+        run: mvn test -DskipTests=false
         working-directory: ./editor
 
-
-  # Build job (waits for compile and test jobs to complete)
   build:
     runs-on: ubuntu-latest
-    needs: [ test, compile ]  # Run after both compile and test are finished
+    needs: [ test, compile ]
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -55,11 +50,9 @@ jobs:
       - name: Build Project
         run: mvn clean package -DskipTests
         working-directory: ./editor
-
-  # Build and Push Docker Image job (waits for build job)
   build-and-push-docker:
     runs-on: ubuntu-latest
-    needs: build  # Run after build finishes
+    needs: build
     steps:
       - name: Checkout Code
         uses: actions/checkout@v2
@@ -75,12 +68,32 @@ jobs:
 
       - name: Push Docker Image
         run: docker push ${{ secrets.DOCKER_USERNAME }}/backend:latest
-
-  # Deploy job (waits for build-and-push-docker job)
   deploy:
     runs-on: ubuntu-latest
-    needs: build-and-push-docker  # Run after Docker image is pushed
+    needs: build-and-push-docker
     steps:
       - name: Deploy to AWS EC2
         run: |
           ssh -o StrictHostKeyChecking=no -i ${{ secrets.AWS_EC2_KEY }} ubuntu@${{ secrets.AWS_EC2_IP }} 'docker pull ${{ secrets.DOCKER_USERNAME }}/backend:latest && docker-compose up -d'
+      - name: SSH into Backend EC2
+        uses: appleboy/ssh-action@master
+        with:
+            host: ${{ secrets.AWS_BACKEND_HOST }}
+            username: i-0adabf6ef59b093e9
+            key: ${{ secrets.AWS_SSH_KEY }}
+            script: |
+              # Pull the latest backend image
+              docker pull ${{ secrets.DOCKER_USERNAME }}/backend:latest
+              
+              # Stop and remove existing backend container
+              docker stop backend || true
+              docker rm backend || true
+              
+              # Run MySQL container
+              docker run --name mysql -e MYSQL_ROOT_PASSWORD=root -e MYSQL_DATABASE=mysql_db -p 3306:3306 -d mysql:8.0 || docker start mysql
+              
+              # Run MongoDB container
+              docker run --name mongo -e MONGO_INITDB_ROOT_USERNAME=devroot -e MONGO_INITDB_ROOT_PASSWORD=devroot -p 27017:27017 -d mongo || docker start mongo
+              
+              # Run the backend container
+              docker run -d -p 8080:8080 --name backend --link mysql:mysql --link mongo:mongo ${{ secrets.DOCKER_USERNAME }}/backend:latest

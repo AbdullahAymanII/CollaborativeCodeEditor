@@ -1,10 +1,8 @@
 package com.collaborative.editor.service.editorService;
 
 
-import com.collaborative.editor.dto.code.CodeDTO;
 import com.collaborative.editor.dto.code.CodeMetrics;
 import com.collaborative.editor.model.codeUpdate.CodeUpdate;
-import com.collaborative.editor.model.file.File;
 import com.collaborative.editor.repository.mongodb.CodeUpdateRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

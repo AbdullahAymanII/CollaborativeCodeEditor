@@ -47,15 +47,6 @@ class ProjectServiceImplTest {
         projectDTO.setRoomId("123");
     }
 
-//    @Test
-//    void testCreateProject_Success() {
-//        Room room = new Room();
-//        when(roomRepository.findByRoomId(projectDTO.getRoomId())).thenReturn(Optional.of(room));
-//
-//        projectService.createProject(projectDTO);
-//
-//        verify(projectRepository, times(1)).save(any(Project.class));
-//    }
 
     @Test
     void testCreateProject_RoomNotFound() {
@@ -75,31 +66,4 @@ class ProjectServiceImplTest {
         verify(projectRepository, times(1)).delete(project);
     }
 
-//    @Test
-//    void testDownloadProject_Success() throws IOException {
-//        Project project = new Project();
-//        when(projectRepository.findByRoomIdAndProjectName(projectDTO.getRoomId(), projectDTO.getProjectName()))
-//                .thenReturn(Optional.of(project));
-//
-//        List<File> fileList = List.of(
-//                new File(
-//                        "TestFile",
-//                        "123",
-//                        "Test Project",
-//                        "file content",
-//                        System.currentTimeMillis(),
-//                        System.currentTimeMillis(),
-//                        ".txt"
-//                )
-//        );
-//
-//        when(fileRepository.findByProjectNameAndRoomId(projectDTO.getProjectName(), projectDTO.getRoomId()))
-//                .thenReturn(Optional.of(fileList));
-//
-//        projectService.downloadProject(projectDTO, response);
-//
-//        verify(response, times(1)).setContentType("application/zip");
-//
-//        verify(fileRepository, times(1)).findByProjectNameAndRoomId(projectDTO.getProjectName(), projectDTO.getRoomId());
-//    }
 }

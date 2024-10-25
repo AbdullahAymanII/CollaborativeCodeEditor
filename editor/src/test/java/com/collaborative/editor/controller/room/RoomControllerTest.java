@@ -1,7 +1,5 @@
 package com.collaborative.editor.controller.room;
 
-
-import com.collaborative.editor.controller.authentication.SignUpController;
 import com.collaborative.editor.dto.room.AddMemberRequest;
 import com.collaborative.editor.dto.room.CreateRoomRequest;
 import com.collaborative.editor.dto.room.RoomDTO;
@@ -17,7 +15,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.http.ResponseEntity;
 
 import java.util.*;
