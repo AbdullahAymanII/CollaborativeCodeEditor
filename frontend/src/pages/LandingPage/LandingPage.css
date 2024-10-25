@@ -1,144 +1,16 @@
-/*!* Scoped styles specifically for the landing page *!*/
-
-/*.landing-page-container {*/
-/*    width: 100%;*/
-/*    height: 100vh;*/
-/*    background: radial-gradient(circle, rgba(13,27,42,1) 0%, rgba(2,9,19,1) 100%);*/
-/*    display: flex;*/
-/*    justify-content: center;*/
-/*    align-items: center;*/
-/*    text-align: center;*/
-/*    overflow: hidden;*/
-/*}*/
-
-/*.landing-page-container::before {*/
-/*    content: '';*/
-/*    position: absolute;*/
-/*    top: 0;*/
-/*    left: 0;*/
-/*    right: 0;*/
-/*    bottom: 0;*/
-/*    background-image: url('https://www.transparenttextures.com/patterns/cubes.png');*/
-/*    opacity: 0.1;*/
-/*    z-index: 1;*/
-/*}*/
-
-/*.landing-page-content {*/
-/*    z-index: 2;*/
-/*    max-width: 600px;*/
-/*    padding: 20px;*/
-/*}*/
-
-/*.landing-page-title {*/
-/*    font-size: 2.5rem;*/
-/*    line-height: 1.2;*/
-/*    margin-bottom: 20px;*/
-/*    color: #e0e6ed;*/
-/*    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);*/
-/*}*/
-
-/*.landing-page-description {*/
-/*    font-size: 1.2rem;*/
-/*    margin-bottom: 30px;*/
-/*    color: #a8b3c1;*/
-/*}*/
-
-/*.landing-page-cta {*/
-/*    background-color: #008cff;*/
-/*    color: white;*/
-/*    padding: 15px 30px;*/
-/*    text-decoration: none;*/
-/*    border-radius: 5px;*/
-/*    box-shadow: 0 4px 10px rgba(0, 140, 255, 0.2);*/
-/*    transition: all 0.3s ease;*/
-/*}*/
-
-/*.landing-page-cta:hover {*/
-/*    background-color: #006bbf;*/
-/*    box-shadow: 0 6px 15px rgba(0, 140, 255, 0.4);*/
-/*}*/
-
-
-
-/*!* Scoped styles specifically for the landing page *!*/
-/*.landing-page-container {*/
-/*    position: fixed; !* Ensures it covers the entire viewport *!*/
-/*    top: 0;*/
-/*    left: 0;*/
-/*    width: 100%;*/
-/*    height: 100vh; !* Full viewport height *!*/
-/*    background: radial-gradient(circle, rgba(13,27,42,1) 0%, rgba(2,9,19,1) 100%);*/
-/*    display: flex;*/
-/*    justify-content: center;*/
-/*    align-items: center;*/
-/*    text-align: center;*/
-/*    overflow: hidden;*/
-/*    z-index: 1; !* Make sure it stays on top of other content *!*/
-/*}*/
-
-/*!* Background image with a subtle pattern overlay *!*/
-/*.landing-page-container::before {*/
-/*    content: '';*/
-/*    position: absolute;*/
-/*    top: 0;*/
-/*    left: 0;*/
-/*    right: 0;*/
-/*    bottom: 0;*/
-/*    background-image: url('https://www.transparenttextures.com/patterns/cubes.png');*/
-/*    opacity: 0.1;*/
-/*    z-index: 1;*/
-/*}*/
-
-/*.landing-page-content {*/
-/*    z-index: 2;*/
-/*    max-width: 600px;*/
-/*    padding: 20px;*/
-/*}*/
-
-/*.landing-page-title {*/
-/*    font-size: 2.5rem;*/
-/*    line-height: 1.2;*/
-/*    margin-bottom: 20px;*/
-/*    color: #e0e6ed;*/
-/*    text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);*/
-/*}*/
-
-/*.landing-page-description {*/
-/*    font-size: 1.2rem;*/
-/*    margin-bottom: 30px;*/
-/*    color: #a8b3c1;*/
-/*}*/
-
-/*.landing-page-cta {*/
-/*    background-color: #008cff;*/
-/*    color: white;*/
-/*    padding: 15px 30px;*/
-/*    text-decoration: none;*/
-/*    border-radius: 5px;*/
-/*    box-shadow: 0 4px 10px rgba(0, 140, 255, 0.2);*/
-/*    transition: all 0.3s ease;*/
-/*}*/
-
-/*.landing-page-cta:hover {*/
-/*    background-color: #006bbf;*/
-/*    box-shadow: 0 6px 15px rgba(0, 140, 255, 0.4);*/
-/*}*/
-
-
-
 .landing-page-container {
-    position: fixed; /* Ensures it covers the entire viewport */
+    position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    height: 100vh; /* Full viewport height */
+    height: 100vh;
     background: radial-gradient(circle, rgba(13,27,42,1) 0%, rgba(2,9,19,1) 100%);
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: center;
     overflow: hidden;
-    z-index: 1; /* Make sure it stays on top of other content */
+    z-index: 1;
 }
 
 .landing-page-container::before {
@@ -160,13 +32,13 @@
 }
 
 .landing-page-title {
-    font-size: 3.5rem; /* Larger for more impact */
+    font-size: 3.5rem;
     line-height: 1.1;
     margin-bottom: 20px;
     color: #e0e6ed;
-    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5); /* Deeper shadow for modern effect */
-    animation: fadeInUp 1s ease-out; /* Simple animation */
-    font-weight: 700; /* Bolder appearance */
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+    animation: fadeInUp 1s ease-out;
+    font-weight: 700;
 }
 
 .landing-page-description {
@@ -185,7 +57,7 @@
     border-radius: 8px;
     box-shadow: 0 4px 15px rgba(0, 170, 255, 0.3);
     transition: all 0.3s ease;
-    font-size: 1.2rem; /* Increased for more presence */
+    font-size: 1.2rem;
     font-weight: 600;
 }
 
