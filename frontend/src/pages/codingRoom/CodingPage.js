@@ -29,6 +29,20 @@ const CodingPage = () => {
         lastModifiedAt: '',
         extension: ''
     });
+    const originalConsoleError = console.error;
+
+    console.error = (...args) => {
+        if (
+            args.length > 0 &&
+            typeof args[0] === 'string' &&
+            args[0].includes('ResizeObserver loop completed with undelivered notifications')
+        ) {
+            // Ignore the ResizeObserver notification error
+            return;
+        }
+        originalConsoleError(...args); // Log other errors as usual
+    };
+
     const [messages, setMessages] = useState([]);
     const [liveEditing, setLiveEditing] = useState(false);
     const [isJoined, setIsJoined] = useState(true);

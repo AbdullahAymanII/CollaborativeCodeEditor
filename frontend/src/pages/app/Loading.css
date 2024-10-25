@@ -1,39 +1,3 @@
-/*.loading-container {*/
-/*    position: fixed;*/
-/*    top: 0;*/
-/*    left: 0;*/
-/*    width: 100vw;*/
-/*    height: 100vh;*/
-/*    display: flex;*/
-/*    flex-direction: column;*/
-/*    justify-content: center;*/
-/*    align-items: center;*/
-/*    background-color: rgba(0, 0, 0, 0.7); !* Semi-transparent background *!*/
-/*    z-index: 1000; !* Ensures it covers the whole page *!*/
-/*}*/
-
-/*.spinner {*/
-/*    width: 50px;*/
-/*    height: 50px;*/
-/*    border: 5px solid #f3f3f3;*/
-/*    border-top: 5px solid #3498db; !* Blue color for the spinner *!*/
-/*    border-radius: 50%;*/
-/*}*/
-
-/*.loading-text {*/
-/*    margin-top: 20px;*/
-/*    font-size: 1.5rem;*/
-/*    color: #fff;*/
-/*    font-family: 'Arial', sans-serif;*/
-/*    text-transform: uppercase;*/
-/*    letter-spacing: 2px;*/
-/*    animation: pulse 1.5s infinite; !* Pulsating effect *!*/
-/*}*/
-
-/*@keyframes pulse {*/
-/*    0%, 100% { opacity: 1; }*/
-/*    50% { opacity: 0.5; }*/
-/*}*/
 /* Loading.css */
 .loading-container {
     position: fixed;
@@ -45,8 +9,8 @@
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
-    z-index: 1000; /* Ensures it covers the whole page */
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 1000;
     transition: opacity 0.5s ease;
 }
 
@@ -54,9 +18,9 @@
     width: 50px;
     height: 50px;
     border: 5px solid #f3f3f3;
-    border-top: 5px solid var(--primary-color); /* Blue color for the spinner */
+    border-top: 5px solid var(--primary-color);
     border-radius: 50%;
-    animation: spin 1s linear infinite; /* Spinning animation */
+    animation: spin 1s linear infinite;
 }
 
 @keyframes spin {

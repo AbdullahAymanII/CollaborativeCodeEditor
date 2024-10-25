@@ -29,7 +29,7 @@ const useFetch = (url) => {
                         setError(err.message);
                     }
                 });
-        }, 2000); // Set a delay of 2 seconds for the loading message
+        }, 2000);
 
         return () => abortController.abort();
     }, [url]);

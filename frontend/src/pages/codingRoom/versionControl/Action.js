@@ -11,7 +11,7 @@ const Action = ({ show, title, actionLabel, inputs, onConfirm, onCancel }) => {
         const filled = Object.values(inputValues).every(val => val.trim());
         if (filled) {
             onConfirm(inputValues);
-            setInputValues({}); // Clear inputs after confirmation
+            setInputValues({});
         }
     };
 

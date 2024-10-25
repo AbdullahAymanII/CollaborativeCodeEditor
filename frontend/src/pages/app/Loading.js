@@ -1,6 +1,6 @@
 import React from 'react';
-import { motion } from 'framer-motion'; // Import framer-motion
-import './Loading.css'; // Import the custom CSS
+import { motion } from 'framer-motion';
+import './Loading.css';
 
 const loadingContainerVariants = {
     initial: { opacity: 0 },

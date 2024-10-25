@@ -96,22 +96,22 @@ button:disabled {
     padding: 10px;
     border: none;
     border-radius: 5px;
-    background-color: #db4437; /* Google color */
+    background-color: #db4437;
     color: white;
     cursor: pointer;
     transition: background-color 0.3s ease;
 }
 
 .github-button {
-    background-color: #333; /* GitHub color */
+    background-color: #333;
 }
 
 .google-button:hover {
-    background-color: #c1351d; /* Darker Google color */
+    background-color: #c1351d;
 }
 
 .github-button:hover {
-    background-color: #222; /* Darker GitHub color */
+    background-color: #222;
 }
 
 .theme-toggle {

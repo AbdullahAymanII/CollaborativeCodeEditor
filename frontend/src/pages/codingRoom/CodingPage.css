@@ -1,4 +1,3 @@
-
 /* Main Container */
 .coding-room-container {
     display: flex;
@@ -52,6 +51,7 @@
     gap: 10px;
     margin-bottom: 20px;
 }
+
 .version-control-buttons .action-btn {
     padding: 10px 15px;
     border: none;
@@ -154,6 +154,7 @@
 .dark-mode .input-output-wrapper div {
     background-color: rgba(255, 255, 255, 0.02);
 }
+
 /* Coding Playground (Editor) */
 .coding-playground {
     flex-basis: 60%;
@@ -163,13 +164,12 @@
     display: flex;
     flex-direction: column;
 }
+
 .sidebar h2 {
-     font-size: 1.5rem;
-     margin-bottom: 20px;
-     color: #bbbbbb;
+    font-size: 1.5rem;
+    margin-bottom: 20px;
+    color: #bbbbbb;
 }
-
-
 
 
 /* Modal */
@@ -213,6 +213,7 @@
 .modal-actions button.cancel {
     background-color: var(--primary-color-dark);
 }
+
 .success-message {
     margin-top: 10px;
     padding: 10px;
@@ -222,43 +223,45 @@
     font-weight: bold;
     text-align: center;
 }
+
 .cursor-line {
-    background-color: rgba(255, 0, 0, 0.1); /* Light red background for locked lines */
-    border-left: 3px solid red; /* Red marker to indicate a line is locked */
+    background-color: rgba(255, 0, 0, 0.1);
+    border-left: 3px solid red;
 }
 
 .view-details-btn {
-    background-color: var(--primary-color);  /* Use theme primary color */
-    color: #fff;  /* White text */
+    background-color: var(--primary-color);
+    color: #fff;
     border: none;
-    padding: 10px 20px;  /* Standard padding */
-    border-radius: 5px;  /* Rounded corners */
-    cursor: pointer;  /* Pointer on hover */
-    font-size: 1rem;  /* Standard font size */
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);  /* Soft shadow */
-    transition: background-color 0.3s ease, transform 0.2s;  /* Smooth transitions */
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1rem;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    transition: background-color 0.3s ease, transform 0.2s;
 }
 
 .view-details-btn:hover {
-    background-color: var(--primary-color-light);  /* Lighter primary color on hover */
-    transform: translateY(-3px);  /* Slight lift on hover */
+    background-color: var(--primary-color-light);
+    transform: translateY(-3px);
 }
 
 .view-details-btn:active {
-    background-color: var(--primary-color-dark);  /* Darker shade when clicked */
-    transform: translateY(1px);  /* Push-down effect on click */
+    background-color: var(--primary-color-dark);
+    transform: translateY(1px);
 }
+
 .modal-overlay {
     position: fixed;
     top: 0;
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.7);  /* Dark transparent background */
+    background-color: rgba(0, 0, 0, 0.7);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 1000;  /* Ensure it appears on top */
+    z-index: 1000;
 }
 
 .modal-content {
@@ -266,7 +269,7 @@
     padding: 20px;
     border-radius: 10px;
     width: 400px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);  /* Modal shadow */
+    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.2);
     text-align: center;
 }
 
@@ -278,13 +281,14 @@
     border: none;
     font-size: 1.5rem;
     cursor: pointer;
-    color: #999;  /* Lighter color for close button */
+    color: #999;
     transition: color 0.3s;
 }
 
 .modal-close:hover {
-    color: #333;  /* Darker color on hover */
+    color: #333;
 }
+
 /* Code Metrics Container */
 .code-metrics-container {
     display: flex;
@@ -465,6 +469,7 @@ h2 {
     color: #777;
     font-style: italic;
 }
+
 /* Editor Container */
 .code-editor-container.light {
     background-color: #f5f5f5;
@@ -540,69 +545,11 @@ h2 {
     --border-color: #444;
 }
 
-/*//////////////////////////////////*/
-/* Editor Footer */
-/*.editor-footer {*/
-/*    display: flex;*/
-/*    justify-content: flex-end;*/
-/*    padding: 10px 20px;*/
-/*    background-color: #59595914;*/
-/*    border-top: 1px solid var(--border-color);*/
-/*}*/
-
-/*button.push-btn, button.view-details-btn {*/
-/*    padding: 10px 20px;*/
-/*    margin-left: 10px;*/
-/*    border: none;*/
-/*    border-radius: 5px;*/
-/*    background-color: var(--primary-color);*/
-/*    color: #fff;*/
-/*    cursor: pointer;*/
-/*    transition: background-color 0.3s ease;*/
-/*    font-size: 1rem;*/
-/*}*/
-/*button.download-btn {*/
-/*    padding: 10px 20px;*/
-/*    margin-left: 10px;*/
-/*    border: none;*/
-/*    border-radius: 5px;*/
-/*    background-color: rgb(255, 255, 255);*/
-/*    color: #000000;*/
-/*    cursor: pointer;*/
-/*    transition: background-color 0.3s ease;*/
-/*    font-size: 1rem;*/
-/*}*/
-
-/*button.run-btn {*/
-/*    padding: 10px 20px;*/
-/*    margin-left: 10px;*/
-/*    border: none;*/
-/*    border-radius: 5px;*/
-/*    background-color: red;*/
-/*    color: #fff;*/
-/*    cursor: pointer;*/
-/*    transition: background-color 0.3s ease;*/
-/*    font-size: 1rem;*/
-/*}*/
-/*button.run-btn:hover{*/
-/*    background-color: rgba(227, 13, 13, 0.35);*/
-/*}*/
-
-/*button.push-btn:hover, button.view-details-btn:hover {*/
-/*    background-color: var(--primary-color-light);*/
-/*}*/
-
-/*button.run-btn:active, button.push-btn:active, button.view-details-btn:active {*/
-/*    background-color: var(--primary-color-dark);*/
-/*}*/
-
-
 
 .input-box, .output-box {
     display: flex;
     flex-direction: column;
 }
-
 
 
 .input-area, .output-area {
@@ -613,15 +560,15 @@ h2 {
     outline: none;
     font-size: 1rem;
     font-family: 'Courier New', Courier, monospace;
-    background: #282c34; /* Dark background for input/output */
-    color: #ffffff; /* White text */
+    background: #282c34;
+    color: #ffffff;
     box-shadow: 0px 5px 15px rgba(255 255 255 / 59%);
     resize: none;
     transition: all 0.3s ease;
 }
 
 .input-area:focus, .output-area:focus {
-    box-shadow: 0px 8px 20px rgba(255 255 255 / 0%); /* Green shadow on focus */
+    box-shadow: 0px 8px 20px rgba(255 255 255 / 0%);
 }
 
 .input-area::placeholder, .output-area::placeholder {
@@ -656,35 +603,8 @@ h2 {
 }
 
 .output-area:hover {
-    box-shadow: 0px 8px 20px rgba(255 255 255 / 0%); /* Subtle shadow when hovered */
+    box-shadow: 0px 8px 20px rgba(255 255 255 / 0%);
 }
-
-
-
-
-/*!* Normal button style *!*/
-/*.live-editing-btn {*/
-/*    background-color: #f0f0f0; !* Normal background color *!*/
-/*    color: #333;*/
-/*    border: 1px solid #ccc;*/
-/*    padding: 8px 16px;*/
-/*    border-radius: 4px;*/
-/*    cursor: pointer;*/
-/*    margin-left: 14px;*/
-/*}*/
-
-/*!* Active (green) button when live editing is active *!*/
-/*.live-editing-btn.active-btn {*/
-/*    background-color: green;*/
-/*    color: white;*/
-/*    border: 1px solid darkgreen;*/
-/*}*/
-
-/*.live-editing-btn:disabled {*/
-/*    cursor: not-allowed;*/
-/*    opacity: 0.7;*/
-/*}*/
-
 
 .chat-container {
     display: flex;
@@ -789,12 +709,14 @@ h2 {
     background-color: var(--primary-color-dark);
     transform: translateY(1px);
 }
+
 .input-output-wrapper div {
     flex: 1 1;
     background-color: #ffffff00;
     padding: 20px;
     border-radius: 10px;
 }
+
 .input-output-wrapper {
     display: flex;
     flex-direction: column;
@@ -846,6 +768,7 @@ h2 {
     margin-right: 10px;
     color: var(--header-title-color);
 }
+
 .toast {
     position: fixed;
     bottom: 20px;
@@ -860,10 +783,11 @@ h2 {
     z-index: 1000;
     transition: opacity 0.3s ease-in-out;
 }
+
 /* Editor Footer Styles */
 .editor-footer {
     display: flex;
-    justify-content: space-between; /* Spread the typing indicator and action buttons */
+    justify-content: space-between;
     align-items: center;
     padding: 10px 20px;
     background-color: #00000000;
@@ -943,6 +867,7 @@ button.download-btn {
 button.download-btn:hover {
     background-color: #f1f1f1;
 }
+
 input[type="text"] {
     width: 100%;
     padding: 10px;
@@ -952,7 +877,6 @@ input[type="text"] {
     color: #000000;
     border-radius: 20px;
 }
-
 
 
 .file-info-container {

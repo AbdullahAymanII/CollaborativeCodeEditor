@@ -18,7 +18,7 @@ const EditorPlayGround = ({ code, setCode, darkMode, runCode, currentFile, user,
     };
 
     const handleCloseMetricsModal = () => {
-        setShowMetricsModal(false); // Close the modal
+        setShowMetricsModal(false);
     };
 
     const handlePushConfirm = () => {

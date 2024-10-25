@@ -5,8 +5,8 @@ const useEditorLogic = (role) => {
     const [cursorPosition, setCursorPosition] = useState({ lineNumber: null, column: null, endColumn: 0 });
     const [lineContent, setLineContent] = useState('');
     const [isCommentBoxVisible, setIsCommentBoxVisible] = useState(false);
-    const [currentLine, setCurrentLine] = useState(null); // To store the line number for adding comment
-    const [comment, setComment] = useState(''); // To store the inputted comment
+    const [currentLine, setCurrentLine] = useState(null);
+    const [comment, setComment] = useState('');
 
     const handleEditorDidMount = (editor, monaco) => {
         editorRef.current = editor;
@@ -23,16 +23,13 @@ const useEditorLogic = (role) => {
                     const position = ed.getPosition();
                     const lineNumber = position.lineNumber;
 
-                    // Store the line number where the comment will be added
                     setCurrentLine(lineNumber);
 
-                    // Show the comment input box
                     setIsCommentBoxVisible(true);
                 }
             });
         }
 
-        // Cursor position tracking
         const handleCursorChange = (event) => {
             const model = editorRef.current.getModel();
             const position = event.position;
@@ -40,7 +37,6 @@ const useEditorLogic = (role) => {
             const endColumn = model.getLineMaxColumn(lineNumber);
             const content = model.getLineContent(lineNumber);
 
-            // Update state with the current cursor position and line content
             setCursorPosition({ lineNumber, column: position.column, endColumn: endColumn });
             setLineContent(content);
 
