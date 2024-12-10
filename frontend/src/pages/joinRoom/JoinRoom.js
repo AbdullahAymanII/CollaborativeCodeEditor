@@ -14,7 +14,7 @@ const JoinRoom = () => {
 
     const fetchUserRooms = async () => {
         try {
-            const response = await fetch(`http://localhost:8080/api/rooms/join-room?username=${encodeURIComponent(user.name)}`, {
+            const response = await fetch(`http://localhost:8080/api/rooms/join-room?username=${user.name}`, {
                 method: 'GET',
                 headers: {
                     'Content-Type': 'application/json',
@@ -48,12 +48,9 @@ const JoinRoom = () => {
             body: JSON.stringify({roomName: room.name}),
         })
             .then((response) => {
-                console.log(role);
+
                 if (response.ok) {
-
                     setRole(roleClick);
-
-                    console.log(role);
                     navigate(`/join-room/${room.roomId}/${roleClick}`, {
                         state: {user, room:{roomId:room.roomId, name:room.name}, role: roleClick},
                     });
@@ -121,7 +118,6 @@ const JoinRoom = () => {
                 </div>
             </div>
 
-            {/* Reusable Footer */}
             <footer className="home-footer">
                 <p>&copy; {new Date().getFullYear()} Developed by Abdullah Ayman</p>
             </footer>

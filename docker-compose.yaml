@@ -1,7 +1,7 @@
 services:
   app:
     build:
-      context: './editor'
+      context: './backend'
       dockerfile: Dockerfile
     container_name: collaborative-editor
     ports:

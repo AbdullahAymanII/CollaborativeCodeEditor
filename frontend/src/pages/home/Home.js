@@ -17,9 +17,11 @@ const Home = () => {
                 },
             });
             if (!response.ok) throw new Error('Failed to fetch user info');
+
             const userInfo = await response.json();
-            console.log(userInfo);
+
             setUser({ name: userInfo.username, profileImage: userInfo.profileImage });
+
         } catch (error) {
             console.error('Failed to fetch user info:', error);
         }
@@ -32,7 +34,6 @@ const Home = () => {
     const toggleTheme = () => setDarkMode(!darkMode);
 
     const handleLogout = () => {
-        // Clear the token and navigate to the login page
         localStorage.removeItem('token');
         navigate('/');
     };

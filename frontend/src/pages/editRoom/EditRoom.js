@@ -7,9 +7,8 @@ const EditRoom = () => {
     const [darkMode, setDarkMode] = useState(false);
     const navigate = useNavigate();
     const location = useLocation();
-    const { user } = location.state; // Retrieve user from state
+    const { user } = location.state;
 
-    // Fetch rooms from the server
     const fetchRooms = async () => {
         try {
             const response = await fetch(`http://localhost:8080/api/rooms/edit-room/${user.name}`, {
@@ -20,7 +19,7 @@ const EditRoom = () => {
             });
             if (!response.ok) throw new Error('Failed to fetch rooms');
             const data = await response.json();
-            setRooms(data.rooms); // Assuming rooms are in a 'rooms' key
+            setRooms(data.rooms);
         } catch (error) {
             console.error('Error fetching rooms:', error);
         }

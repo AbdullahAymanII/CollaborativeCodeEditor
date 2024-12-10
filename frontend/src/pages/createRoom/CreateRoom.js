@@ -73,13 +73,6 @@ const RoomCreationFlow = () => {
         <div className="form-wrapper">
             {errorMessage && <div className="error-message">{errorMessage}</div>}
 
-            <motion.div
-                className="form-animation"
-                initial={{opacity: 0, scale: 0.8}}
-                animate={{opacity: 1, scale: 1}}
-                exit={{opacity: 0, scale: 0.8}}
-                transition={{duration: 0.5}}
-            >
                 {!showMemberForm ? (
                     <form className="creation-form" onSubmit={(e) => e.preventDefault()}>
                         <h1 className="form-room-header">Create Your Room</h1>
@@ -95,7 +88,6 @@ const RoomCreationFlow = () => {
                             className="form-action-button"
                             type="submit"
                             onClick={handleCreateRoom}
-                            // disabled={loading || !roomName || !roomId}
                             disabled={loading || !roomName}
                         >
                             {loading ? 'Creating...' : 'Next'}
@@ -143,7 +135,6 @@ const RoomCreationFlow = () => {
                         </button>
                     </div>
                 )}
-            </motion.div>
         </div>
     );
 };

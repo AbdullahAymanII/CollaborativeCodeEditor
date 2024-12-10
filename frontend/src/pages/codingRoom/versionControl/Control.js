@@ -150,7 +150,6 @@ const Control = ({ room, currentFile, isConnected, subscribeToCodeUpdates }) => 
     const handleCreateNewFile = async ({ branchName, filename, extension }) => {
         if (filename && branchName) {
             try {
-                const encodedBranchName = encodeURIComponent(branchName);
                 const response = await fetch(`http://localhost:8080/api/files/create-file`, {
                     method: 'POST',
                     headers: {
@@ -159,10 +158,6 @@ const Control = ({ room, currentFile, isConnected, subscribeToCodeUpdates }) => 
                     },
                     body: JSON.stringify({ filename: filename, roomId: room.roomId, projectName: branchName, extension: extension }),
                 });
-                console.log(filename);
-                console.log(room.roomId);
-                console.log(branchName);
-                console.log(extension);
                 if (!response.ok) throw new Error('Failed to create file');
                 fetchFiles(branchName);
             } catch (error) {
